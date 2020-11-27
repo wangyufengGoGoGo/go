@@ -120,26 +120,20 @@ hex_digit     = "0" … "9" | "A" … "F" | "a" … "f" .
 </ol>
 
 <p>
-A comment cannot start inside a <a href="#Rune_literals">rune</a> or
-<a href="#String_literals">string literal</a>, or inside a comment.
-A general comment containing no newlines acts like a space.
-Any other comment acts like a newline.
+	注释不能开始于 <a href="#Rune_literals">rune</a> 或 <a href="#String_literals">string 字面量</a>或另一个注释的内部。
+	不包含换行符的注释就像一个空格。
+	任何其他的注释都像一个换行符。
 </p>
 
 <h3 id="Tokens">Tokens</h3>
 
 <p>
-Tokens form the vocabulary of the Go language.
-There are four classes: <i>identifiers</i>, <i>keywords</i>, <i>operators
-and punctuation</i>, and <i>literals</i>.  <i>White space</i>, formed from
-spaces (U+0020), horizontal tabs (U+0009),
-carriage returns (U+000D), and newlines (U+000A),
-is ignored except as it separates tokens
-that would otherwise combine into a single token. Also, a newline or end of file
-may trigger the insertion of a <a href="#Semicolons">semicolon</a>.
-While breaking the input into tokens,
-the next token is the longest sequence of characters that form a
-valid token.
+	Tokens 组成了 Go 语言的词汇表。
+	有四个分类：<i>标识符</i>，<i>关键字</i>，<i>运算符和标点符号</i>，和<i>字面量</i>。
+	<i>空白</i> 是由空格（U+0020），水平制表符（U+0009），回车符（U+000D）以及换行符（U+000A）所组成的，空白一般会被忽略，
+	因为它会分隔标记 否则将合并为一个 tokens。
+	另外，换行符或文件结尾可能会触发<a href="#Semicolons">分号</a>的插入。
+	把输入的内容区分为 tokens 时，每一个 token 都是可组成有效 token 的最长字符序列。
 </p>
 
 <h3 id="Semicolons">Semicolons</h3>
