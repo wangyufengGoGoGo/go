@@ -35,7 +35,7 @@ Repetition  = "{" Expression "}" .
 </pre>
 
 <p>
-	产生式（Productions）是由术语（terms）和以下操作符所构成的表达式，其优先级越来越高：
+	产生式（Productions）是由术语（terms）和如下操作符所构成的表达式，其优先级越来越高：
 </p>
 <pre class="grammar">
 |   选择
@@ -57,54 +57,42 @@ Repetition  = "{" Expression "}" .
 <h2 id="Source_code_representation">源代码表示</h2>
 
 <p>
-	源代码是采用 <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> 编码的Unicode文本。
-
-Source code is Unicode text encoded in
-<a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a>. The text is not
-canonicalized, so a single accented code point is distinct from the
-same character constructed from combining an accent and a letter;
-those are treated as two code points.  For simplicity, this document
-will use the unqualified term <i>character</i> to refer to a Unicode code point
-in the source text.
+	源代码是采用 <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> 编码的 Unicode 文本。
+该文本并不是规范化的，所以一个单字节字符集的码位（code point）和由单字节字符集和字母组成的相同字符不同；后者被视为是两个码位。
+为简单起见，本文档使用非正规的术语 <i>字符</i> 来指代源文本中的 Unicode 码位。
 </p>
 <p>
-Each code point is distinct; for instance, upper and lower case letters
-are different characters.
+	每个码位都是不同的；例如，大写和小写字母是不同的字符。
 </p>
 <p>
-Implementation restriction: For compatibility with other tools, a
-compiler may disallow the NUL character (U+0000) in the source text.
+	实现限制：为了与其他工具兼容，编译器可能会禁止在源文本中使用 NUL 字符（U+0000）。
 </p>
 <p>
-Implementation restriction: For compatibility with other tools, a
-compiler may ignore a UTF-8-encoded byte order mark
-(U+FEFF) if it is the first Unicode code point in the source text.
-A byte order mark may be disallowed anywhere else in the source.
+	实现限制：为了与其他工具兼容，如果一个 UTF-8 编码的字节顺序标记（U+FEFF）为源文本的第一个 Unicode 码位，编译器可能会忽略它。
+	字节顺序标记也可能会禁止在源中的任何其它位置使用。
 </p>
 
-<h3 id="Characters">Characters</h3>
+<h3 id="Characters">字符</h3>
 
 <p>
-The following terms are used to denote specific Unicode character classes:
+	如下述术语用于表示特定的 Unicode 字符类：
 </p>
 <pre class="ebnf">
-newline        = /* the Unicode code point U+000A */ .
-unicode_char   = /* an arbitrary Unicode code point except newline */ .
-unicode_letter = /* a Unicode code point classified as "Letter" */ .
-unicode_digit  = /* a Unicode code point classified as "Number, decimal digit" */ .
+newline        = /* 换行（LF）的 Unicode 码位为 U+000A */ .
+unicode_char   = /* 除换行符外的任意 Unicode 码位 */ .
+unicode_letter = /* 分类为“字母”的 Unicode 码位 */ .
+unicode_digit  = /* 分类为“数字，十进制数字”的 Unicode 码位 */ .
 </pre>
 
 <p>
-In <a href="https://www.unicode.org/versions/Unicode8.0.0/">The Unicode Standard 8.0</a>,
-Section 4.5 "General Category" defines a set of character categories.
-Go treats all characters in any of the Letter categories Lu, Ll, Lt, Lm, or Lo
-as Unicode letters, and those in the Number category Nd as Unicode digits.
+	在 <a href="https://www.unicode.org/versions/Unicode8.0.0/">Unicode 8.0 标准中</a>，第4.5节 "General Category" 定义了一套字符类别。
+	Go将字母类别 Lu，Ll，Lt，Lm 或 Lo 中的任何字符视为 Unicode 字母，将数字类别 Nd 中的所有字符视为 Unicode 数字。
 </p>
 
-<h3 id="Letters_and_digits">Letters and digits</h3>
+<h3 id="Letters_and_digits">字母和数字</h3>
 
 <p>
-The underscore character <code>_</code> (U+005F) is considered a letter.
+	下划线字符 <code>_</code> (U+005F) 被认为是一个字母.
 </p>
 <pre class="ebnf">
 letter        = unicode_letter | "_" .
@@ -114,22 +102,20 @@ octal_digit   = "0" … "7" .
 hex_digit     = "0" … "9" | "A" … "F" | "a" … "f" .
 </pre>
 
-<h2 id="Lexical_elements">Lexical elements</h2>
+<h2 id="Lexical_elements">词法元素</h2>
 
-<h3 id="Comments">Comments</h3>
+<h3 id="Comments">注释</h3>
 
 <p>
-Comments serve as program documentation. There are two forms:
+	注释作为程序的文档，有以下两种形式：
 </p>
 
 <ol>
 <li>
-<i>Line comments</i> start with the character sequence <code>//</code>
-and stop at the end of the line.
+<i>单行注释</i> 以字符序列 <code>//</code> 开头并在该行的结尾处停止。
 </li>
 <li>
-<i>General comments</i> start with the character sequence <code>/*</code>
-and stop with the first subsequent character sequence <code>*/</code>.
+<i>全局注释</i> 以字符序列 <code>/*</code> 开头并在遇到第一个字符序列  <code>*/</code> 时结束。
 </li>
 </ol>
 
