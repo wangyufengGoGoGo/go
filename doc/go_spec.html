@@ -11,7 +11,8 @@
 </p>
 
 <p>
-	Go 是一种在设计时就考虑了系统编程的通用语言。它是强类型的、具有垃圾回收功能且明确支持了并发编程。
+	Go 是一种在设计时就考虑了系统编程的通用语言。
+	它是强类型的、具有垃圾回收功能且明确支持了并发编程。
 	程序是由<i>包 </i>来构建的，<i>包 </i>的特性允许其高效的管理依赖关系。
 </p>
 
@@ -45,21 +46,23 @@ Repetition  = "{" Expression "}" .
 </pre>
 
 <p>
-	小写字母的产生式名用于标识词汇（词组）记号的。非终结符（Non-terminals）是以驼峰的形式命名的。词汇记号用双引号 <code>""</code> 或反引号 <code>``</code>。
+	小写字母的产生式名用于标识词汇（词组）记号的。
+	非终结符（Non-terminals）是以驼峰的形式命名的。
+	词汇记号用双引号 <code>""</code> 或反引号 <code>``</code>。
 </p>
 
 <p>
 	<code>a … b </code>这样的格式表示从 <code>a</code> 到 <code>b</code> 的连续字符集。
-在规范中的其他地方也会使用水平省略号 <code>…</code> 来非正式地表示各种枚举或代码段，而这些代码段未作进一步规定。
-字符 <code>…</code>（与单独的三个字符 <code>...</code> 不同），并不是 Go 语言的标记。
+	在规范中的其他地方也会使用水平省略号 <code>…</code> 来非正式地表示各种枚举或代码段，而这些代码段未作进一步规定。
+	字符 <code>…</code>（与单独的三个字符 <code>...</code> 不同），并不是 Go 语言的标记。
 </p>
 
 <h2 id="Source_code_representation">源代码表示</h2>
 
 <p>
 	源代码是采用 <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> 编码的 Unicode 文本。
-该文本并不是规范化的，所以一个单字节字符集的码位（code point）和由单字节字符集和字母组成的相同字符不同；后者被视为是两个码位。
-为简单起见，本文档使用非正规的术语 <i>字符</i> 来指代源文本中的 Unicode 码位。
+	该文本并不是规范化的，所以一个单字节字符集的码位（code point）和由单字节字符集和字母组成的相同字符不同；后者被视为是两个码位。
+	为简单起见，本文档使用非正规的术语 <i>字符</i> 来指代源文本中的 Unicode 码位。
 </p>
 <p>
 	每个码位都是不同的；例如，大写和小写字母是不同的字符。
@@ -102,7 +105,7 @@ octal_digit   = "0" … "7" .
 hex_digit     = "0" … "9" | "A" … "F" | "a" … "f" .
 </pre>
 
-<h2 id="Lexical_elements">词法元素</h2>
+<h2 id="Lexical_elements">词法单元</h2>
 
 <h3 id="Comments">注释</h3>
 
@@ -120,82 +123,74 @@ hex_digit     = "0" … "9" | "A" … "F" | "a" … "f" .
 </ol>
 
 <p>
-	注释不能开始于 <a href="#Rune_literals">rune</a> 或 <a href="#String_literals">string 字面量</a>或另一个注释的内部。
-	不包含换行符的注释就像一个空格。
-	任何其他的注释都像一个换行符。
+注释不能开始于 <a href="#Rune_literals">rune</a> 或 <a href="#String_literals">string 字面量</a>或另一个注释的内部。不包含换行符的注释就像一个空格。任何其他的注释都像一个换行符。
 </p>
 
 <h3 id="Tokens">Tokens</h3>
 
 <p>
-	Tokens 组成了 Go 语言的词汇表。
-	有四个分类：<i>标识符</i>，<i>关键字</i>，<i>运算符和标点符号</i>，和<i>字面量</i>。
-	<i>空白</i> 是由空格（U+0020），水平制表符（U+0009），回车符（U+000D）以及换行符（U+000A）所组成的，空白一般会被忽略，
-	因为它会分隔标记 否则将合并为一个 tokens。
+	Tokens 组成了 Go 语言的词汇表。有四个分类：<i>标识符</i>，<i>关键字</i>，<i>运算符和标点符号</i>，和<i>字面量</i>。
+	<i>空白</i> 是由空格（U+0020），水平制表符（U+0009），回车符（U+000D）以及换行符（U+000A）所组成的，空白一般会被忽略，因为它会分隔标记，否则将合并为一个 tokens。
 	另外，换行符或文件结尾可能会触发<a href="#Semicolons">分号</a>的插入。
 	把输入的内容区分为 tokens 时，每一个 token 都是可组成有效 token 的最长字符序列。
 </p>
 
-<h3 id="Semicolons">Semicolons</h3>
+<h3 id="Semicolons">分号</h3>
 
 <p>
-The formal grammar uses semicolons <code>";"</code> as terminators in
-a number of productions. Go programs may omit most of these semicolons
-using the following two rules:
+	正式的语法使用分号 <code>";"</code> 作为一些产生式的终止符。
+	Go 程序可以使用以下两个规则来省略大多数这样的分号：
 </p>
 
 <ol>
 <li>
-When the input is broken into tokens, a semicolon is automatically inserted
-into the token stream immediately after a line's final token if that token is
+	当输入的内容被分解为 tokens 时，当每一行最后一个 token 为以下 token 时，一个分号会自动插入到其后面：
 <ul>
-	<li>an
-	    <a href="#Identifiers">identifier</a>
+	<li>一个
+	    <a href="#Identifiers">标识符</a>
 	</li>
 
-	<li>an
-	    <a href="#Integer_literals">integer</a>,
-	    <a href="#Floating-point_literals">floating-point</a>,
-	    <a href="#Imaginary_literals">imaginary</a>,
-	    <a href="#Rune_literals">rune</a>, or
-	    <a href="#String_literals">string</a> literal
+	<li>一个
+	    <a href="#Integer_literals">整形</a>,
+	    <a href="#Floating-point_literals">浮点数</a>,
+	    <a href="#Imaginary_literals">虚数</a>,
+	    <a href="#Rune_literals">rune</a>, 或者
+	    <a href="#String_literals">字符串</a> 字面量
 	</li>
 
-	<li>one of the <a href="#Keywords">keywords</a>
+	<li> <a href="#Keywords">关键字</a>
 	    <code>break</code>,
 	    <code>continue</code>,
-	    <code>fallthrough</code>, or
-	    <code>return</code>
+	    <code>fallthrough</code>, 或者
+	    <code>return</code> 之一
 	</li>
 
-	<li>one of the <a href="#Operators_and_punctuation">operators and punctuation</a>
+	<li> <a href="#Operators_and_punctuation">运算符和标点符号</a>
 	    <code>++</code>,
 	    <code>--</code>,
 	    <code>)</code>,
-	    <code>]</code>, or
-	    <code>}</code>
+	    <code>]</code>, 或者
+	    <code>}</code> 之一
 	</li>
 </ul>
 </li>
 
 <li>
-To allow complex statements to occupy a single line, a semicolon
-may be omitted before a closing <code>")"</code> or <code>"}"</code>.
+	为了使复杂的语句占据一行，分号可以在结束 <code>")"</code> 或 <code>"}"</code> 之前省略。
 </li>
 </ol>
 
 <p>
-To reflect idiomatic use, code examples in this document elide semicolons
-using these rules.
+	为了反映惯用用法，本文档中的代码示例使用这些规则来省略分号。
 </p>
 
 
-<h3 id="Identifiers">Identifiers</h3>
+<h3 id="Identifiers">标识符</h3>
 
 <p>
-Identifiers name program entities such as variables and types.
-An identifier is a sequence of one or more letters and digits.
-The first character in an identifier must be a letter.
+	标识符命名程序中的实体，例如变量和类型。
+	标识符是一个或多个字母或数字的组合。
+	标识符的第一个字符必须是字母。
 </p>
 <pre class="ebnf">
 identifier = letter { letter | unicode_digit } .
@@ -208,14 +203,14 @@ ThisVariableIsExported
 </pre>
 
 <p>
-Some identifiers are <a href="#Predeclared_identifiers">predeclared</a>.
+	一些标识符是<a href="#Predeclared_identifiers">预先声明的</a>。
 </p>
 
 
-<h3 id="Keywords">Keywords</h3>
+<h3 id="Keywords">关键字</h3>
 
 <p>
-The following keywords are reserved and may not be used as identifiers.
+	以下关键字是保留关键字，不能用作标识符。
 </p>
 <pre class="grammar">
 break        default      func         interface    select
@@ -225,11 +220,10 @@ const        fallthrough  if           range        type
 continue     for          import       return       var
 </pre>
 
-<h3 id="Operators_and_punctuation">Operators and punctuation</h3>
+<h3 id="Operators_and_punctuation">运算符和标点符号</h3>
 
 <p>
-The following character sequences represent <a href="#Operators">operators</a>
-(including <a href="#assign_op">assignment operators</a>) and punctuation:
+	以下字符序列表示<a href="#Operators">运算符</a>（包括<a href="#assign_op">赋值运算符</a>）和标点符号:
 </p>
 <pre class="grammar">
 +    &amp;     +=    &amp;=     &amp;&amp;    ==    !=    (    )
@@ -240,7 +234,7 @@ The following character sequences represent <a href="#Operators">operators</a>
      &amp;^          &amp;^=
 </pre>
 
-<h3 id="Integer_literals">Integer literals</h3>
+<h3 id="Integer_literals">整型字面量</h3>
 
 <p>
 An integer literal is a sequence of digits representing an
