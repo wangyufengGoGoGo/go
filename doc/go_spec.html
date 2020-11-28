@@ -237,20 +237,15 @@ continue     for          import       return       var
 <h3 id="Integer_literals">整型字面量</h3>
 
 <p>
-An integer literal is a sequence of digits representing an
-<a href="#Constants">integer constant</a>.
-An optional prefix sets a non-decimal base: <code>0b</code> or <code>0B</code>
-for binary, <code>0</code>, <code>0o</code>, or <code>0O</code> for octal,
-and <code>0x</code> or <code>0X</code> for hexadecimal.
-A single <code>0</code> is considered a decimal zero.
-In hexadecimal literals, letters <code>a</code> through <code>f</code>
-and <code>A</code> through <code>F</code> represent values 10 through 15.
+	整型字面量是用来代表<a href="#Constants">整型常量</a>的数字序列。
+	可用一个可选的前缀来设置非十进制数：<code>0b</code> 或 <code>0B</code> 代表二进制，<code>0</code>，<code>0o</code>，或 <code>0O</code> 代表八进制，<code>0x</code> 或 <code>0X</code> 代表十六进制。
+	单独的 <code>0</code> 被认为是十进制零。
+	在十六进制数的字面量中，字母 <code>a</code> 到 <code>f</code> 和 <code>A</code> 到 <code>F</code> 代表数值 10 到 15。
 </p>
 
 <p>
-For readability, an underscore character <code>_</code> may appear after
-a base prefix or between successive digits; such underscores do not change
-the literal's value.
+	为了便于阅读，下划线字符 <code>_</code> 可能出现在基本前缀之后或连续数字之间；
+	这样的下划线不会更改文字的值。
 </p>
 <pre class="ebnf">
 int_lit        = decimal_lit | binary_lit | octal_lit | hex_lit .
@@ -285,20 +280,16 @@ _42         // an identifier, not an integer literal
 </pre>
 
 
-<h3 id="Floating-point_literals">Floating-point literals</h3>
+<h3 id="Floating-point_literals">浮点数字面量</h3>
 
 <p>
-A floating-point literal is a decimal or hexadecimal representation of a
-<a href="#Constants">floating-point constant</a>.
+	浮点数字面量是<a href="#Constants">浮点数常量</a>的十进制或十六进制表示。
 </p>
 
 <p>
-A decimal floating-point literal consists of an integer part (decimal digits),
-a decimal point, a fractional part (decimal digits), and an exponent part
-(<code>e</code> or <code>E</code> followed by an optional sign and decimal digits).
-One of the integer part or the fractional part may be elided; one of the decimal point
-or the exponent part may be elided.
-An exponent value exp scales the mantissa (integer and fractional part) by 10<sup>exp</sup>.
+	十进制的浮点数字面量由整数部分（十进制数字），小数点，小数部分（十进制小数）和指数部分（<code>e</code> 或 <code>E</code> 后紧跟着带或者不带符号的十进制数字）。
+	整数部分或小数部分其中之一可以被省略；小数点部分或指数部分其中之一可以被省略。
+	指数值 exp 以 10<sup>exp</sup> 来缩放（整数部分和小数部分）。
 </p>
 
 <p>
