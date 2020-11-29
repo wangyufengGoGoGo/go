@@ -405,7 +405,7 @@ imaginary_lit = (decimal_digits | int_lit | float_lit) "i" .
 	虽然这些表示的结果都是一个整数，但它们具有不同的有效范围。
 	八进制转义符必须表示一个 0 和 255 之间的值。
 	十六进制转义满足条件的要求会因为构造不同而不同。
-	转义字符 <code>\u</code> 和 <code>\U</code> 表示 Unicode 码位。因此其中有些值是非法的，尤其是那些大于 <code>0x10FFFF</code> 的值和代理了一半的。
+	转义字符 <code>\u</code> 和 <code>\U</code> 表示 Unicode 码位。因此其中有些值是非法的，尤其是那些大于 <code>0x10FFFF</code> 的值和替换了一半的。
 </p>
 
 <p>
@@ -421,12 +421,12 @@ imaginary_lit = (decimal_digits | int_lit | float_lit) "i" .
 \t   U+0009 水平制表
 \v   U+000b 垂直制表
 \\   U+005c 反斜杠
-\'   U+0027 单引号  (仅在 rune 字面量内转义转义才有效)
+\'   U+0027 单引号  (仅在rune字面量内转义转义才有效)
 \"   U+0022 双引号  (仅在字符串字面量中转义才有效)
 </pre>
 
 <p>
-All other sequences starting with a backslash are illegal inside rune literals.
+	所有其他以反斜杠开头的序列在 Rune 字面量中都是非法的。
 </p>
 <pre class="ebnf">
 rune_lit         = "'" ( unicode_value | byte_value ) "'" .
@@ -452,16 +452,16 @@ escaped_char     = `\` ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | `\` | "'" | `
 '\xff'
 '\u12e4'
 '\U00101234'
-'\''         // rune literal containing single quote character
-'aa'         // illegal: too many characters
-'\xa'        // illegal: too few hexadecimal digits
-'\0'         // illegal: too few octal digits
-'\uDFFF'     // illegal: surrogate half
-'\U00110000' // illegal: invalid Unicode code point
+'\''         // rune字面量包含单引号字符
+'aa'         // 非法: 字符过多
+'\xa'        // 非法: 十六进制数字过少
+'\0'         // 非法: 十进制数字过少
+'\uDFFF'     // 非法: 只替换了一半
+'\U00110000' // 非法: 无效的Unicode码位
 </pre>
 
 
-<h3 id="String_literals">String literals</h3>
+<h3 id="String_literals">字符串字面量</h3>
 
 <p>
 A string literal represents a <a href="#Constants">string constant</a>
