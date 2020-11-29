@@ -123,7 +123,7 @@ hex_digit     = "0" … "9" | "A" … "F" | "a" … "f" .
 </ol>
 
 <p>
-注释不能开始于 <a href="#Rune_literals">rune</a> 或 <a href="#String_literals">string 字面量</a>或另一个注释的内部。不包含换行符的注释就像一个空格。任何其他的注释都像一个换行符。
+注释不能开始于 <a href="#Rune_literals">rune</a> 或 <a href="#String_literals">string 字面量（literal）</a>或另一个注释的内部。不包含换行符的注释就像一个空格。任何其他的注释都像一个换行符。
 </p>
 
 <h3 id="Tokens">Tokens</h3>
@@ -245,7 +245,7 @@ continue     for          import       return       var
 
 <p>
 	为了便于阅读，下划线字符 <code>_</code> 可能出现在基本前缀之后或连续数字之间；
-	这样的下划线不会更改文字的值。
+	这样的下划线不会更改字面量的值。
 </p>
 <pre class="ebnf">
 int_lit        = decimal_lit | binary_lit | octal_lit | hex_lit .
@@ -273,10 +273,10 @@ hex_digits     = hex_digit { [ "_" ] hex_digit } .
 170141183460469231731687303715884105727
 170_141183_460469_231731_687303_715884_105727
 
-_42         // an identifier, not an integer literal
-42_         // invalid: _ must separate successive digits
-4__2        // invalid: only one _ at a time
-0_xBadFace  // invalid: _ must separate successive digits
+_42         // 这是一个标识符, 而不是一个整型字面量
+42_         // 无效: _ 必须分隔连续数字
+4__2        // 无效: 一次只能有一个 _
+0_xBadFace  // 无效: _ 必须分隔连续数字
 </pre>
 
 
@@ -287,24 +287,20 @@ _42         // an identifier, not an integer literal
 </p>
 
 <p>
-	十进制的浮点数字面量由整数部分（十进制数字），小数点，小数部分（十进制小数）和指数部分（<code>e</code> 或 <code>E</code> 后紧跟着带或者不带符号的十进制数字）。
+	十进制的浮点数字面量由整数部分（十进制数字），小数点，小数部分（十进制小数）和指数部分（<code>e</code> 或 <code>E</code> 后紧跟着带或者不带符号的十进制数字）组成。
 	整数部分或小数部分其中之一可以被省略；小数点部分或指数部分其中之一可以被省略。
-	指数值 exp 以 10<sup>exp</sup> 来缩放（整数部分和小数部分）。
+	指数值 exp 以 10<sup>exp</sup> 来缩放尾数（mantissa）（整数部分和小数部分）。
 </p>
 
 <p>
-A hexadecimal floating-point literal consists of a <code>0x</code> or <code>0X</code>
-prefix, an integer part (hexadecimal digits), a radix point, a fractional part (hexadecimal digits),
-and an exponent part (<code>p</code> or <code>P</code> followed by an optional sign and decimal digits).
-One of the integer part or the fractional part may be elided; the radix point may be elided as well,
-but the exponent part is required. (This syntax matches the one given in IEEE 754-2008 §5.12.3.)
-An exponent value exp scales the mantissa (integer and fractional part) by 2<sup>exp</sup>.
+	十六进制浮点数字面量由一个 <code>0x</code> 或 <code>0X</code> 前缀，一个整数部分（十六进制数字），一个小数点，一个小数部分（十六进制小数），和一个指数部分（<code>p</code> 或 <code>P</code> 后紧跟着带或者不带符号的十六进制的数字）组成。
+	整数部分或小数部分其中之一可以被省略；小数点也可以被省略，但是指数部分是必须的。（此语法与 IEEE 754-2008§5.12.3 中给出的语法匹配。）
+	指数值 exp 以 2<sup>exp</sup> 来缩放尾数（mantissa）（整数部分和小数部分）。
 </p>
 
 <p>
-For readability, an underscore character <code>_</code> may appear after
-a base prefix or between successive digits; such underscores do not change
-the literal value.
+	为了便于阅读，下划线字符 <code>_</code> 可能出现在基本前缀之后或连续数字之间；
+	这样的下划线不会更改字面量的值。
 </p>
 
 <pre class="ebnf">
@@ -342,27 +338,23 @@ hex_exponent      = ( "p" | "P" ) [ "+" | "-" ] decimal_digits .
 0X_1FFFP-16  // == 0.1249847412109375
 0x15e-2      // == 0x15e - 2 (integer subtraction)
 
-0x.p1        // invalid: mantissa has no digits
-1p-2         // invalid: p exponent requires hexadecimal mantissa
-0x1.5e-2     // invalid: hexadecimal mantissa requires p exponent
-1_.5         // invalid: _ must separate successive digits
-1._5         // invalid: _ must separate successive digits
-1.5_e1       // invalid: _ must separate successive digits
-1.5e_1       // invalid: _ must separate successive digits
-1.5e1_       // invalid: _ must separate successive digits
+0x.p1        // 无效: 尾数（mantissa）没有数字
+1p-2         // 无效: p指数需要十六进制尾数
+0x1.5e-2     // 无效: 十六进制尾数要求p指数
+1_.5         // 无效: _ 必须分隔连续数字
+1._5         // 无效: _ 必须分隔连续数字
+1.5_e1       // 无效: _ 必须分隔连续数字
+1.5e_1       // 无效: _ 必须分隔连续数字
+1.5e1_       // 无效: _ 必须分隔连续数字
 </pre>
 
 
-<h3 id="Imaginary_literals">Imaginary literals</h3>
+<h3 id="Imaginary_literals">虚数字面量</h3>
 
 <p>
-An imaginary literal represents the imaginary part of a
-<a href="#Constants">complex constant</a>.
-It consists of an <a href="#Integer_literals">integer</a> or
-<a href="#Floating-point_literals">floating-point</a> literal
-followed by the lower-case letter <code>i</code>.
-The value of an imaginary literal is the value of the respective
-integer or floating-point literal multiplied by the imaginary unit <i>i</i>.
+	虚数字面量表示复数<a href="#Constants">常量</a>的虚部。
+	它由一个<a href="#Integer_literals">整型</a>或<a href="#Floating-point_literals">浮点型</a>字面量紧跟着一个小写字母 <code>i</code> 组成。
+	这个虚数字面量的值是相应整型或浮点型字面量的值乘以虚数的单位 <i>i</i>。
 </p>
 
 <pre class="ebnf">
@@ -370,9 +362,7 @@ imaginary_lit = (decimal_digits | int_lit | float_lit) "i" .
 </pre>
 
 <p>
-For backward compatibility, an imaginary literal's integer part consisting
-entirely of decimal digits (and possibly underscores) is considered a decimal
-integer, even if it starts with a leading <code>0</code>.
+	考虑到向后兼容，虚数字面量的整数部分完全由十进制数字（可能存在下划线）组成，即使其以 <code>0</code> 开头也不例外。
 </p>
 
 <pre>
@@ -391,39 +381,24 @@ integer, even if it starts with a leading <code>0</code>.
 </pre>
 
 
-<h3 id="Rune_literals">Rune literals</h3>
+<h3 id="Rune_literals">Rune 字面量</h3>
 
 <p>
-A rune literal represents a <a href="#Constants">rune constant</a>,
-an integer value identifying a Unicode code point.
-A rune literal is expressed as one or more characters enclosed in single quotes,
-as in <code>'x'</code> or <code>'\n'</code>.
-Within the quotes, any character may appear except newline and unescaped single
-quote. A single quoted character represents the Unicode value
-of the character itself,
-while multi-character sequences beginning with a backslash encode
-values in various formats.
+	一个 Rune 字面量代表一个 Rune <a href="#Constants">常量</a>，一个整确定了 Unicode 码位的整数值。
+	Rune 字面量表示一个或多个用单引号括起来的字符，如 <code>'x'</code> 或 <code>'\n'</code>。
+	在引号内，除换行符和未转义的单引号外，其它任何字符都可以出现。
+	用单引号引起来的字符表示字符本身的Unicode值，而以反斜杠开头的多字符序列则以不同的格式来编码 Unicode 值。
 </p>
 
 <p>
-The simplest form represents the single character within the quotes;
-since Go source text is Unicode characters encoded in UTF-8, multiple
-UTF-8-encoded bytes may represent a single integer value.  For
-instance, the literal <code>'a'</code> holds a single byte representing
-a literal <code>a</code>, Unicode U+0061, value <code>0x61</code>, while
-<code>'ä'</code> holds two bytes (<code>0xc3</code> <code>0xa4</code>) representing
-a literal <code>a</code>-dieresis, U+00E4, value <code>0xe4</code>.
+	这是在引号内代表单一字符的最简单的形式；由于 Go 源文本是采用 UTF-8 编码的 Unicode 字符，因此多个 UTF-8 编码的字节可以表示单个整数值。
+	例如，字面量 <code>'a'</code> 用一个单个字节代表一个字面量 <code>a</code>，Unicode U+0061，值为 <code>0x61</code>，但 <code>'ä'</code> 用了两个字节（<code>0xc3</code> <code>0xa4</code>）代表一个字面量 <code>a 分音符 </code>，U+00E4，值为 <code>0xe4</code>。
 </p>
 
 <p>
-Several backslash escapes allow arbitrary values to be encoded as
-ASCII text.  There are four ways to represent the integer value
-as a numeric constant: <code>\x</code> followed by exactly two hexadecimal
-digits; <code>\u</code> followed by exactly four hexadecimal digits;
-<code>\U</code> followed by exactly eight hexadecimal digits, and a
-plain backslash <code>\</code> followed by exactly three octal digits.
-In each case the value of the literal is the value represented by
-the digits in the corresponding base.
+	多个反斜杠转义符允许将任意值编码为 ASCII 文本。
+	有四种方法可以将整数值表示为数字常量：<code>\x</code> 后紧跟两个十六进制数；<code>\u</code> 后紧跟四个十六进制数；<code>\U</code> 后紧跟八个十六进制数；一个简单的反斜杠 <code>\</code> 后紧跟着三个八进制数。
+	每一种情况的字面量的值都是相应的基数上该数所表示的值。
 </p>
 
 <p>
