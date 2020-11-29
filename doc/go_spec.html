@@ -402,29 +402,27 @@ imaginary_lit = (decimal_digits | int_lit | float_lit) "i" .
 </p>
 
 <p>
-Although these representations all result in an integer, they have
-different valid ranges.  Octal escapes must represent a value between
-0 and 255 inclusive.  Hexadecimal escapes satisfy this condition
-by construction. The escapes <code>\u</code> and <code>\U</code>
-represent Unicode code points so within them some values are illegal,
-in particular those above <code>0x10FFFF</code> and surrogate halves.
+	虽然这些表示的结果都是一个整数，但它们具有不同的有效范围。
+	八进制转义符必须表示一个 0 和 255 之间的值。
+	十六进制转义满足条件的要求会因为构造不同而不同。
+	转义字符 <code>\u</code> 和 <code>\U</code> 表示 Unicode 码位。因此其中有些值是非法的，尤其是那些大于 <code>0x10FFFF</code> 的值和代理了一半的。
 </p>
 
 <p>
-After a backslash, certain single-character escapes represent special values:
+	在反斜杠后，某些单字符的转义表示特殊的值：
 </p>
 
 <pre class="grammar">
-\a   U+0007 alert or bell
-\b   U+0008 backspace
-\f   U+000C form feed
-\n   U+000A line feed or newline
-\r   U+000D carriage return
-\t   U+0009 horizontal tab
-\v   U+000b vertical tab
-\\   U+005c backslash
-\'   U+0027 single quote  (valid escape only within rune literals)
-\"   U+0022 double quote  (valid escape only within string literals)
+\a   U+0007 响铃
+\b   U+0008 退格
+\f   U+000C 换页
+\n   U+000A 换行
+\r   U+000D 回车
+\t   U+0009 水平制表
+\v   U+000b 垂直制表
+\\   U+005c 反斜杠
+\'   U+0027 单引号  (仅在 rune 字面量内转义转义才有效)
+\"   U+0022 双引号  (仅在字符串字面量中转义才有效)
 </pre>
 
 <p>
