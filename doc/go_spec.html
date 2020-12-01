@@ -505,69 +505,43 @@ interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
 </pre>
 
 <p>
-These examples all represent the same string:
+	这些示例都表示相同的字符串：
 </p>
 
 <pre>
-"日本語"                                 // UTF-8 input text
-`日本語`                                 // UTF-8 input text as a raw literal
-"\u65e5\u672c\u8a9e"                    // the explicit Unicode code points
-"\U000065e5\U0000672c\U00008a9e"        // the explicit Unicode code points
-"\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e"  // the explicit UTF-8 bytes
+"日本語"                                 // UTF-8输入文本
+`日本語`                                 // UTF-8输入文本作为一个原始类型字面量
+"\u65e5\u672c\u8a9e"                    // 明确的Unicode码位
+"\U000065e5\U0000672c\U00008a9e"        // 明确的Unicode码位
+"\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e"  // 明确的UTF-8字节
 </pre>
 
 <p>
-If the source code represents a character as two code points, such as
-a combining form involving an accent and a letter, the result will be
-an error if placed in a rune literal (it is not a single code
-point), and will appear as two code points if placed in a string
-literal.
+	当源代码以两个码位表示一个字符，比如包含一个重音符号（accent）和一个字母的组合形式，如果是在 rune 字面量中的话会使得结果出错（因为其并不是一个单一码位），而如果是在字符串字面量中的话则会显示为两个码位。
 </p>
 
 
-<h2 id="Constants">Constants</h2>
+<h2 id="Constants">常量</h2>
 
-<p>There are <i>boolean constants</i>,
-<i>rune constants</i>,
-<i>integer constants</i>,
-<i>floating-point constants</i>, <i>complex constants</i>,
-and <i>string constants</i>. Rune, integer, floating-point,
-and complex constants are
-collectively called <i>numeric constants</i>.
+<p>
+	常量有<i>布尔常量</i>，<i>rune 常量</i>，<i>整型常量</i>，<i>浮点数常量</i>，<i>复数常量</i>，和<i>字符串常量</i>。
+	Rune，整型，浮点型，和复数常量统称为<i>数值常量</i>。
 </p>
 
 <p>
-A constant value is represented by a
-<a href="#Rune_literals">rune</a>,
-<a href="#Integer_literals">integer</a>,
-<a href="#Floating-point_literals">floating-point</a>,
-<a href="#Imaginary_literals">imaginary</a>,
-or
-<a href="#String_literals">string</a> literal,
-an identifier denoting a constant,
-a <a href="#Constant_expressions">constant expression</a>,
-a <a href="#Conversions">conversion</a> with a result that is a constant, or
-the result value of some built-in functions such as
-<code>unsafe.Sizeof</code> applied to any value,
-<code>cap</code> or <code>len</code> applied to
-<a href="#Length_and_capacity">some expressions</a>,
-<code>real</code> and <code>imag</code> applied to a complex constant
-and <code>complex</code> applied to numeric constants.
-The boolean truth values are represented by the predeclared constants
-<code>true</code> and <code>false</code>. The predeclared identifier
-<a href="#Iota">iota</a> denotes an integer constant.
+	一个常量的值由 <a href="#Rune_literals">rune</a>，<a href="#Integer_literals">整数</a>，<a href="#Floating-point_literals">浮点数</a>，<a href="#Imaginary_literals">虚数</a>或<a href="#String_literals">字符串</a>字面量所表示，表示常量的标识符，<a href="#Constant_expressions">常量表达式</a>，
+<a href="#Conversions">转换</a>结果为常量，或者一些内置函数所生成的值如 <code>unsafe.Sizeof</code> 适用于任何值，<code>cap</code> 或 <code>len</code> 适用于<a href="#Length_and_capacity">一些表达式</a>，<code>real</code> 和 <code>imag</code> 适用于复数常量，以及 <code>complex</code>适用于数值常量。
+	布尔值是由预先声明的常量 <code>true</code> 和 <code>false</code> 表示。
+	预先声明的标识符 <a href="#Iota">iota</a> 表示一个整数常量。
 </p>
 
 <p>
-In general, complex constants are a form of
-<a href="#Constant_expressions">constant expression</a>
-and are discussed in that section.
+	通常，复数常量是<a href="#Constant_expressions">常量表达式</a>的一种形式，将在该节讨论。
 </p>
 
 <p>
-Numeric constants represent exact values of arbitrary precision and do not overflow.
-Consequently, there are no constants denoting the IEEE-754 negative zero, infinity,
-and not-a-number values.
+	数值常量表示任意精度的精确值，并且不会溢出。
+	因此，没有常量表示 IEEE-754 负零，无穷大以及非数字值。
 </p>
 
 <p>
@@ -624,9 +598,7 @@ implementation must:
 </ul>
 
 <p>
-These requirements apply both to literal constants and to the result
-of evaluating <a href="#Constant_expressions">constant
-expressions</a>.
+	这些要求既适用于字面量常量，也适用于<a href="#Constant_expressions">常量表达式</a>的求值结果。
 </p>
 
 
