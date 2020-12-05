@@ -339,7 +339,7 @@ hex_exponent      = ( "p" | "P" ) [ "+" | "-" ] decimal_digits .
 0x15e-2      // == 0x15e - 2 (integer subtraction)
 
 0x.p1        // 无效: 尾数（mantissa）没有数字
-1p-2         // 无效: p指数需要十六进制尾数
+1p-2         // 无效: p 指数需要十六进制尾数
 0x1.5e-2     // 无效: 十六进制尾数要求p指数
 1_.5         // 无效: _ 必须分隔连续数字
 1._5         // 无效: _ 必须分隔连续数字
@@ -421,7 +421,7 @@ imaginary_lit = (decimal_digits | int_lit | float_lit) "i" .
 \t   U+0009 水平制表
 \v   U+000b 垂直制表
 \\   U+005c 反斜杠
-\'   U+0027 单引号  (仅在rune字面量内转义转义才有效)
+\'   U+0027 单引号  (仅在 rune 字面量内转义转义才有效)
 \"   U+0022 双引号  (仅在字符串字面量中转义才有效)
 </pre>
 
@@ -452,12 +452,12 @@ escaped_char     = `\` ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | `\` | "'" | `
 '\xff'
 '\u12e4'
 '\U00101234'
-'\''         // rune字面量包含单引号字符
+'\''         // rune 字面量包含单引号字符
 'aa'         // 非法: 字符过多
 '\xa'        // 非法: 十六进制数字过少
 '\0'         // 非法: 十进制数字过少
 '\uDFFF'     // 非法: 只替换了一半
-'\U00110000' // 非法: 无效的Unicode码位
+'\U00110000' // 非法: 无效的 Unicode 码位
 </pre>
 
 
@@ -501,7 +501,7 @@ interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
 "\u65e5本\U00008a9e"
 "\xff\u00FF"
 "\uD800"             // 非法: 只替换了一半
-"\U00110000"         // 非法: 无效的Unicode码位
+"\U00110000"         // 非法: 无效的Unicode 码位
 </pre>
 
 <p>
@@ -509,11 +509,11 @@ interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
 </p>
 
 <pre>
-"日本語"                                 // UTF-8输入文本
-`日本語`                                 // UTF-8输入文本作为一个原始类型字面量
-"\u65e5\u672c\u8a9e"                    // 明确的Unicode码位
-"\U000065e5\U0000672c\U00008a9e"        // 明确的Unicode码位
-"\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e"  // 明确的UTF-8字节
+"日本語"                                 // UTF-8 输入文本
+`日本語`                                 // UTF-8 输入文本作为一个原始类型字面量
+"\u65e5\u672c\u8a9e"                    // 明确的 Unicode 码位
+"\U000065e5\U0000672c\U00008a9e"        // 明确的 Unicode 码位
+"\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e"  // 明确的 UTF-8 字节
 </pre>
 
 <p>
@@ -545,56 +545,34 @@ interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
 </p>
 
 <p>
-Constants may be <a href="#Types">typed</a> or <i>untyped</i>.
-Literal constants, <code>true</code>, <code>false</code>, <code>iota</code>,
-and certain <a href="#Constant_expressions">constant expressions</a>
-containing only untyped constant operands are untyped.
+	常量可能是<a href="#Types">有类型的</a>或<i>无类型的</i>。
+	字面量常量，<code>true</code>，<code>false</code>，<code>iota</code>，以及一些仅包含无类型的恒定操作数的<a href="#Constant_expressions">常量表达式</a>是无类型的。
 </p>
 
 <p>
-A constant may be given a type explicitly by a <a href="#Constant_declarations">constant declaration</a>
-or <a href="#Conversions">conversion</a>, or implicitly when used in a
-<a href="#Variable_declarations">variable declaration</a> or an
-<a href="#Assignments">assignment</a> or as an
-operand in an <a href="#Expressions">expression</a>.
-It is an error if the constant value
-cannot be <a href="#Representability">represented</a> as a value of the respective type.
+	常量可以通过<a href="#Constant_declarations">常量声明</a>或<a href="#Conversions">转换</a>来显示地指定类型，也可以在<a href="#Variable_declarations">变量声明</a>或<a href="#Assignments">赋值</a>或作为<a href="#Expressions">表达式</a>中的操作数隐式地被赋予一个类型。
+	如果常量值不能<a href="#Representability">表示</a>为相应类型的值，则会出错。
 </p>
 
 <p>
-An untyped constant has a <i>default type</i> which is the type to which the
-constant is implicitly converted in contexts where a typed value is required,
-for instance, in a <a href="#Short_variable_declarations">short variable declaration</a>
-such as <code>i := 0</code> where there is no explicit type.
-The default type of an untyped constant is <code>bool</code>, <code>rune</code>,
-<code>int</code>, <code>float64</code>, <code>complex128</code> or <code>string</code>
-respectively, depending on whether it is a boolean, rune, integer, floating-point,
-complex, or string constant.
+	一个无类型的常量有一个<i>默认类型</i>，该默认类型是在需要使用类型值的上下文中，比如像 <code>i := 0</code> 这样子的<a href="#Short_variable_declarations">简短的变量声明</a>就没有显式的类型。
+	无类型常量的默认类型分别是 <code>bool</code>，<code>rune</code>，<code>int</code>，<code>float64</code>，<code>complex128</code> 或 <code>string</code>，取决于它是否是一个布尔值、rune、整数、浮点数、复数或字符串常量。
 </p>
 
 <p>
-Implementation restriction: Although numeric constants have arbitrary
-precision in the language, a compiler may implement them using an
-internal representation with limited precision.  That said, every
-implementation must:
+	实现限制：虽然数值常量在这个语言中可以是任意精度的，但编译器可能会使用精度受限的内部表示法来实现它。也就是说，每一种实现必须：
 </p>
 
 <ul>
-	<li>Represent integer constants with at least 256 bits.</li>
+	<li>使用至少256位表示整数常量。</li>
 
-	<li>Represent floating-point constants, including the parts of
-	    a complex constant, with a mantissa of at least 256 bits
-	    and a signed binary exponent of at least 16 bits.</li>
+	<li>使用最少 256 位来表示浮点数常量（包括复数常量的对应部分）的小数部分，使用最少 16 位表示其带符号的二进制指数部分。</li>
 
-	<li>Give an error if unable to represent an integer constant
-	    precisely.</li>
+	<li>当无法表示一个整数常量的精度时，需要给出错误。</li>
 
-	<li>Give an error if unable to represent a floating-point or
-	    complex constant due to overflow.</li>
+	<li>当因为溢出而无法表示一个浮点数或复数常量时，需要给出错误。</li>
 
-	<li>Round to the nearest representable constant if unable to
-	    represent a floating-point or complex constant due to limits
-	    on precision.</li>
+	<li>当因为精度限制而无法表示一个浮点数或复数常量时，约到最接近的可表示的常量。</li>
 </ul>
 
 <p>
@@ -602,71 +580,47 @@ implementation must:
 </p>
 
 
-<h2 id="Variables">Variables</h2>
+<h2 id="Variables">变量</h2>
 
 <p>
-A variable is a storage location for holding a <i>value</i>.
-The set of permissible values is determined by the
-variable's <i><a href="#Types">type</a></i>.
+	变量是用于保存<i>值</i>的存储位置。可允许的值的集是由变量<i><a href="#Types">类型</a></i>所确定的。
 </p>
 
 <p>
-A <a href="#Variable_declarations">variable declaration</a>
-or, for function parameters and results, the signature
-of a <a href="#Function_declarations">function declaration</a>
-or <a href="#Function_literals">function literal</a> reserves
-storage for a named variable.
-
-Calling the built-in function <a href="#Allocation"><code>new</code></a>
-or taking the address of a <a href="#Composite_literals">composite literal</a>
-allocates storage for a variable at run time.
-Such an anonymous variable is referred to via a (possibly implicit)
-<a href="#Address_operators">pointer indirection</a>.
+	<a href="#Variable_declarations">变量声明</a>和对于函数参数及其结果而言的<a href="#Function_declarations">函数声明</a>或<a href="#Function_literals">函数字面量</a>的签名都为命名的变量保留存储空间。
+	调用内置函数 <a href="#Allocation"><code>new</code></a> 或获取<a href="#Composite_literals">复合字面量</a>的地址会在运行时为变量分配存储空间。
+	这样子的一个匿名变量是通过（可能隐式的）<a href="#Address_operators">指针间接</a>引用到的。
 </p>
 
 <p>
-<i>Structured</i> variables of <a href="#Array_types">array</a>, <a href="#Slice_types">slice</a>,
-and <a href="#Struct_types">struct</a> types have elements and fields that may
-be <a href="#Address_operators">addressed</a> individually. Each such element
-acts like a variable.
+	<i>结构化</i>的<a href="#Array_types">数组</a>，<a href="#Slice_types">切片</a>和<a href="#Struct_types">结构体</a>类型变量存在可以独立<a href="#Address_operators">寻址</a>的元素和字段。
+	每一个这样子的元素就像一个变量。
 </p>
 
 <p>
-The <i>static type</i> (or just <i>type</i>) of a variable is the
-type given in its declaration, the type provided in the
-<code>new</code> call or composite literal, or the type of
-an element of a structured variable.
-Variables of interface type also have a distinct <i>dynamic type</i>,
-which is the concrete type of the value assigned to the variable at run time
-(unless the value is the predeclared identifier <code>nil</code>,
-which has no type).
-The dynamic type may vary during execution but values stored in interface
-variables are always <a href="#Assignability">assignable</a>
-to the static type of the variable.
+	变量的<i>静态类型</i>（或者就叫<i>类型</i>）是其声明时确定好的类型，或由 <code>new</code> 调用或复合字面量所提供的类型，或结构化变量的元素类型。
+	接口类型的变量还有一个独特的<i>动态</i>类型，该类型是在运行时所分配给变量的值的具体类型（除非那个值是预声明的标识符<code>nil</code>，它是没有类型的）。
+	动态类型可能会在执行过程中变化，但存储在接口变量中的值始终<a href="#Assignability">可分配</a>为接口变量的静态类型。
 </p>
 
 <pre>
-var x interface{}  // x is nil and has static type interface{}
-var v *T           // v has value nil, static type *T
-x = 42             // x has value 42 and dynamic type int
-x = v              // x has value (*T)(nil) and dynamic type *T
+var x interface{}  // x 是 nil，它有一个静态类型 interface{}
+var v *T           // v 的值为 nil，静态类型为 *T
+x = 42             // x 的值为 42，动态类型为 int
+x = v              // x 的值为 (*T)(nil)，动态类型为 *T
 </pre>
 
 <p>
-A variable's value is retrieved by referring to the variable in an
-<a href="#Expressions">expression</a>; it is the most recent value
-<a href="#Assignments">assigned</a> to the variable.
-If a variable has not yet been assigned a value, its value is the
-<a href="#The_zero_value">zero value</a> for its type.
+	变量的值是通过引用<a href="#Expressions">表达式</a>中的变量来检索的；它是<a href="#Assignments">分配</a>给变量的最新值。
+	如果一个变量还没有被分配到值，那么它的值是其对应类型的<a href="#The_zero_value">零值</a>。
 </p>
 
 
-<h2 id="Types">Types</h2>
+<h2 id="Types">类型</h2>
 
 <p>
-A type determines a set of values together with operations and methods specific
-to those values. A type may be denoted by a <i>type name</i>, if it has one,
-or specified using a <i>type literal</i>, which composes a type from existing types.
+	类型确定一组值以及特定于那些值的操作和方法。
+	类型可以是由<i>类型名</i>所表示的（如果它有的话），或者使用<i>类型字面值</i>指定,该类型字面量由现有类型组成。。
 </p>
 
 <pre class="ebnf">
@@ -677,20 +631,14 @@ TypeLit   = ArrayType | StructType | PointerType | FunctionType | InterfaceType 
 </pre>
 
 <p>
-The language <a href="#Predeclared_identifiers">predeclares</a> certain type names.
-Others are introduced with <a href="#Type_declarations">type declarations</a>.
-<i>Composite types</i>&mdash;array, struct, pointer, function,
-interface, slice, map, and channel types&mdash;may be constructed using
-type literals.
+	语言本身<a href="#Predeclared_identifiers">预先声明</a>了一些特定的类型名。
+	其它的命名类型则使用<a href="#Type_declarations">类型声明</a>引入。
+	<i>复合类型</i>——数组、结构体、指针、函数、接口、切片、映射和 channel 类型——可以由类型字面量构成。
 </p>
 
 <p>
-Each type <code>T</code> has an <i>underlying type</i>: If <code>T</code>
-is one of the predeclared boolean, numeric, or string types, or a type literal,
-the corresponding underlying
-type is <code>T</code> itself. Otherwise, <code>T</code>'s underlying type
-is the underlying type of the type to which <code>T</code> refers in its
-<a href="#Type_declarations">type declaration</a>.
+	每个类型 <code>T</code> 都有一个<i>潜在类型</i>：如果 <code>T</code> 是预先声明的布尔值、数值或者字符串类型之一，或一个类型字面量，那对应的潜在类型就是 <code>T</code> 自己。
+	否则，其潜在类型就是在<a href="#Type_declarations">类型声明</a>时 <code>T</code> 指定的那个类型的潜在类型。
 </p>
 
 <pre>
@@ -708,129 +656,103 @@ type (
 </pre>
 
 <p>
-The underlying type of <code>string</code>, <code>A1</code>, <code>A2</code>, <code>B1</code>,
-and <code>B2</code> is <code>string</code>.
-The underlying type of <code>[]B1</code>, <code>B3</code>, and <code>B4</code> is <code>[]B1</code>.
+	<code>string</code>，<code>A1</code>，<code>A2</code>，<code>B1</code> 和 <code>B2</code> 的潜在类型是 <code>string</code>。
+	<code>[]B1</code>，<code>B3</code> 和 <code>B4</code> 的潜在类型是 <code>[]B1</code>。
 </p>
 
-<h3 id="Method_sets">Method sets</h3>
+<h3 id="Method_sets">方法集</h3>
 <p>
-A type may have a <i>method set</i> associated with it.
-The method set of an <a href="#Interface_types">interface type</a> is its interface.
-The method set of any other type <code>T</code> consists of all
-<a href="#Method_declarations">methods</a> declared with receiver type <code>T</code>.
-The method set of the corresponding <a href="#Pointer_types">pointer type</a> <code>*T</code>
-is the set of all methods declared with receiver <code>*T</code> or <code>T</code>
-(that is, it also contains the method set of <code>T</code>).
-Further rules apply to structs containing embedded fields, as described
-in the section on <a href="#Struct_types">struct types</a>.
-Any other type has an empty method set.
-In a method set, each method must have a
-<a href="#Uniqueness_of_identifiers">unique</a>
-non-<a href="#Blank_identifier">blank</a> <a href="#MethodName">method name</a>.
+	一个类型可能有一个 <i>方法集（method set）</i>与之关联。
+	<a href="#Interface_types">接口类型</a>的方法集就是它的接口。
+	任何其它类型 <code>T</code> 的方法集由以类型 <code>T</code> 为接收者所声明的所有<a href="#Method_declarations">方法</a>组成。
+	相应的<a href="#Pointer_types">指针类型</a> <code>*T</code> 的方法集是以 <code>*T</code> 或 <code>T</code> 为接收者所声明的所有方法的集合（也就是说，它同样包含了 <code>T</code> 的方法集）。
+	适用于包含嵌入式字段结构的更多规则会在<a href="#Struct_types">结构体类型</a>部分中叙述。
+	任何其它类型会有一个空的方法集。
+	在一个方法集中，每一个方法必须要有一个<a href="#Uniqueness_of_identifiers">唯一的</a>非<a href="#Blank_identifier">空白</a>的<a href="#MethodName">方法名</a>。
 </p>
 
 <p>
-The method set of a type determines the interfaces that the
-type <a href="#Interface_types">implements</a>
-and the methods that can be <a href="#Calls">called</a>
-using a receiver of that type.
+	类型的方法集确定了这个类型所<a href="#Interface_types">实现</a>的接口和以此类型作为接收者所可以<a href="#Calls">调用</a>的方法。
 </p>
 
-<h3 id="Boolean_types">Boolean types</h3>
+<h3 id="Boolean_types">布尔类型</h3>
 
 <p>
-A <i>boolean type</i> represents the set of Boolean truth values
-denoted by the predeclared constants <code>true</code>
-and <code>false</code>. The predeclared boolean type is <code>bool</code>;
-it is a <a href="#Type_definitions">defined type</a>.
+	<i>布尔类型</i>代表以预先声明的常量 <code>true</code> 和 <code>false</code> 所表示的布尔真值的集合。
+	预先声明的布尔类型为 <code>bool</code>；这是一个<a href="#Type_definitions">定义类型</a>。
 </p>
 
-<h3 id="Numeric_types">Numeric types</h3>
+<h3 id="Numeric_types">数字类型</h3>
 
 <p>
-A <i>numeric type</i> represents sets of integer or floating-point values.
-The predeclared architecture-independent numeric types are:
+	<i>数字类型</i>代表整数或浮点数值的集合。
+	预先声明的与体系结构无关的数字类型有：
 </p>
 
 <pre class="grammar">
-uint8       the set of all unsigned  8-bit integers (0 to 255)
-uint16      the set of all unsigned 16-bit integers (0 to 65535)
-uint32      the set of all unsigned 32-bit integers (0 to 4294967295)
-uint64      the set of all unsigned 64-bit integers (0 to 18446744073709551615)
+uint8       无符号的  8 位整数集合 (0 to 255)
+uint16      无符号的 16 位整数集合 (0 to 65535)
+uint32      无符号的 32 位整数集合 (0 to 4294967295)
+uint64      无符号的 64 位整数集合 (0 to 18446744073709551615)
 
-int8        the set of all signed  8-bit integers (-128 to 127)
-int16       the set of all signed 16-bit integers (-32768 to 32767)
-int32       the set of all signed 32-bit integers (-2147483648 to 2147483647)
-int64       the set of all signed 64-bit integers (-9223372036854775808 to 9223372036854775807)
+int8        带符号的  8 位整数集合 (-128 to 127)
+int16       带符号的  16 位整数集合 (-32768 to 32767)
+int32       带符号的  32 位整数集合 (-2147483648 to 2147483647)
+int64       带符号的  64 位整数集合 (-9223372036854775808 to 9223372036854775807)
 
-float32     the set of all IEEE-754 32-bit floating-point numbers
-float64     the set of all IEEE-754 64-bit floating-point numbers
+float32     所有 IEEE-754 标准的 32 位浮点数数字集合
+float64     所有 IEEE-754 标准的 64 位浮点数数字集合
 
-complex64   the set of all complex numbers with float32 real and imaginary parts
-complex128  the set of all complex numbers with float64 real and imaginary parts
+complex64   由 float32 类型的实数和虚数部分所组成的所有复数的集合
+complex128  由 float64 类型的实数和虚数部分所组成的所有复数的集合
 
-byte        alias for uint8
-rune        alias for int32
+byte        unit8 的别名
+rune        int32 的别名
 </pre>
 
 <p>
-The value of an <i>n</i>-bit integer is <i>n</i> bits wide and represented using
-<a href="https://en.wikipedia.org/wiki/Two's_complement">two's complement arithmetic</a>.
+	一个 <i>n</i> 位整数的值是 <i>n</i> 位宽的，是使用 <a href="https://en.wikipedia.org/wiki/Two's_complement">二进制补码</a>来表示的。
 </p>
 
 <p>
-There is also a set of predeclared numeric types with implementation-specific sizes:
+	以下是根据实现不同而有特定大小的预先声明的数字类型：
 </p>
 
 <pre class="grammar">
-uint     either 32 or 64 bits
-int      same size as uint
-uintptr  an unsigned integer large enough to store the uninterpreted bits of a pointer value
+uint     可以是 32 或 64 位
+int      和 uint 大小相同
+uintptr  一个大到足够用来存储一个指针值的未解释的比特位的无符号整数
 </pre>
 
 <p>
-To avoid portability issues all numeric types are <a href="#Type_definitions">defined
-types</a> and thus distinct except
-<code>byte</code>, which is an <a href="#Alias_declarations">alias</a> for <code>uint8</code>, and
-<code>rune</code>, which is an alias for <code>int32</code>.
-Explicit conversions
-are required when different numeric types are mixed in an expression
-or assignment. For instance, <code>int32</code> and <code>int</code>
-are not the same type even though they may have the same size on a
-particular architecture.
+	为了避免移植性问题，除了 <code>byte</code> （ <code>uint8</code> 的<a href="#Alias_declarations">别名）</a>和 <code>rune</code> （ <code>int32</code> 的别名）外的所有数字类型都是截然不同的<a href="#Type_definitions">定义类型</a>。
+	当不同的数字类型混合在一个表达式或赋值里时，是需要显示的转换的。
+	比如，<code>int32</code> 和 <code>int</code> 并不是相同的类型，就算在一个特定的架构上它们可能有相同的大小，也是如此。
+</p>
 
-
-<h3 id="String_types">String types</h3>
+<h3 id="String_types">字符串类型</h3>
 
 <p>
-A <i>string type</i> represents the set of string values.
-A string value is a (possibly empty) sequence of bytes.
-The number of bytes is called the length of the string and is never negative.
-Strings are immutable: once created,
-it is impossible to change the contents of a string.
-The predeclared string type is <code>string</code>;
-it is a <a href="#Type_definitions">defined type</a>.
+	<i>字符串类型</i>代表了字符串值的集合。
+	一个字符串值是字节的序列（可能为空）。
+	字节的个数被称为该字符串的长度，并且不能为负。
+	字符串是不可变的：一旦创建好了是不可能去修改其内容的。
+	预先声明的字符串类型是 <code>string</code>；它是一个<a href="#Type_definitions">定义类型</a>。
 </p>
 
 <p>
-The length of a string <code>s</code> can be discovered using
-the built-in function <a href="#Length_and_capacity"><code>len</code></a>.
-The length is a compile-time constant if the string is a constant.
-A string's bytes can be accessed by integer <a href="#Index_expressions">indices</a>
-0 through <code>len(s)-1</code>.
-It is illegal to take the address of such an element; if
-<code>s[i]</code> is the <code>i</code>'th byte of a
-string, <code>&amp;s[i]</code> is invalid.
+	字符串 <code>s</code> 的长度可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 查出。
+	如果字符串是一个常量，那么长度是一个编译时常量。
+	一个字符串的字节可以通过整数<a href="#Index_expressions">索引</a> 0 到 <code>len(s)-1</code> 来访问。
+	获取一个元素的地址是非法的；如果 <code>s[i]</code> 是一个字符串的第 <code>i</code> 个字节，那么 <code>&amp;s[i]</code> 是无效的。
 </p>
 
 
-<h3 id="Array_types">Array types</h3>
+<h3 id="Array_types">数组类型</h3>
 
 <p>
-An array is a numbered sequence of elements of a single
-type, called the element type.
-The number of elements is called the length of the array and is never negative.
+	数组是单一类型元素的有序序列，该单一类型称为元素类型。
+	元素的个数被称为数组长度，并且不能为负值。
 </p>
 
 <pre class="ebnf">
@@ -840,16 +762,10 @@ ElementType = Type .
 </pre>
 
 <p>
-The length is part of the array's type; it must evaluate to a
-non-negative <a href="#Constants">constant</a>
-<a href="#Representability">representable</a> by a value
-of type <code>int</code>.
-The length of array <code>a</code> can be discovered
-using the built-in function <a href="#Length_and_capacity"><code>len</code></a>.
-The elements can be addressed by integer <a href="#Index_expressions">indices</a>
-0 through <code>len(a)-1</code>.
-Array types are always one-dimensional but may be composed to form
-multi-dimensional types.
+	长度是数组类型的一部分；它必须为一个可以被 <code>int</code> 类型的值所<a href="#Representability">代表</a>的非负<a href="#Constants">常量</a>。
+	数组的长度 <code>a</code> 可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 来发现。
+	元素可以通过整数<a href="#Index_expressions">索引</a> 0 到 <code>len(a)-1</code> 来寻址到。
+	数组类型总是一维的，但可以被组合以形成多维类型。
 </p>
 
 <pre>
@@ -860,14 +776,12 @@ multi-dimensional types.
 [2][2][2]float64  // same as [2]([2]([2]float64))
 </pre>
 
-<h3 id="Slice_types">Slice types</h3>
+<h3 id="Slice_types">切片类型</h3>
 
 <p>
-A slice is a descriptor for a contiguous segment of an <i>underlying array</i> and
-provides access to a numbered sequence of elements from that array.
-A slice type denotes the set of all slices of arrays of its element type.
-The number of elements is called the length of the slice and is never negative.
-The value of an uninitialized slice is <code>nil</code>.
+	切片是针对一个<i>底层数组</i>的连续段的描述符，它提供了对该数组内有序序列元素的访问。
+	切片类型表示其元素类型的数组的所有切片的集合。
+	元素的数量被称为切片长度，且不能为负。未初始化的切片的值为 <code>nil</code>。
 </p>
 
 <pre class="ebnf">
