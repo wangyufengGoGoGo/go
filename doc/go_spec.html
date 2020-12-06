@@ -741,7 +741,7 @@ uintptr  一个大到足够用来存储一个指针值的未解释的比特位�
 </p>
 
 <p>
-	字符串 <code>s</code> 的长度可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 查出。
+	字符串 <code>s</code> 的长度可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 获取到。
 	如果字符串是一个常量，那么长度是一个编译时常量。
 	一个字符串的字节可以通过整数<a href="#Index_expressions">索引</a> 0 到 <code>len(s)-1</code> 来访问。
 	获取一个元素的地址是非法的；如果 <code>s[i]</code> 是一个字符串的第 <code>i</code> 个字节，那么 <code>&amp;s[i]</code> 是无效的。
@@ -763,7 +763,7 @@ ElementType = Type .
 
 <p>
 	长度是数组类型的一部分；它必须为一个可以被 <code>int</code> 类型的值所<a href="#Representability">代表</a>的非负<a href="#Constants">常量</a>。
-	数组的长度 <code>a</code> 可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 来发现。
+	数组的长度 <code>a</code> 可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 获取到。
 	元素可以通过整数<a href="#Index_expressions">索引</a> 0 到 <code>len(a)-1</code> 来寻址到。
 	数组类型总是一维的，但可以被组合以形成多维类型。
 </p>
@@ -789,37 +789,24 @@ SliceType = "[" "]" ElementType .
 </pre>
 
 <p>
-The length of a slice <code>s</code> can be discovered by the built-in function
-<a href="#Length_and_capacity"><code>len</code></a>; unlike with arrays it may change during
-execution.  The elements can be addressed by integer <a href="#Index_expressions">indices</a>
-0 through <code>len(s)-1</code>.  The slice index of a
-given element may be less than the index of the same element in the
-underlying array.
+	切片 <code>s</code> 的长度可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 获取到；和数组不同的是，这个长度可能会在执行过程中改变。
+	元素可以通过整数<a href="#Index_expressions">索引</a> 0  到 <code>len(s)-1</code> 寻址到。
+	一个给定元素的切片索引可能小于其底层数组中相同元素的索引。
 </p>
 <p>
-A slice, once initialized, is always associated with an underlying
-array that holds its elements.  A slice therefore shares storage
-with its array and with other slices of the same array; by contrast,
-distinct arrays always represent distinct storage.
+	切片一旦初始化便始终关联到存放其元素的底层数组。
+	因此，一个切片与其数组以及相同数组的其他切片共享存储区；相反，不同的数组始终代表不同的存储。
 </p>
 <p>
-The array underlying a slice may extend past the end of the slice.
-The <i>capacity</i> is a measure of that extent: it is the sum of
-the length of the slice and the length of the array beyond the slice;
-a slice of length up to that capacity can be created by
-<a href="#Slice_expressions"><i>slicing</i></a> a new one from the original slice.
-The capacity of a slice <code>a</code> can be discovered using the
-built-in function <a href="#Length_and_capacity"><code>cap(a)</code></a>.
+	切片底层的数组可以延伸超过切片的末端。
+	<i>容量</i> 便是对这个范围的测量：它是切片的长度与切片以外的数组的长度之和；可以通过从原始切片中<a href="#Slice_expressions"><i>切</i></a>一个新切片来创建长度达到该容量的切片。
+	切片 <code>a</code> 的容量可以使用内置函数 <a href="#Length_and_capacity"><code>cap(a)</code></a> 获取到。
 </p>
 
 <p>
-A new, initialized slice value for a given element type <code>T</code> is
-made using the built-in function
-<a href="#Making_slices_maps_and_channels"><code>make</code></a>,
-which takes a slice type
-and parameters specifying the length and optionally the capacity.
-A slice created with <code>make</code> always allocates a new, hidden array
-to which the returned slice value refers. That is, executing
+	使用内置函数 <a href="#Making_slices_maps_and_channels"><code>make</code></a> 创建给定元素类型 <code>T</code> 的新的初始化切片值，该函数采用切片类型和参数来指定长度和容量（可选）。
+	使用 <code>make</code> 创建的切片总是分配一个新的隐藏的数组，返回的切片值将引用该数组。
+	也就是，执行
 </p>
 
 <pre>
@@ -827,8 +814,7 @@ make([]T, length, capacity)
 </pre>
 
 <p>
-produces the same slice as allocating an array and <a href="#Slice_expressions">slicing</a>
-it, so these two expressions are equivalent:
+	就像分配个数组然后<a href="#Slice_expressions">再分片</a>它一样来产生相同的切片，所以如下两个表达式是等效的：
 </p>
 
 <pre>
@@ -837,21 +823,17 @@ new([100]int)[0:50]
 </pre>
 
 <p>
-Like arrays, slices are always one-dimensional but may be composed to construct
-higher-dimensional objects.
-With arrays of arrays, the inner arrays are, by construction, always the same length;
-however with slices of slices (or arrays of slices), the inner lengths may vary dynamically.
-Moreover, the inner slices must be initialized individually.
+	如同数组一样，切片总是一维的但可以通过组合来构造高维的对象。
+	数组间组合时，被构造的内部数组总是拥有相同的长度；但切片与切片（或数组与切片）组合时，内部的长度可能是动态变化的。
+	此外，内部切片必须单独初始化。
 </p>
 
-<h3 id="Struct_types">Struct types</h3>
+<h3 id="Struct_types">结构体类型</h3>
 
 <p>
-A struct is a sequence of named elements, called fields, each of which has a
-name and a type. Field names may be specified explicitly (IdentifierList) or
-implicitly (EmbeddedField).
-Within a struct, non-<a href="#Blank_identifier">blank</a> field names must
-be <a href="#Uniqueness_of_identifiers">unique</a>.
+	结构体是命名元素的一个序列，这些元素被称为字段，每一个都有一个名字和一个类型。
+	字段名可以被显式指定（IdentifierList）也可以被隐式指定（EmbeddedField）。
+	在结构体中，非<a href="#Blank_identifier">空白</a>字段名必须是<a href="#Uniqueness_of_identifiers">唯一的</a>。
 </p>
 
 <pre class="ebnf">
@@ -862,10 +844,10 @@ Tag           = string_lit .
 </pre>
 
 <pre>
-// An empty struct.
+// 一个空的结构体。
 struct {}
 
-// A struct with 6 fields.
+// 一个有六个字段的结构体。
 struct {
 	x, y int
 	u float32
@@ -876,102 +858,83 @@ struct {
 </pre>
 
 <p>
-A field declared with a type but no explicit field name is called an <i>embedded field</i>.
-An embedded field must be specified as
-a type name <code>T</code> or as a pointer to a non-interface type name <code>*T</code>,
-and <code>T</code> itself may not be
-a pointer type. The unqualified type name acts as the field name.
+	一个声明了类型但没有显式的字段名的字段就是<i>嵌入字段</i>。
+	嵌入字段必须指定为一个类型名 <code>T</code> 或指向非接口类型名称 <code>*T</code> 的指针，并且 <code>T</code> 本身可能不是一个指针类型。
+	这个非限定的类型名就被当作字段名。
 </p>
 
 <pre>
-// A struct with four embedded fields of types T1, *T2, P.T3 and *P.T4
+// 四个类型分别为 T1，*T2，P.T3，*P.T4 的嵌入字段所组成的结构体
 struct {
-	T1        // field name is T1
-	*T2       // field name is T2
-	P.T3      // field name is T3
-	*P.T4     // field name is T4
-	x, y int  // field names are x and y
+	T1        // 字段名为 T1
+	*T2       // 字段名为 T2
+	P.T3      // 字段名为 T3
+	*P.T4     // 字段名为 T4
+	x, y int  // 字段名为 x 和 y
 }
 </pre>
 
 <p>
-The following declaration is illegal because field names must be unique
-in a struct type:
+	以下声明是非法的，因为在一个结构体类型中，字段名必须是唯一的：
 </p>
 
 <pre>
 struct {
-	T     // conflicts with embedded field *T and *P.T
-	*T    // conflicts with embedded field T and *P.T
-	*P.T  // conflicts with embedded field T and *T
+	T     // 与嵌入字段 *T 和 *P.T 冲突
+	*T    // 与嵌入字段  T 和 *P.T 冲突
+	*P.T  // 与嵌入字段  T 和   *T 冲突
 }
 </pre>
 
 <p>
-A field or <a href="#Method_declarations">method</a> <code>f</code> of an
-embedded field in a struct <code>x</code> is called <i>promoted</i> if
-<code>x.f</code> is a legal <a href="#Selectors">selector</a> that denotes
-that field or method <code>f</code>.
+	在结构体 <code>x</code> 中，一个嵌入字段的字段或<a href="#Method_declarations">方法</a> <code>f</code> 被称作 <i>promoted</i> ，前提是 <code>x.f</code> 是一个表示那个字段或方法 <code>f</code> 的合法<a href="#Selectors">选择器</a>。
 </p>
 
 <p>
-Promoted fields act like ordinary fields
-of a struct except that they cannot be used as field names in
-<a href="#Composite_literals">composite literals</a> of the struct.
+	除了不能在结构体的<a href="#Composite_literals">复合字面量</a>中作为字段名外，promoted 字段和结构体的普通字段一样。
 </p>
 
 <p>
-Given a struct type <code>S</code> and a <a href="#Type_definitions">defined type</a>
-<code>T</code>, promoted methods are included in the method set of the struct as follows:
+	给定一个结构体类型 <code>S</code> 和一个 <a href="#Type_definitions">定义类型</a> <code>T</code>，promoted 方法包含在这个结构体的方法集中的情况分为：
 </p>
 <ul>
 	<li>
-	If <code>S</code> contains an embedded field <code>T</code>,
-	the <a href="#Method_sets">method sets</a> of <code>S</code>
-	and <code>*S</code> both include promoted methods with receiver
-	<code>T</code>. The method set of <code>*S</code> also
-	includes promoted methods with receiver <code>*T</code>.
+		如果 <code>S</code> 包含一个嵌入字段 <code>T</code>，那么 <code>S</code> 和 <code>*S</code> 的<a href="#Method_sets">方法集</a>都包括了接收者为 <code>T</code> 的 promoted 方法。
+		<code>*S</code> 的方法集还包括了接收者为 <code>*T</code> 的 promoted 方法。
 	</li>
 
 	<li>
-	If <code>S</code> contains an embedded field <code>*T</code>,
-	the method sets of <code>S</code> and <code>*S</code> both
-	include promoted methods with receiver <code>T</code> or
-	<code>*T</code>.
+		如果 <code>S</code> 包含了一个嵌入字段 <code>*T</code> ，那么 <code>S</code> 和 <code>*S</code> 的方法集都包括了接收者为 <code>T</code> 或 <code>*T</code> 的 promoted 方法。
 	</li>
 </ul>
 
 <p>
-A field declaration may be followed by an optional string literal <i>tag</i>,
-which becomes an attribute for all the fields in the corresponding
-field declaration. An empty tag string is equivalent to an absent tag.
-The tags are made visible through a <a href="/pkg/reflect/#StructTag">reflection interface</a>
-and take part in <a href="#Type_identity">type identity</a> for structs
-but are otherwise ignored.
+	字段声明可以紧跟着一个可选的字符串字面量<i>标签</i>，在对应的字段声明中，它将成为针对所有这个字段的属性。
+	空的标签字符串等于没有标签。
+	标签可以通过<a href="/pkg/reflect/#StructTag">反射接口</a>被可视化，并且可以参与到结构体的<a href="#Type_identity">类型一致性</a>中，但其它情况下都是被忽略的。
 </p>
 
 <pre>
 struct {
-	x, y float64 ""  // an empty tag string is like an absent tag
+	x, y float64 ""  // 空的标签字面值和没有标签一样
 	name string  "any string is permitted as a tag"
 	_    [4]byte "ceci n'est pas un champ de structure"
 }
 
-// A struct corresponding to a TimeStamp protocol buffer.
-// The tag strings define the protocol buffer field numbers;
-// they follow the convention outlined by the reflect package.
+// 对应时间戳协议缓冲区的结构体。
+// 其标签字符串定义了协议缓冲区的字段号；
+// 它们遵循了由 reflect 包所概述的转换规则。
 struct {
 	microsec  uint64 `protobuf:"1"`
 	serverIP6 uint64 `protobuf:"2"`
 }
 </pre>
 
-<h3 id="Pointer_types">Pointer types</h3>
+<h3 id="Pointer_types">指针类型</h3>
 
 <p>
-A pointer type denotes the set of all pointers to <a href="#Variables">variables</a> of a given
-type, called the <i>base type</i> of the pointer.
-The value of an uninitialized pointer is <code>nil</code>.
+	指针类型表示指向一给定类型的<a href="#Variables">变量</a>的所有指针的集合，这个给定类型称为该指针的<i>基础类型</i>。
+	未初始化的指针的值为 <code>nil</code>。
 </p>
 
 <pre class="ebnf">
@@ -984,12 +947,11 @@ BaseType    = Type .
 *[4]int
 </pre>
 
-<h3 id="Function_types">Function types</h3>
+<h3 id="Function_types">函数类型（Function types）</h3>
 
 <p>
-A function type denotes the set of all functions with the same parameter
-and result types. The value of an uninitialized variable of function type
-is <code>nil</code>.
+	函数类型表示具有相同参数和结果类型的所有函数的集合。
+	函数类型的未初始化的变量的值为 <code>nil</code>。
 </p>
 
 <pre class="ebnf">
@@ -1002,22 +964,15 @@ ParameterDecl  = [ IdentifierList ] [ "..." ] Type .
 </pre>
 
 <p>
-Within a list of parameters or results, the names (IdentifierList)
-must either all be present or all be absent. If present, each name
-stands for one item (parameter or result) of the specified type and
-all non-<a href="#Blank_identifier">blank</a> names in the signature
-must be <a href="#Uniqueness_of_identifiers">unique</a>.
-If absent, each type stands for one item of that type.
-Parameter and result
-lists are always parenthesized except that if there is exactly
-one unnamed result it may be written as an unparenthesized type.
+	在参数或结果的列表中，名字（IdentifierList）要么全部存在，要么全部不存在。
+	如果存在，则每个名字代表特定类型的一项（参数或者结果），签名中的所有非<a href="#Blank_identifier">空白</a>名称必须是<a href="#Uniqueness_of_identifiers">唯一的</a>。
+	如果不存在，则每种类型都代表该类型的一项。
+	参数和结果列表始终带有括号，但如果有一个未命名的结果，则可以将其写为非括号的形式。
 </p>
 
 <p>
-The final incoming parameter in a function signature may have
-a type prefixed with <code>...</code>.
-A function with such a parameter is called <i>variadic</i> and
-may be invoked with zero or more arguments for that parameter.
+	函数签名中最后的进入参数可以是以 <code>...</code> 为前缀的类型。
+	带这样一个参数的函数被称为 <i>可变（variadic）</i>，它可以携带针对该形参的零或多个实参来调用。
 </p>
 
 <pre>
@@ -1032,14 +987,13 @@ func(n int) func(p *T)
 </pre>
 
 
-<h3 id="Interface_types">Interface types</h3>
+<h3 id="Interface_types">接口类型</h3>
 
 <p>
-An interface type specifies a <a href="#Method_sets">method set</a> called its <i>interface</i>.
-A variable of interface type can store a value of any type with a method set
-that is any superset of the interface. Such a type is said to
-<i>implement the interface</i>.
-The value of an uninitialized variable of interface type is <code>nil</code>.
+	接口类型指定了一个称为<i>接口</i>的<a href="#Method_sets">方法集</a>。
+	一个接口变量可以存储任意类型的值，这个类型要带有一个方法集，方法集需要是该接口的任意超集。
+	这样子的类型就被叫做<i>实现了这个接口</i>。
+	接口类型的未初始化的变量的值为 <code>nil</code>。
 </p>
 
 <pre class="ebnf">
@@ -1050,12 +1004,11 @@ InterfaceTypeName  = TypeName .
 </pre>
 
 <p>
-An interface type may specify methods <i>explicitly</i> through method specifications,
-or it may <i>embed</i> methods of other interfaces through interface type names.
+	接口类型可以通过方法规范<i>显示地</i>指定其方法，也可以通过接口类型名<i>嵌入</i>其它接口的方法。
 </p>
 
 <pre>
-// A simple File interface.
+// 一个简单的 File 接口。
 interface {
 	Read([]byte) (int, error)
 	Write([]byte) (int, error)
@@ -1064,22 +1017,20 @@ interface {
 </pre>
 
 <p>
-The name of each explicitly specified method must be <a href="#Uniqueness_of_identifiers">unique</a>
-and not <a href="#Blank_identifier">blank</a>.
+	显示指定的方法必须是<a href="#Uniqueness_of_identifiers">唯一的</a>且非<a href="#Blank_identifier">空白</a>的。
 </p>
 
 <pre>
 interface {
 	String() string
-	String() string  // illegal: String not unique
-	_(x int)         // illegal: method must have non-blank name
+	String() string  // 非法: String 不是唯一的
+	_(x int)         // 非法: 方法不能是空白名
 }
 </pre>
 
 <p>
-More than one type may implement an interface.
-For instance, if two types <code>S1</code> and <code>S2</code>
-have the method set
+	多个类型可以实现一个相同的接口。
+	比如，如果两个类型 <code>S1</code> 和 <code>S2</code> 有方法集
 </p>
 
 <pre>
@@ -1089,10 +1040,7 @@ func (p T) Close() error
 </pre>
 
 <p>
-(where <code>T</code> stands for either <code>S1</code> or <code>S2</code>)
-then the <code>File</code> interface is implemented by both <code>S1</code> and
-<code>S2</code>, regardless of what other methods
-<code>S1</code> and <code>S2</code> may have or share.
+	（其中 <code>T</code> 代表 <code>S1</code> 或 <code>S2</code>）那么 <code>File</code> 接口就被 <code>S1</code> 和 <code>S2</code> 实现了，不管 <code>S1</code> 和 <code>S2</code> 是否有其它的（或共享的）方法。
 </p>
 
 <p>
