@@ -550,7 +550,7 @@ interpreted_string_lit = `"` { unicode_value | byte_value } `"` .
 </p>
 
 <p>
-	常量可以通过<a href="#Constant_declarations">常量声明</a>或<a href="#Conversions">转换</a>来显示地指定类型，也可以在<a href="#Variable_declarations">变量声明</a>或<a href="#Assignments">赋值</a>或作为<a href="#Expressions">表达式</a>中的操作数隐式地被赋予一个类型。
+	常量可以通过<a href="#Constant_declarations">常量声明</a>或<a href="#Conversions">转换</a>来显式地指定类型，也可以在<a href="#Variable_declarations">变量声明</a>或<a href="#Assignments">赋值</a>或作为<a href="#Expressions">表达式</a>中的操作数隐式地被赋予一个类型。
 	如果常量值不能<a href="#Representability">表示</a>为相应类型的值，则会出错。
 </p>
 
@@ -726,7 +726,7 @@ uintptr  一个大到足够用来存储一个指针值的未解释的比特位�
 
 <p>
 	为了避免移植性问题，除了 <code>byte</code> （ <code>uint8</code> 的<a href="#Alias_declarations">别名）</a>和 <code>rune</code> （ <code>int32</code> 的别名）外的所有数字类型都是截然不同的<a href="#Type_definitions">定义类型</a>。
-	当不同的数字类型混合在一个表达式或赋值里时，是需要显示的转换的。
+	当不同的数字类型混合在一个表达式或赋值里时，是需要显式的转换的。
 	比如，<code>int32</code> 和 <code>int</code> 并不是相同的类型，就算在一个特定的架构上它们可能有相同的大小，也是如此。
 </p>
 
@@ -1004,7 +1004,7 @@ InterfaceTypeName  = TypeName .
 </pre>
 
 <p>
-	接口类型可以通过方法规范<i>显示地</i> 指定其方法，也可以通过接口类型名<i>嵌入</i> 其它接口的方法。
+	接口类型可以通过方法规范<i>显式地</i> 指定其方法，也可以通过接口类型名<i>嵌入</i> 其它接口的方法。
 </p>
 
 <pre>
@@ -1017,7 +1017,7 @@ interface {
 </pre>
 
 <p>
-	显示指定的方法必须是<a href="#Uniqueness_of_identifiers">唯一的</a>且非<a href="#Blank_identifier">空白</a>的。
+	显式指定的方法必须是<a href="#Uniqueness_of_identifiers">唯一的</a>且非<a href="#Blank_identifier">空白</a>的。
 </p>
 
 <pre>
@@ -1078,7 +1078,7 @@ func (p T) Unlock() { … }
 
 <p>
 	一个接口 <code>T</code> 可以使用（可能是限定的）接口类型名 <code>E</code> 代替方法规范。
-	这叫做在 <code>T</code> 中的<i>内嵌</i> 接口 <code>E</code>；<code>T</code> 的<a href="#Method_sets">方法集</a> 是 <code>T</code> 的显示声明的方法和 <code>T</code> 的嵌入接口的方法的集合的<i>联合</i>。
+	这叫做在 <code>T</code> 中的<i>内嵌</i> 接口 <code>E</code>；<code>T</code> 的<a href="#Method_sets">方法集</a> 是 <code>T</code> 的显式声明的方法和 <code>T</code> 的嵌入接口的方法的集合的<i>联合</i>。
 </p>
 
 <pre>
@@ -1154,18 +1154,12 @@ map[string]interface{}
 </pre>
 
 <p>
-The number of map elements is called its length.
-For a map <code>m</code>, it can be discovered using the
-built-in function <a href="#Length_and_capacity"><code>len</code></a>
-and may change during execution. Elements may be added during execution
-using <a href="#Assignments">assignments</a> and retrieved with
-<a href="#Index_expressions">index expressions</a>; they may be removed with the
-<a href="#Deletion_of_map_elements"><code>delete</code></a> built-in function.
+	map 元素的数目被称为其长度。
+	对于一个 map <code>m</code>，长度可以使用内置函数 <a href="#Length_and_capacity"><code>len</code></a> 获取并且它可能会在执行过程中改变。
+	元素可以在执行过程中使用<a href="#Assignments">赋值</a>来进行添加，可以使用<a href="#Index_expressions">索引表达式</a>来获取；可以使用内置函数 <a href="#Deletion_of_map_elements"><code>delete</code></a> 来移除。
 </p>
 <p>
-A new, empty map value is made using the built-in
-function <a href="#Making_slices_maps_and_channels"><code>make</code></a>,
-which takes the map type and an optional capacity hint as arguments:
+	一个新的、空的 map 值的创建使用的是内置函数 <a href="#Making_slices_maps_and_channels"><code>make</code></a>，其获取 map 类型和一个可选的容量提示作为实参：
 </p>
 
 <pre>
@@ -1174,22 +1168,15 @@ make(map[string]int, 100)
 </pre>
 
 <p>
-The initial capacity does not bound its size:
-maps grow to accommodate the number of items
-stored in them, with the exception of <code>nil</code> maps.
-A <code>nil</code> map is equivalent to an empty map except that no elements
-may be added.
+	初始化的容量不会限制其大小：maps 会增长以适合其存储项目的数量，除了 <code>nil</code> maps。
+	<code>nil</code> map 相当于空 map，但是 nil map 不能添加元素。
+</p>
 
-<h3 id="Channel_types">Channel types</h3>
+<h3 id="Channel_types">Channel类型</h3>
 
 <p>
-A channel provides a mechanism for
-<a href="#Go_statements">concurrently executing functions</a>
-to communicate by
-<a href="#Send_statements">sending</a> and
-<a href="#Receive_operator">receiving</a>
-values of a specified element type.
-The value of an uninitialized channel is <code>nil</code>.
+	channel 为<a href="#Go_statements">并发执行函数</a>提供了一个<a href="#Send_statements">发送</a>和<a href="#Receive_operator">接收</a>特定类型值的机制。
+	未初始化的 channel 的值为 <code>nil</code> 。
 </p>
 
 <pre class="ebnf">
@@ -1197,23 +1184,19 @@ ChannelType = ( "chan" | "chan" "&lt;-" | "&lt;-" "chan" ) ElementType .
 </pre>
 
 <p>
-The optional <code>&lt;-</code> operator specifies the channel <i>direction</i>,
-<i>send</i> or <i>receive</i>. If no direction is given, the channel is
-<i>bidirectional</i>.
-A channel may be constrained only to send or only to receive by
-<a href="#Assignments">assignment</a> or
-explicit <a href="#Conversions">conversion</a>.
+	可选的 <code>&lt;-</code> 操作符指定了信道的<i>方向</i>，<i>发送</i> 或<i>接收</i>。
+	如果没有指定方向，这个 channel 就是<i>双向的</i>。
+	通过<a href="#Assignments">赋值</a>或显式的<a href="#Conversions">转换</a>，channel 可以被限制为仅能发送或仅能接收。
 </p>
 
 <pre>
-chan T          // can be used to send and receive values of type T
-chan&lt;- float64  // can only be used to send float64s
-&lt;-chan int      // can only be used to receive ints
+chan T          // 可用于发送或接收类型为 T 的值
+chan&lt;- float64  // 仅用于发送 float64 类型
+&lt;-chan int      // 仅用于接收 int 类型
 </pre>
 
 <p>
-The <code>&lt;-</code> operator associates with the leftmost <code>chan</code>
-possible:
+	<code>&lt;-</code> 操作符与最左的 <code>chan</code> 关联的一些可能性：
 </p>
 
 <pre>
@@ -1224,10 +1207,7 @@ chan (&lt;-chan int)
 </pre>
 
 <p>
-A new, initialized channel
-value can be made using the built-in function
-<a href="#Making_slices_maps_and_channels"><code>make</code></a>,
-which takes the channel type and an optional <i>capacity</i> as arguments:
+	一个新的，初始化的 channel 值的创建可以使用内置的函数 <a href="#Making_slices_maps_and_channels"><code>make</code></a>，它获取 channel 类型和可选的<i>容量</i> 作为实参：
 </p>
 
 <pre>
@@ -1235,40 +1215,26 @@ make(chan int, 100)
 </pre>
 
 <p>
-The capacity, in number of elements, sets the size of the buffer in the channel.
-If the capacity is zero or absent, the channel is unbuffered and communication
-succeeds only when both a sender and receiver are ready. Otherwise, the channel
-is buffered and communication succeeds without blocking if the buffer
-is not full (sends) or not empty (receives).
-A <code>nil</code> channel is never ready for communication.
+	容量，即元素的数量，它确定了 channel 中缓冲区的大小。
+	如果容量为零或没有写，那么 channel 就是无缓冲的，这种情况下，只有在接收端和发送端都准备好的情况下，通信才会成功。
+	不然 channel 就是有缓冲的，这种情况下只要不阻塞，通信便会成功；阻塞是指缓冲区满了（对于发送端而言）或者缓冲区空了（对于接收端而言）。
+	一个 <code>nil</code> 的 channel 是不能用于通信的。
 </p>
 
 <p>
-A channel may be closed with the built-in function
-<a href="#Close"><code>close</code></a>.
-The multi-valued assignment form of the
-<a href="#Receive_operator">receive operator</a>
-reports whether a received value was sent before
-the channel was closed.
+	channel 可以使用内置函数 <a href="#Close"><code>close</code></a> 来关闭。
+	<a href="#Receive_operator">接收运算符</a>的多值分配形式报告了在 channel 关闭前接收到的值是否已经被发送了。
 </p>
 
 <p>
-A single channel may be used in
-<a href="#Send_statements">send statements</a>,
-<a href="#Receive_operator">receive operations</a>,
-and calls to the built-in functions
-<a href="#Length_and_capacity"><code>cap</code></a> and
-<a href="#Length_and_capacity"><code>len</code></a>
-by any number of goroutines without further synchronization.
-Channels act as first-in-first-out queues.
-For example, if one goroutine sends values on a channel
-and a second goroutine receives them, the values are
-received in the order sent.
+	单个 channel 可用于<a href="#Send_statements">发送语句</a>，<a href="#Receive_operator">接受操作</a>以及由任意数量的 goroutine 对内置函数 <a href="#Length_and_capacity"><code>cap</code></a> 和 <a href="#Length_and_capacity"><code>len</code></a> 的调用，而无需进一步同步。
+	Channels 是一个先进先出的队列。
+	举例，如果一个 goroutine 在信道上发送了值，第二个 goroutine 接收了这些值，那么这些值是按照发送的顺序被接收的。
 </p>
 
-<h2 id="Properties_of_types_and_values">Properties of types and values</h2>
+<h2 id="Properties_of_types_and_values">类型和值的属性</h2>
 
-<h3 id="Type_identity">Type identity</h3>
+<h3 id="Type_identity">类型一致性</h3>
 
 <p>
 Two types are either <i>identical</i> or <i>different</i>.
