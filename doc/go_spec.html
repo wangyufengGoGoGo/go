@@ -1237,48 +1237,39 @@ make(chan int, 100)
 <h3 id="Type_identity">类型一致性</h3>
 
 <p>
-Two types are either <i>identical</i> or <i>different</i>.
+	两个类型，要么是<i>一致的</i> 要么是<i>不同的</i>。
 </p>
 
 <p>
-A <a href="#Type_definitions">defined type</a> is always different from any other type.
-Otherwise, two types are identical if their <a href="#Types">underlying</a> type literals are
-structurally equivalent; that is, they have the same literal structure and corresponding
-components have identical types. In detail:
+	<a href="#Type_definitions">定义类型</a>和其它类型总是不同的。
+	不然的话，如果两个类型所对应的<a href="#Type_definitions">潜在类型</a>字面量是结构一致的；也就是说它们拥有相同的字面量结构并且对应的组成部分拥有一致的类型，那么它们便是一致的。
+	详细来说：
 </p>
 
 <ul>
-	<li>Two array types are identical if they have identical element types and
-	    the same array length.</li>
+	<li>如果两个数组类型有一致的元素类型和相同的数组长度，那么它们便是一致的。</li>
 
-	<li>Two slice types are identical if they have identical element types.</li>
+	<li>如果两个切片类型有一致的元素类型，那么它们便是一致的。</li>
 
-	<li>Two struct types are identical if they have the same sequence of fields,
-	    and if corresponding fields have the same names, and identical types,
-	    and identical tags.
-	    <a href="#Exported_identifiers">Non-exported</a> field names from different
-	    packages are always different.</li>
+	<li>
+		如果两个结构体有相同的字段序列，并且对应的字段有相同的名字、一致的类型和一致的标签，那么它们便是一致的。
+		不同包的<a href="#Exported_identifiers">非暴露的</a>字段名总是不同的。</li>
 
-	<li>Two pointer types are identical if they have identical base types.</li>
+	<li>如果两个指针类型有一致的基础类型，那么它们便是一致的。</li>
 
-	<li>Two function types are identical if they have the same number of parameters
-	    and result values, corresponding parameter and result types are
-	    identical, and either both functions are variadic or neither is.
-	    Parameter and result names are not required to match.</li>
+	<li>如果两个函数类型有相同的参数数量和结果值，并且对应的参数和结果类型是一致的，并且两者要么都是 variadic 要么都不是，那么它们便是一致的。
+		参数和结果名不是必须匹配的。</li>
 
-	<li>Two interface types are identical if they have the same set of methods
-	    with the same names and identical function types.
-	    <a href="#Exported_identifiers">Non-exported</a> method names from different
-	    packages are always different. The order of the methods is irrelevant.</li>
+	<li>如果两个接口类型有一样的带相同名字和一致的函数类型的方法集，那么它们便是一致的。
+		不同包的<a href="#Exported_identifiers">非暴露的</a>方法名总是不同的。方法的顺序是无关紧要的。</li>
 
-	<li>Two map types are identical if they have identical key and element types.</li>
+	<li>如果两个 map 类型有一致的键类型和值类型，那么它们便是一致的。</li>
 
-	<li>Two channel types are identical if they have identical element types and
-	    the same direction.</li>
+	<li>如果两个 channel 类型有一致的值类型和相同的方向，那么它们便是一致的。</li>
 </ul>
 
 <p>
-Given the declarations
+	给出声明
 </p>
 
 <pre>
@@ -1304,7 +1295,7 @@ type	C0 = B0
 </pre>
 
 <p>
-these types are identical:
+	这些类型是一致的：
 </p>
 
 <pre>
@@ -1320,14 +1311,11 @@ func(x int, y float64) *[]string, func(int, float64) (result *[]string), and A5
 </pre>
 
 <p>
-<code>B0</code> and <code>B1</code> are different because they are new types
-created by distinct <a href="#Type_definitions">type definitions</a>;
-<code>func(int, float64) *B0</code> and <code>func(x int, y float64) *[]string</code>
-are different because <code>B0</code> is different from <code>[]string</code>.
+	<code>B0</code> 和 <code>B1</code> 是不同的，因为它们是被不同的<a href="#Type_definitions">类型定义</a>所创建的新类型；<code>func(int, float64) *B0</code> 和 <code>func(x int, y float64) *[]string</code> 是不同的，因为 <code>B0</code> 和 <code>[]string</code> 是不同的。
 </p>
 
 
-<h3 id="Assignability">Assignability</h3>
+<h3 id="Assignability">可分配性</h3>
 
 <p>
 A value <code>x</code> is <i>assignable</i> to a <a href="#Variables">variable</a> of type <code>T</code>
