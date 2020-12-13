@@ -1318,100 +1318,85 @@ func(x int, y float64) *[]string, func(int, float64) (result *[]string), and A5
 <h3 id="Assignability">可分配性</h3>
 
 <p>
-A value <code>x</code> is <i>assignable</i> to a <a href="#Variables">variable</a> of type <code>T</code>
-("<code>x</code> is assignable to <code>T</code>") if one of the following conditions applies:
+	在如下这些情况中，值 <code>x</code> <i>可以分配</i> 给一个类型为 <code>T</code> 的<a href="#Variables">变量</a>（“ <code>x</code> 可以分配给 <code>T</code> ”）：
 </p>
 
 <ul>
 <li>
-<code>x</code>'s type is identical to <code>T</code>.
+	<code>x</code> 的类型和 <code>T</code> 一致。
 </li>
 <li>
-<code>x</code>'s type <code>V</code> and <code>T</code> have identical
-<a href="#Types">underlying types</a> and at least one of <code>V</code>
-or <code>T</code> is not a <a href="#Type_definitions">defined</a> type.
+	<code>x</code> 的类型 <code>V</code> 和 <code>T</code> 有一致的<a href="#Types">潜在类型</a>并且二者最少有一个不是<a href="#Type_definitions">定义类型</a>。
 </li>
 <li>
-<code>T</code> is an interface type and
-<code>x</code> <a href="#Interface_types">implements</a> <code>T</code>.
+<code>T</code> 是一个接口类型，而 <code>x</code> <a href="#Interface_types">实现了</a> <code>T</code>.
 </li>
 <li>
-<code>x</code> is a bidirectional channel value, <code>T</code> is a channel type,
-<code>x</code>'s type <code>V</code> and <code>T</code> have identical element types,
-and at least one of <code>V</code> or <code>T</code> is not a defined type.
+<code>x</code> 是一个双向的 channel 值，<code>T</code> 是一个 channel 类型,<code>x</code> 的类型 <code>V</code> 和 <code>T</code> 有一致的元素值，并且 <code>V</code> 和 <code>T</code> 中至少有一个不是定义类型。
 </li>
 <li>
-<code>x</code> is the predeclared identifier <code>nil</code> and <code>T</code>
-is a pointer, function, slice, map, channel, or interface type.
+<code>x</code> 是一个预先声明的标识符 <code>nil</code> 而 <code>T</code> 是一个指针、函数、切片、map、channel 或接口类型。
 </li>
 <li>
-<code>x</code> is an untyped <a href="#Constants">constant</a>
-<a href="#Representability">representable</a>
-by a value of type <code>T</code>.
+	<code>x</code> 是一个无类型的可以被类型 <code>T</code> 的一个值所<a href="#Representability">代表</a>的<a href="#Constants">常量</a>。
 </li>
 </ul>
 
 
-<h3 id="Representability">Representability</h3>
+<h3 id="Representability">可表示性</h3>
 
 <p>
-A <a href="#Constants">constant</a> <code>x</code> is <i>representable</i>
-by a value of type <code>T</code> if one of the following conditions applies:
+	只要以下条件有一个成立，那么<a href="#Constants">常量</a> <code>x</code> 就可以被一个类型为 <code>T</code> 的值所<i>表示</i>：
 </p>
 
 <ul>
 <li>
-<code>x</code> is in the set of values <a href="#Types">determined</a> by <code>T</code>.
+	<code>x</code> 在 <code>T</code> <a href="#Types">确定的</a>一组值中。
 </li>
 
 <li>
-<code>T</code> is a floating-point type and <code>x</code> can be rounded to <code>T</code>'s
-precision without overflow. Rounding uses IEEE 754 round-to-even rules but with an IEEE
-negative zero further simplified to an unsigned zero. Note that constant values never result
-in an IEEE negative zero, NaN, or infinity.
+	<code>T</code> 是一个浮点类型并且 <code>x</code> 可以被不溢出地约到 <code>T</code> 的精度。
+	约数用的是 IEEE 754 round-to-even 规则，但是 IEEE 负零会被进一步简化到一个无符号的零。
+	注：这种常量值不会出现 IEEE 负零、 NaN 或者无穷。
 </li>
 
 <li>
-<code>T</code> is a complex type, and <code>x</code>'s
-<a href="#Complex_numbers">components</a> <code>real(x)</code> and <code>imag(x)</code>
-are representable by values of <code>T</code>'s component type (<code>float32</code> or
-<code>float64</code>).
+	<code>T</code> 是一个复合类型并且 <code>x</code> 的<a href="#Complex_numbers">组成</a> <code>real(x)</code> 和 <code>imag(x)</code> 是可以被 <code>T</code> 的组成类型（<code>float32</code> 或者 <code>float64</code>）所表示的。
 </li>
 </ul>
 
 <pre>
-x                   T           x is representable by a value of T because
+x                   T           x 可以被 T 表示的原因是
 
-'a'                 byte        97 is in the set of byte values
-97                  rune        rune is an alias for int32, and 97 is in the set of 32-bit integers
-"foo"               string      "foo" is in the set of string values
-1024                int16       1024 is in the set of 16-bit integers
-42.0                byte        42 is in the set of unsigned 8-bit integers
-1e10                uint64      10000000000 is in the set of unsigned 64-bit integers
-2.718281828459045   float32     2.718281828459045 rounds to 2.7182817 which is in the set of float32 values
--1e-1000            float64     -1e-1000 rounds to IEEE -0.0 which is further simplified to 0.0
-0i                  int         0 is an integer value
-(42 + 0i)           float32     42.0 (with zero imaginary part) is in the set of float32 values
+'a'                 byte        97 在 byte 值集中
+97                  rune        rune 是 int32 的别名且 97 在 32 位整数值集中
+"foo"               string      "foo" 在 string 值集中
+1024                int16       1024 在 16 位整数值集中
+42.0                byte        42 在无符号 8 位整数值集中
+1e10                uint64      10000000000 在无符号 64 位整数值集中
+2.718281828459045   float32     2.718281828459045 约到 2.7182817 后在 float32 值集中
+-1e-1000            float64     -1e-1000 约到 IEEE -0.0 后再被进一步简化到 0.0
+0i                  int         0 是一个整数值
+(42 + 0i)           float32     42.0 （带虚部零）在 float32 值集中
 </pre>
 
 <pre>
-x                   T           x is not representable by a value of T because
+x                   T           x 不能被 T 表示的原因是
 
-0                   bool        0 is not in the set of boolean values
-'a'                 string      'a' is a rune, it is not in the set of string values
-1024                byte        1024 is not in the set of unsigned 8-bit integers
--1                  uint16      -1 is not in the set of unsigned 16-bit integers
-1.1                 int         1.1 is not an integer value
-42i                 float32     (0 + 42i) is not in the set of float32 values
-1e1000              float64     1e1000 overflows to IEEE +Inf after rounding
+0                   bool        0 不在 boolean 值集中
+'a'                 string      'a' 是 rune，它不在 string 值集中
+1024                byte        1024 不在无符号 8 位整数值集中
+-1                  uint16      -1 不在无符号 16 位整数值集中
+1.1                 int         1.1 不是一个整数值
+42i                 float32     （0 + 42i） 不在 float32 值集中
+1e1000              float64     1e1000 约数后溢出了 IEEE +Inf
 </pre>
 
 
-<h2 id="Blocks">Blocks</h2>
+<h2 id="Blocks">块（Blocks）</h2>
 
 <p>
-A <i>block</i> is a possibly empty sequence of declarations and statements
-within matching brace brackets.
+	<i>块</i> 是在一对花括号内声明和语句的序列，这个序列可能是空的。
 </p>
 
 <pre class="ebnf">
@@ -1420,34 +1405,27 @@ StatementList = { Statement ";" } .
 </pre>
 
 <p>
-In addition to explicit blocks in the source code, there are implicit blocks:
+	源代码中除了显式的块外，还有隐式的块：
 </p>
 
 <ol>
-	<li>The <i>universe block</i> encompasses all Go source text.</li>
+	<li>包围所有 Go 原始文本的 <i>universe 块</i>。</li>
 
-	<li>Each <a href="#Packages">package</a> has a <i>package block</i> containing all
-	    Go source text for that package.</li>
+	<li>每个<a href="#Packages">包</a>有一个包含针对该包的所有 Go 原始文本的<i>包块</i>。</li>
 
-	<li>Each file has a <i>file block</i> containing all Go source text
-	    in that file.</li>
+	<li>每个文件有一个包含在该文件中所有 Go 原始文本的<i>文件块</i>。</li>
 
-	<li>Each <a href="#If_statements">"if"</a>,
-	    <a href="#For_statements">"for"</a>, and
-	    <a href="#Switch_statements">"switch"</a>
-	    statement is considered to be in its own implicit block.</li>
+	<li>每个 <a href="#If_statements">"if"</a>，<a href="#For_statements">"for"</a> 和 <a href="#Switch_statements">"switch"</a> 语句都被认为是在其自己的隐式块中。</li>
 
-	<li>Each clause in a <a href="#Switch_statements">"switch"</a>
-	    or <a href="#Select_statements">"select"</a> statement
-	    acts as an implicit block.</li>
+	<li>每个在 <a href="#Switch_statements">"switch"</a> 或 <a href="#Select_statements">"select"</a> 语句中的子句都作为一个隐式的块。</li>
 </ol>
 
 <p>
-Blocks nest and influence <a href="#Declarations_and_scope">scoping</a>.
+	块是嵌套的并影响着<a href="#Declarations_and_scope">作用域</a>。
 </p>
 
 
-<h2 id="Declarations_and_scope">Declarations and scope</h2>
+<h2 id="Declarations_and_scope">声明和作用域</h2>
 
 <p>
 A <i>declaration</i> binds a non-<a href="#Blank_identifier">blank</a> identifier to a
