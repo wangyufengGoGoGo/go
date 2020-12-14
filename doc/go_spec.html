@@ -1434,11 +1434,8 @@ StatementList = { Statement ";" } .
 </p>
 
 <p>
-The <a href="#Blank_identifier">blank identifier</a> may be used like any other identifier
-in a declaration, but it does not introduce a binding and thus is not declared.
-In the package block, the identifier <code>init</code> may only be used for
-<a href="#Package_initialization"><code>init</code> function</a> declarations,
-and like the blank identifier it does not introduce a new binding.
+	<a href="#Blank_identifier">空白标识符</a>可以像声明中的任何其他标识符一样使用，但是它不会引入绑定，因此不会被声明。
+	在包块中，标识符 <code>init</code> 只能用于 <a href="#Package_initialization"><code>init</code> 函数</a>声明，且和空白标识符一样，它不会引出一个新的绑定。
 </p>
 
 <pre class="ebnf">
@@ -1447,52 +1444,39 @@ TopLevelDecl  = Declaration | FunctionDecl | MethodDecl .
 </pre>
 
 <p>
-The <i>scope</i> of a declared identifier is the extent of source text in which
-the identifier denotes the specified constant, type, variable, function, label, or package.
+	声明的标识符的<i>作用域</i> 是该标识符表示特定常量、类型、变量、函数、标签或包时所处的原始文本的范围。
 </p>
 
 <p>
-Go is lexically scoped using <a href="#Blocks">blocks</a>:
+	Go 使用<a href="#Blocks">块</a>来定作用域：
 </p>
 
 <ol>
-	<li>The scope of a <a href="#Predeclared_identifiers">predeclared identifier</a> is the universe block.</li>
+	<li><a href="#Predeclared_identifiers">预先声明的标识符</a>的作用域为 universe 块。</li>
 
-	<li>The scope of an identifier denoting a constant, type, variable,
-	    or function (but not method) declared at top level (outside any
-	    function) is the package block.</li>
+	<li>表示在顶层（任何函数之外）声明的常量，类型，变量或函数（但不是方法）的标识符的作用域是包块。</li>
 
-	<li>The scope of the package name of an imported package is the file block
-	    of the file containing the import declaration.</li>
+	<li>导入包的包名的作用域是包含导入声明在内的的文件的文件块。</li>
 
-	<li>The scope of an identifier denoting a method receiver, function parameter,
-	    or result variable is the function body.</li>
+	<li>表示方法接收者，函数参数或结果变量的标识符的作用域为函数主体。</li>
 
-	<li>The scope of a constant or variable identifier declared
-	    inside a function begins at the end of the ConstSpec or VarSpec
-	    (ShortVarDecl for short variable declarations)
-	    and ends at the end of the innermost containing block.</li>
+	<li>在函数内定义的常量或变量标识符的作用域起始于 ConstSpec 或 VarSpec（对短变量来说为 ShortVarDecl）的尾端，结束于包含着它的最内的块。</li>
 
-	<li>The scope of a type identifier declared inside a function
-	    begins at the identifier in the TypeSpec
-	    and ends at the end of the innermost containing block.</li>
+	<li>在函数内定义的类型标识符的作用域起始于 TypeSpec 的标识符，结束于包含着它的最内的块。</li>
 </ol>
 
 <p>
-An identifier declared in a block may be redeclared in an inner block.
-While the identifier of the inner declaration is in scope, it denotes
-the entity declared by the inner declaration.
+	在块中声明的标识符可以在其内的块中重新声明。
+	当内部声明的标识符在作用域内，它表示内部声明所声明的实体。
 </p>
 
 <p>
-The <a href="#Package_clause">package clause</a> is not a declaration; the package name
-does not appear in any scope. Its purpose is to identify the files belonging
-to the same <a href="#Packages">package</a> and to specify the default package name for import
-declarations.
+	<a href="#Package_clause">包子句</a>不是一个声明；包名不会在任何作用域中出现。
+	它的目的是确定一个文件属于相同的<a href="#Packages">包</a>和针对导入声明指定默认的包名。
 </p>
 
 
-<h3 id="Label_scopes">Label scopes</h3>
+<h3 id="Label_scopes">标签作用域</h3>
 
 <p>
 Labels are declared by <a href="#Labeled_statements">labeled statements</a> and are
