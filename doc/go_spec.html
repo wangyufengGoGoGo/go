@@ -1479,33 +1479,26 @@ TopLevelDecl  = Declaration | FunctionDecl | MethodDecl .
 <h3 id="Label_scopes">标签作用域</h3>
 
 <p>
-Labels are declared by <a href="#Labeled_statements">labeled statements</a> and are
-used in the <a href="#Break_statements">"break"</a>,
-<a href="#Continue_statements">"continue"</a>, and
-<a href="#Goto_statements">"goto"</a> statements.
-It is illegal to define a label that is never used.
-In contrast to other identifiers, labels are not block scoped and do
-not conflict with identifiers that are not labels. The scope of a label
-is the body of the function in which it is declared and excludes
-the body of any nested function.
+	标签是由<a href="#Labeled_statements">标签语句</a>所声明的，它用在 <a href="#Break_statements">"break"</a>、<a href="#Continue_statements">"continue"</a> 和 <a href="#Goto_statements">"goto"</a> 语句中。
+	定义一个不去用的标签是非法的。
+	与其它标识符相对比，标签不按块分作用域，
+	也不和那些不是标签的标识符冲突。
+	标记的作用域是声明时所在的函数的主体，不过要排除所有嵌套函数的主体。
 </p>
 
 
-<h3 id="Blank_identifier">Blank identifier</h3>
+<h3 id="Blank_identifier">空白标识符</h3>
 
 <p>
-The <i>blank identifier</i> is represented by the underscore character <code>_</code>.
-It serves as an anonymous placeholder instead of a regular (non-blank)
-identifier and has special meaning in <a href="#Declarations_and_scope">declarations</a>,
-as an <a href="#Operands">operand</a>, and in <a href="#Assignments">assignments</a>.
+	<i>空白标识符</i> 由下划线字符 <code>_</code> 所代表。
+	它充当一个匿名的占位符替代常规的（非空白的）标识符，并且作为<a href="#Operands">操作数</a>在<a href="#Declarations_and_scope">声明</a>和<a href="#Assignments">赋值</a>中有特殊的意义。
 </p>
 
 
-<h3 id="Predeclared_identifiers">Predeclared identifiers</h3>
+<h3 id="Predeclared_identifiers">预声明的标识符</h3>
 
 <p>
-The following identifiers are implicitly declared in the
-<a href="#Blocks">universe block</a>:
+	以下的标识符是在 <a href="#Blocks">universe 块</a>中被隐式地定义的：
 </p>
 <pre class="grammar">
 Types:
@@ -1525,43 +1518,34 @@ Functions:
 </pre>
 
 
-<h3 id="Exported_identifiers">Exported identifiers</h3>
+<h3 id="Exported_identifiers">暴露的标识符</h3>
 
 <p>
-An identifier may be <i>exported</i> to permit access to it from another package.
-An identifier is exported if both:
+	标识符可以被<i>暴露</i> 用来允许从另一个包访问到它。
+	一个标识符将会被暴露如果同时满足：
 </p>
 <ol>
-	<li>the first character of the identifier's name is a Unicode upper case
-	letter (Unicode class "Lu"); and</li>
-	<li>the identifier is declared in the <a href="#Blocks">package block</a>
-	or it is a <a href="#Struct_types">field name</a> or
-	<a href="#MethodName">method name</a>.</li>
+	<li>标识符的首字母为 Unicode 大写字母（Unicode 类 "Lu"）；</li>
+	<li>标识符是在<a href="#Blocks">包块</a>中声明的或者它是一个<a href="#Struct_types">字段名</a>或<a href="#MethodName">方法名</a>。</li>
 </ol>
 <p>
-All other identifiers are not exported.
+	所有其它的标识符是不暴露的。
 </p>
 
 
-<h3 id="Uniqueness_of_identifiers">Uniqueness of identifiers</h3>
+<h3 id="Uniqueness_of_identifiers">标识符的唯一性</h3>
 
 <p>
-Given a set of identifiers, an identifier is called <i>unique</i> if it is
-<i>different</i> from every other in the set.
-Two identifiers are different if they are spelled differently, or if they
-appear in different <a href="#Packages">packages</a> and are not
-<a href="#Exported_identifiers">exported</a>. Otherwise, they are the same.
+	给定一组标识符，如果标识符在集合中彼此<i>不同</i>，则称为<i>唯一</i> 标识符。
+	如果两个标识符拼写不同，或它们处于不同的<a href="#Packages">包</a>并且没有被<a href="#Exported_identifiers">暴露</a>，那么它们便是不同的。
+	否则，它们便是相同的。
 </p>
 
-<h3 id="Constant_declarations">Constant declarations</h3>
+<h3 id="Constant_declarations">常量声明</h3>
 
 <p>
-A constant declaration binds a list of identifiers (the names of
-the constants) to the values of a list of <a href="#Constant_expressions">constant expressions</a>.
-The number of identifiers must be equal
-to the number of expressions, and the <i>n</i>th identifier on
-the left is bound to the value of the <i>n</i>th expression on the
-right.
+	常量声明绑定了一个标识符的列表（常量的名字）到<a href="#Constant_expressions">常量表达式</a>列表的值。
+	标识符的数量必须等于表达式的数量，并且左侧第 <i>n</i> 个标识符绑定到了右侧第 <i>n</i> 个表达式的值。
 </p>
 
 <pre class="ebnf">
@@ -1573,38 +1557,29 @@ ExpressionList = Expression { "," Expression } .
 </pre>
 
 <p>
-If the type is present, all constants take the type specified, and
-the expressions must be <a href="#Assignability">assignable</a> to that type.
-If the type is omitted, the constants take the
-individual types of the corresponding expressions.
-If the expression values are untyped <a href="#Constants">constants</a>,
-the declared constants remain untyped and the constant identifiers
-denote the constant values. For instance, if the expression is a
-floating-point literal, the constant identifier denotes a floating-point
-constant, even if the literal's fractional part is zero.
+	如果存在该类型，则所有常量都需采用该指定的类型，并且表达式必须<a href="#Assignability">可分配</a>给该类型。
+	如果省略该类型，则常量采用相应表达式的各个类型。
+	如果表达式的值为无类型<a href="#Constants">常量</a>，那么声明的常量保持为无类型，常量标识符表示着该常量的值。
+	比如，如果一个表达式为浮点数字面量，那么即使字面量的小数部分为零，常量标识符依旧表示一个浮点数常量。
 </p>
 
 <pre>
 const Pi float64 = 3.14159265358979323846
-const zero = 0.0         // untyped floating-point constant
+const zero = 0.0         // 无类型的浮点数常量
 const (
 	size int64 = 1024
-	eof        = -1  // untyped integer constant
+	eof        = -1  // 无类型的整数常量
 )
-const a, b, c = 3, 4, "foo"  // a = 3, b = 4, c = "foo", untyped integer and string constants
+const a, b, c = 3, 4, "foo"  // a = 3, b = 4, c = "foo", 无类型的整数和字符串常量
 const u, v float32 = 0, 3    // u = 0.0, v = 3.0
 </pre>
 
 <p>
-Within a parenthesized <code>const</code> declaration list the
-expression list may be omitted from any but the first ConstSpec.
-Such an empty list is equivalent to the textual substitution of the
-first preceding non-empty expression list and its type if any.
-Omitting the list of expressions is therefore equivalent to
-repeating the previous list.  The number of identifiers must be equal
-to the number of expressions in the previous list.
-Together with the <a href="#Iota"><code>iota</code> constant generator</a>
-this mechanism permits light-weight declaration of sequential values:
+	在带括号的 <code>const</code> 声明列表中，除第一个 ConstSpec 外，其他任何表达式都可以省略。
+	这样的一个空列表相当于第一个前面的非空表达式列表及其类型（如果有的话）的文本替换。
+	省略表达式的列表就因此相当于重复之前的列表。
+	标识符的数量必须等于之前列表的表达式的数量。
+	这个机制结合 <a href="#Iota"><code>iota</code> 常量生成器</a>允许了连续值的轻量声明：
 </p>
 
 <pre>
@@ -1616,7 +1591,7 @@ const (
 	Thursday
 	Friday
 	Partyday
-	numberOfDays  // this constant is not exported
+	numberOfDays  // 这个常量是不暴露的
 )
 </pre>
 
