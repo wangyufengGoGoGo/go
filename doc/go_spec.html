@@ -1599,11 +1599,9 @@ const (
 <h3 id="Iota">Iota</h3>
 
 <p>
-Within a <a href="#Constant_declarations">constant declaration</a>, the predeclared identifier
-<code>iota</code> represents successive untyped integer <a href="#Constants">
-constants</a>. Its value is the index of the respective <a href="#ConstSpec">ConstSpec</a>
-in that constant declaration, starting at zero.
-It can be used to construct a set of related constants:
+	在一个<a href="#Constant_declarations">常量声明</a>中，预先声明的标识符 <code>iota</code> 代表连续的无类型的整数<a href="#Constants">常量</a>。
+	它的值从零开始，是在常量声明中各自的 <a href="#ConstSpec">ConstSpec</a> 的索引。
+	其可以用于构造一组相关常量的集合：
 </p>
 
 <pre>
@@ -1621,9 +1619,9 @@ const (
 )
 
 const (
-	u         = iota * 42  // u == 0     (untyped integer constant)
-	v float64 = iota * 42  // v == 42.0  (float64 constant)
-	w         = iota * 42  // w == 84    (untyped integer constant)
+	u         = iota * 42  // u == 0     (无类型的整数常量)
+	v float64 = iota * 42  // v == 42.0  (float64 常量)
+	w         = iota * 42  // w == 84    (无类型的整数常量)
 )
 
 const x = iota  // x == 0
@@ -1631,7 +1629,7 @@ const y = iota  // y == 0
 </pre>
 
 <p>
-By definition, multiple uses of <code>iota</code> in the same ConstSpec all have the same value:
+	定义上，在同一个 ConstSpec 中使用的多个 <code>iota</code> 都拥有相同的值：
 </p>
 
 <pre>
@@ -1644,16 +1642,15 @@ const (
 </pre>
 
 <p>
-This last example exploits the <a href="#Constant_declarations">implicit repetition</a>
-of the last non-empty expression list.
+	最后一个例子利用了上一个非空表达式列表的<a href="#Constant_declarations">隐式重复</a>。
 </p>
 
 
-<h3 id="Type_declarations">Type declarations</h3>
+<h3 id="Type_declarations">类型声明</h3>
 
 <p>
-A type declaration binds an identifier, the <i>type name</i>, to a <a href="#Types">type</a>.
-Type declarations come in two forms: alias declarations and type definitions.
+	一个类型声明绑定了一个标识符（也就是<i>类型名</i>）到一个<a href="#Types">类型</a>。
+	类型声明有两种形式：别名声明和类型定义。
 </p>
 
 <pre class="ebnf">
@@ -1661,10 +1658,10 @@ TypeDecl = "type" ( TypeSpec | "(" { TypeSpec ";" } ")" ) .
 TypeSpec = AliasDecl | TypeDef .
 </pre>
 
-<h4 id="Alias_declarations">Alias declarations</h4>
+<h4 id="Alias_declarations">别名声明</h4>
 
 <p>
-An alias declaration binds an identifier to the given type.
+	别名声明绑定了一个标识符到一个给定的类型。
 </p>
 
 <pre class="ebnf">
@@ -1672,24 +1669,21 @@ AliasDecl = identifier "=" Type .
 </pre>
 
 <p>
-Within the <a href="#Declarations_and_scope">scope</a> of
-the identifier, it serves as an <i>alias</i> for the type.
+	在标识符的<a href="#Declarations_and_scope">作用域</a>内，它充当了该类型的<i>别名</i>。
 </p>
 
 <pre>
 type (
-	nodeList = []*Node  // nodeList and []*Node are identical types
-	Polar    = polar    // Polar and polar denote identical types
+	nodeList = []*Node  // nodeList 和 []*Node 的类型一致
+	Polar    = polar    // Polar 和 polar 表示的类型一致
 )
 </pre>
 
 
-<h4 id="Type_definitions">Type definitions</h4>
+<h4 id="Type_definitions">类型定义</h4>
 
 <p>
-A type definition creates a new, distinct type with the same
-<a href="#Types">underlying type</a> and operations as the given type,
-and binds an identifier to it.
+	类型定义创建一个新的、不同的类型，其具有与给定类型相同的<a href="#Types">潜在类型</a>和操作，并将标识符绑定到它。
 </p>
 
 <pre class="ebnf">
@@ -1697,15 +1691,14 @@ TypeDef = identifier Type .
 </pre>
 
 <p>
-The new type is called a <i>defined type</i>.
-It is <a href="#Type_identity">different</a> from any other type,
-including the type it is created from.
+	新类型被称为<i>定义类型</i>。
+	它和其它任何的类型（包括那个给定类型）都是<a href="#Type_identity">不同的</a>。
 </p>
 
 <pre>
 type (
-	Point struct{ x, y float64 }  // Point and struct{ x, y float64 } are different types
-	polar Point                   // polar and Point denote different types
+	Point struct{ x, y float64 }  // Point 和 struct{x, y float64} 是不同的类型
+	polar Point                   // polar 和 Point 表示不同的类型
 )
 
 type TreeNode struct {
@@ -1721,38 +1714,34 @@ type Block interface {
 </pre>
 
 <p>
-A defined type may have <a href="#Method_declarations">methods</a> associated with it.
-It does not inherit any methods bound to the given type,
-but the <a href="#Method_sets">method set</a>
-of an interface type or of elements of a composite type remains unchanged:
+	定义类型可能具有与之关联的<a href="#Method_declarations">方法</a>。
+	它不会继承任何绑定到给定类型的方法，但接口类型或者复合类型元素的<a href="#Method_sets">方法集</a>是保持不变的：
 </p>
 
 <pre>
-// A Mutex is a data type with two methods, Lock and Unlock.
-type Mutex struct         { /* Mutex fields */ }
-func (m *Mutex) Lock()    { /* Lock implementation */ }
-func (m *Mutex) Unlock()  { /* Unlock implementation */ }
+// Mutex 是带两个方法 Lock 和 Unlock 的数据类型。
+type Mutex struct         { /* Mutex 字段 */ }
+func (m *Mutex) Lock()    { /* Lock 实现  */ }
+func (m *Mutex) Unlock()  { /* Unlock 实现  */ }
 
-// NewMutex has the same composition as Mutex but its method set is empty.
+// NewMutex 和 Mutex 有相同的构成，但是其方法集是空的。
 type NewMutex Mutex
 
-// The method set of PtrMutex's underlying type *Mutex remains unchanged,
-// but the method set of PtrMutex is empty.
+// PtrMutex 的潜在类型 *Mutex 的方法集是保持不变的，
+// 但 PtrMutex 的方法集是空的。
 type PtrMutex *Mutex
 
-// The method set of *PrintableMutex contains the methods
-// Lock and Unlock bound to its embedded field Mutex.
+// *PrintableMutex 的方法集包含了绑定到它的嵌入字段 Mutex 的方法 Lock 和 Unlock 。
 type PrintableMutex struct {
 	Mutex
 }
 
-// MyBlock is an interface type that has the same method set as Block.
+// MyBlock 是一个和 Block 有着相同方法集的接口类型。
 type MyBlock Block
 </pre>
 
 <p>
-Type definitions may be used to define different boolean, numeric,
-or string types and associate methods with them:
+	类型声明可以用于定义不同的布尔、数值或字符串类型，并关联方法给它：
 </p>
 
 <pre>
@@ -1771,11 +1760,10 @@ func (tz TimeZone) String() string {
 </pre>
 
 
-<h3 id="Variable_declarations">Variable declarations</h3>
+<h3 id="Variable_declarations">变量声明</h3>
 
 <p>
-A variable declaration creates one or more <a href="#Variables">variables</a>,
-binds corresponding identifiers to them, and gives each a type and an initial value.
+	变量声明会创建一个或多个<a href="#Variables">变量</a>，给它们绑定对应的标识符，并为每个标识符提供一个类型和一个初始值。
 </p>
 
 <pre class="ebnf">
@@ -1793,16 +1781,15 @@ var (
 	u, v, s = 2.0, 3.0, "bar"
 )
 var re, im = complexSqrt(-1)
-var _, found = entries[name]  // map lookup; only interested in "found"
+var _, found = entries[name]  // map 查找；只关心 "found"
 </pre>
 
 <p>
-If a list of expressions is given, the variables are initialized
-with the expressions following the rules for <a href="#Assignments">assignments</a>.
-Otherwise, each variable is initialized to its <a href="#The_zero_value">zero value</a>.
+	如果给出了表达式列表，那么变量会根据<a href="#Assignments">赋值</a>规则由表达式来初始化。否则，每个变量都被初始化为其<a href="#The_zero_value">零值</a>。
 </p>
 
 <p>
+
 If a type is present, each variable is given that type.
 Otherwise, each variable is given the type of the corresponding
 initialization value in the assignment.
