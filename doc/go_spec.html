@@ -1789,34 +1789,27 @@ var _, found = entries[name]  // map 查找；只关心 "found"
 </p>
 
 <p>
-
-If a type is present, each variable is given that type.
-Otherwise, each variable is given the type of the corresponding
-initialization value in the assignment.
-If that value is an untyped constant, it is first implicitly
-<a href="#Conversions">converted</a> to its <a href="#Constants">default type</a>;
-if it is an untyped boolean value, it is first implicitly converted to type <code>bool</code>.
-The predeclared value <code>nil</code> cannot be used to initialize a variable
-with no explicit type.
+	如果类型明确了，那么每个变量都会指定为那个类型。
+	否则，每个变量的类型会被给定为赋值中对应的初始化值的类型。
+	如果那个值是无类型的常量，它会先隐式地<a href="#Conversions">转换</a>为它的<a href="#Constants">默认类型</a>；如果它是一个无类型的布尔值，那么它会先隐式地转换为类型 <code>bool</code>。
+	预先声明的值 <code>nil</code> 不能用于初始化没有明确类型的变量。
 </p>
 
 <pre>
-var d = math.Sin(0.5)  // d is float64
-var i = 42             // i is int
-var t, ok = x.(T)      // t is T, ok is bool
-var n = nil            // illegal
+var d = math.Sin(0.5)  // d 是 float64
+var i = 42             // i 是 int
+var t, ok = x.(T)      // t 是 T, ok 是 bool
+var n = nil            // 非法
 </pre>
 
 <p>
-Implementation restriction: A compiler may make it illegal to declare a variable
-inside a <a href="#Function_declarations">function body</a> if the variable is
-never used.
+	实现限制：当在<a href="#Function_declarations">函数实体</a>中定义的变量没有被使用时，编译器可以认定它为非法的。
 </p>
 
-<h3 id="Short_variable_declarations">Short variable declarations</h3>
+<h3 id="Short_variable_declarations">短变量声明</h3>
 
 <p>
-A <i>short variable declaration</i> uses the syntax:
+	<i>短变量声明</i> 使用如下语法：
 </p>
 
 <pre class="ebnf">
@@ -1824,8 +1817,7 @@ ShortVarDecl = IdentifierList ":=" ExpressionList .
 </pre>
 
 <p>
-It is shorthand for a regular <a href="#Variable_declarations">variable declaration</a>
-with initializer expressions but no types:
+	它是带有初始化表达式但没有类型的常规<a href="#Variable_declarations">变量声明</a>的简写：
 </p>
 
 <pre class="grammar">
@@ -1836,39 +1828,30 @@ with initializer expressions but no types:
 i, j := 0, 10
 f := func() int { return 7 }
 ch := make(chan int)
-r, w, _ := os.Pipe()  // os.Pipe() returns a connected pair of Files and an error, if any
-_, y, _ := coord(p)   // coord() returns three values; only interested in y coordinate
+r, w, _ := os.Pipe()  // os.Pipe() 返回一个连接着的文件对和一个 error （如果有的话）
+_, y, _ := coord(p)   // coord() 返回三个值； 只关心 y 座标
 </pre>
 
 <p>
-Unlike regular variable declarations, a short variable declaration may <i>redeclare</i>
-variables provided they were originally declared earlier in the same block
-(or the parameter lists if the block is the function body) with the same type,
-and at least one of the non-<a href="#Blank_identifier">blank</a> variables is new.
-As a consequence, redeclaration can only appear in a multi-variable short declaration.
-Redeclaration does not introduce a new variable; it just assigns a new value to the original.
+	与常规变量声明不同，短变量声明可以<i>重复声明</i> 变量，这个变量是在同一个块（或者参数列表——如果该块是一个函数实体的话）内之前已经声明过的，且变量类型不能改变，但是重复声明语句最少要存在一个新的非<a href="#Blank_identifier">空白</a>变量。
+	因此，重复声明仅能出现在多变量简短声明中。重复声明不会引进新的变量；它仅赋一个新的值到原变量。
 </p>
 
 <pre>
 field1, offset := nextField(str, 0)
-field2, offset := nextField(str, offset)  // redeclares offset
-a, a := 1, 2                              // illegal: double declaration of a or no new variable if a was declared elsewhere
+field2, offset := nextField(str, offset)  // 重复声明了 offset
+a, a := 1, 2                              // 非法: a 声明了两次，或者如果 a 已经在其它地方声明的了话那么就没有新的变量了
 </pre>
 
 <p>
-Short variable declarations may appear only inside functions.
-In some contexts such as the initializers for
-<a href="#If_statements">"if"</a>,
-<a href="#For_statements">"for"</a>, or
-<a href="#Switch_statements">"switch"</a> statements,
-they can be used to declare local temporary variables.
+	短变量声明只能出现在函数内。
+	在一些针对诸如 <a href="#If_statements">"if"</a>、<a href="#For_statements">"for"</a> 或 <a href="#Switch_statements">"switch"</a> 这样的初始化器的上下文中，也可以用于声明本地临时变量。
 </p>
 
-<h3 id="Function_declarations">Function declarations</h3>
+<h3 id="Function_declarations">函数声明</h3>
 
 <p>
-A function declaration binds an identifier, the <i>function name</i>,
-to a function.
+	函数声明绑定一个标识符（也就是<i>函数名</i>）到一个函数。
 </p>
 
 <pre class="ebnf">
@@ -1878,9 +1861,7 @@ FunctionBody = Block .
 </pre>
 
 <p>
-If the function's <a href="#Function_types">signature</a> declares
-result parameters, the function body's statement list must end in
-a <a href="#Terminating_statements">terminating statement</a>.
+	如果函数的<a href="#Function_types">签名</a>声明了结果参数，那么函数体语句列表必须以<a href="#Terminating_statements">终止语句</a>结尾。
 </p>
 
 <pre>
@@ -1895,8 +1876,8 @@ func IndexRune(s string, r rune) int {
 </pre>
 
 <p>
-A function declaration may omit the body. Such a declaration provides the
-signature for a function implemented outside Go, such as an assembly routine.
+	一个函数声明可以缺少函数体。
+	这样的声明为 Go 语言外部实现的函数提供了签名，比如一个汇编程序。
 </p>
 
 <pre>
@@ -1907,15 +1888,14 @@ func min(x int, y int) int {
 	return y
 }
 
-func flushICache(begin, end uintptr)  // implemented externally
+func flushICache(begin, end uintptr)  // 由外部实现
 </pre>
 
-<h3 id="Method_declarations">Method declarations</h3>
+<h3 id="Method_declarations">方法声明</h3>
 
 <p>
-A method is a <a href="#Function_declarations">function</a> with a <i>receiver</i>.
-A method declaration binds an identifier, the <i>method name</i>, to a method,
-and associates the method with the receiver's <i>base type</i>.
+	方法是带<i>接收者</i> 的<a href="#Function_declarations">函数</a>。
+	一个方法声明绑定了一个标识符（也就是<i>方法名</i> ）为一个方法，并与接收者的<i>基础类型</i> 关联。
 </p>
 
 <pre class="ebnf">
@@ -1924,33 +1904,28 @@ Receiver   = Parameters .
 </pre>
 
 <p>
-The receiver is specified via an extra parameter section preceding the method
-name. That parameter section must declare a single non-variadic parameter, the receiver.
-Its type must be a <a href="#Type_definitions">defined</a> type <code>T</code> or a
-pointer to a defined type <code>T</code>. <code>T</code> is called the receiver
-<i>base type</i>. A receiver base type cannot be a pointer or interface type and
-it must be defined in the same package as the method.
-The method is said to be <i>bound</i> to its receiver base type and the method name
-is visible only within <a href="#Selectors">selectors</a> for type <code>T</code>
-or <code>*T</code>.
+	接收者是使用在方法名之前的额外的参数段来指定的。
+	这个参数段必须声明一个单一非 variadic 参数作为接收者。
+	其类型必须为<a href="#Type_definitions">定义类型</a> <code>T</code> 或到定义类型 <code>T</code> 的指针。
+	<code>T</code> 被称为接收者的<i>基础类型</i>。
+	接收者的基本类型不能是一个指针或者接口类型，并且它必须在和方法相同的包中被声明。
+	这个方法就被称为<i>绑定了</i> 这个基础类型，方法名只能通过类型 <code>T</code> 或 <code>*T</code> 的<a href="#Selectors">选择器</a>才可见。
 </p>
 
 <p>
-A non-<a href="#Blank_identifier">blank</a> receiver identifier must be
-<a href="#Uniqueness_of_identifiers">unique</a> in the method signature.
-If the receiver's value is not referenced inside the body of the method,
-its identifier may be omitted in the declaration. The same applies in
-general to parameters of functions and methods.
+	一个非<a href="#Blank_identifier">空白</a>接收者标识符在方法签名中必须是<a href="#Uniqueness_of_identifiers">唯一的</a>。
+	如果接收者的值在方法实体内没有被引用，那么其标识符在声明时是可以省略的。
+	一般来说这也同样适用于函数和方法的参数。
 </p>
 
 <p>
-For a base type, the non-blank names of methods bound to it must be unique.
-If the base type is a <a href="#Struct_types">struct type</a>,
-the non-blank method and field names must be distinct.
+	对一个基础类型来说，绑定到它的非空白的方法名必须是唯一的。
+	如果基础类型为<a href="#Struct_types">结构体类型</a>。
+	那么非空白的方法和字段名必须是不同的。
 </p>
 
 <p>
-Given defined type <code>Point</code>, the declarations
+	给定一个定义类型 <code>Point</code>，其声明如下：
 </p>
 
 <pre>
@@ -1965,14 +1940,12 @@ func (p *Point) Scale(factor float64) {
 </pre>
 
 <p>
-bind the methods <code>Length</code> and <code>Scale</code>,
-with receiver type <code>*Point</code>,
-to the base type <code>Point</code>.
+	绑定了方法 <code>Length</code> 和 <code>Scale</code>，接收者类型为 <code>*Point</code>，对应基础类型 <code>Point</code>。
 </p>
 
 <p>
-The type of a method is the type of a function with the receiver as first
-argument.  For instance, the method <code>Scale</code> has type
+	方法的类型是该函数结合接收者作为的第一个参数的类型。
+	比如，方法 <code>Scale</code> 有类型
 </p>
 
 <pre>
@@ -1980,11 +1953,11 @@ func(p *Point, factor float64)
 </pre>
 
 <p>
-However, a function declared this way is not a method.
+	不过，这样声明的函数并不是一个方法。
 </p>
 
 
-<h2 id="Expressions">Expressions</h2>
+<h2 id="Expressions">表达式</h2>
 
 <p>
 An expression specifies the computation of a value by applying
