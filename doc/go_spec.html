@@ -1871,7 +1871,7 @@ func IndexRune(s string, r rune) int {
 			return i
 		}
 	}
-	// invalid: missing return statement
+	// 无效: 缺少返回语句
 }
 </pre>
 
@@ -1960,25 +1960,18 @@ func(p *Point, factor float64)
 <h2 id="Expressions">表达式</h2>
 
 <p>
-An expression specifies the computation of a value by applying
-operators and functions to operands.
+	表达式通过将运算符和函数应用于操作数来规定值的计算。
 </p>
 
-<h3 id="Operands">Operands</h3>
+<h3 id="Operands">操作数</h3>
 
 <p>
-Operands denote the elementary values in an expression. An operand may be a
-literal, a (possibly <a href="#Qualified_identifiers">qualified</a>)
-non-<a href="#Blank_identifier">blank</a> identifier denoting a
-<a href="#Constant_declarations">constant</a>,
-<a href="#Variable_declarations">variable</a>, or
-<a href="#Function_declarations">function</a>,
-or a parenthesized expression.
+	操作数表示表达式中基本的值。
+	一个操作数可能是一个字面量；可能是一个（可能为<a href="#Qualified_identifiers">限定的</a>）表示<a href="#Constant_declarations">常量</a>、<a href="#Variable_declarations">变量</a>或<a href="#Function_declarations">函数</a>的非<a href="#Blank_identifier">空白</a>标识符或者一个圆括号括起来的表达式。
 </p>
 
 <p>
-The <a href="#Blank_identifier">blank identifier</a> may appear as an
-operand only on the left-hand side of an <a href="#Assignments">assignment</a>.
+	<a href="#Blank_identifier">空白标识符</a>只有在<a href="#Assignments">赋值</a>的左侧时才能作为一个操作数。
 </p>
 
 <pre class="ebnf">
@@ -1988,12 +1981,11 @@ BasicLit    = int_lit | float_lit | imaginary_lit | rune_lit | string_lit .
 OperandName = identifier | QualifiedIdent .
 </pre>
 
-<h3 id="Qualified_identifiers">Qualified identifiers</h3>
+<h3 id="Qualified_identifiers">限定标识符</h3>
 
 <p>
-A qualified identifier is an identifier qualified with a package name prefix.
-Both the package name and the identifier must not be
-<a href="#Blank_identifier">blank</a>.
+	限定标识符是由包名前缀所限定的标识符。
+	包名和标识符都不能为<a href="#Blank_identifier">空白</a>。
 </p>
 
 <pre class="ebnf">
@@ -2001,23 +1993,20 @@ QualifiedIdent = PackageName "." identifier .
 </pre>
 
 <p>
-A qualified identifier accesses an identifier in a different package, which
-must be <a href="#Import_declarations">imported</a>.
-The identifier must be <a href="#Exported_identifiers">exported</a> and
-declared in the <a href="#Blocks">package block</a> of that package.
+	限定标识符可以在不同的包内访问一个标识符，该标识符对应的包必须已经被<a href="#Import_declarations">导入</a>。
+	标识符则必须已经在那个包被<a href="#Exported_identifiers">暴露</a>并在<a href="#Blocks">包块</a>中被声明。
 </p>
 
 <pre>
-math.Sin	// denotes the Sin function in package math
+math.Sin	// 表示在包 math 中的 Sin 函数
 </pre>
 
-<h3 id="Composite_literals">Composite literals</h3>
+<h3 id="Composite_literals">复合字面量</h3>
 
 <p>
-Composite literals construct values for structs, arrays, slices, and maps
-and create a new value each time they are evaluated.
-They consist of the type of the literal followed by a brace-bound list of elements.
-Each element may optionally be preceded by a corresponding key.
+	复合字面量为结构体、数组、切片和 map 构造值，并在每次被求值时创建一个新的值。
+	复合字面量由字面量类型和紧跟着的花括号绑定的元素列表所组成。
+	每个元素可以选择前缀一个对应的键。
 </p>
 
 <pre class="ebnf">
@@ -2033,46 +2022,35 @@ Element       = Expression | LiteralValue .
 </pre>
 
 <p>
-The LiteralType's underlying type must be a struct, array, slice, or map type
-(the grammar enforces this constraint except when the type is given
-as a TypeName).
-The types of the elements and keys must be <a href="#Assignability">assignable</a>
-to the respective field, element, and key types of the literal type;
-there is no additional conversion.
-The key is interpreted as a field name for struct literals,
-an index for array and slice literals, and a key for map literals.
-For map literals, all elements must have a key. It is an error
-to specify multiple elements with the same field name or
-constant key value. For non-constant map keys, see the section on
-<a href="#Order_of_evaluation">evaluation order</a>.
+	LiteralType 的潜在类型必须是结构体、数组、切片或者 map 类型（文法强制执行此约束，除非类型是作为 TypeName 给出的）。
+	元素和键的类型必须是<a href="#Assignability">可分配</a>到字面量类型所对应的字段、元素和键类型的；这里没有额外的转换。
+	该键被解释为结构体字面量的字段名，数组和切片字面量的索引，map 字面量的键。
+	对于 map 字面量而言，索引元素必须要有一个键。
+	给多个元素指定相同的字段名或者不变的键值会出错。
+	查阅<a href="#Order_of_evaluation">求值顺序</a>一节获取非常量 map 键的信息。
 </p>
 
 <p>
-For struct literals the following rules apply:
+	对结构体字面量来说，应用如下规则：
 </p>
 <ul>
-	<li>A key must be a field name declared in the struct type.
+	<li>键必须为在结构体类型中声明的字段。
 	</li>
-	<li>An element list that does not contain any keys must
-	    list an element for each struct field in the
-	    order in which the fields are declared.
+	<li>不包含任何键的元素列表必须对每个结构体字段（字段声明的顺序）列出一个元素。
 	</li>
-	<li>If any element has a key, every element must have a key.
+	<li>只要一个元素有键，那么每个元素都必须要有键。
 	</li>
-	<li>An element list that contains keys does not need to
-	    have an element for each struct field. Omitted fields
-	    get the zero value for that field.
+	<li>包含键的元素列表不需要针对每个结构体字段有一个元素。
+		省略的字段会获得一个零值。
 	</li>
-	<li>A literal may omit the element list; such a literal evaluates
-	    to the zero value for its type.
+	<li>字面量可以省略元素列表；这样子的字面量相当于其类型的零值。
 	</li>
-	<li>It is an error to specify an element for a non-exported
-	    field of a struct belonging to a different package.
+	<li>针对属于不同包的结构体的非暴露字段来指定一个元素是错误的。
 	</li>
 </ul>
 
 <p>
-Given the declarations
+	给定一个声明
 </p>
 <pre>
 type Point3D struct { x, y, z float64 }
@@ -2080,36 +2058,29 @@ type Line struct { p, q Point3D }
 </pre>
 
 <p>
-one may write
+	你可以写
 </p>
 
 <pre>
-origin := Point3D{}                            // zero value for Point3D
-line := Line{origin, Point3D{y: -4, z: 12.3}}  // zero value for line.q.x
+origin := Point3D{}                            // Point3D 为零值
+line := Line{origin, Point3D{y: -4, z: 12.3}}  // line.q.x 为零值7
 </pre>
 
 <p>
-For array and slice literals the following rules apply:
+	对数组和切片字面量来说，应用如下规则：
 </p>
 <ul>
-	<li>Each element has an associated integer index marking
-	    its position in the array.
+	<li>数组中的每个元素有一个关联的标记其位置的整数索引。
 	</li>
-	<li>An element with a key uses the key as its index. The
-	    key must be a non-negative constant
-	    <a href="#Representability">representable</a> by
-	    a value of type <code>int</code>; and if it is typed
-	    it must be of integer type.
+	<li>带键的元素使用该键作为其索引。
+		这个键必须是可被类型 <code>int</code> 所<a href="#Representability">表示</a>的一个非负常量；而且如果其被赋予了类型的话则必须是整数类型。
 	</li>
-	<li>An element without a key uses the previous element's index plus one.
-	    If the first element has no key, its index is zero.
+	<li>不带键的元素使用之前元素的索引加一。如果第一个元素没有键，则其索引为零。
 	</li>
 </ul>
 
 <p>
-<a href="#Address_operators">Taking the address</a> of a composite literal
-generates a pointer to a unique <a href="#Variables">variable</a> initialized
-with the literal's value.
+	一个复合变量的<a href="#Address_operators">寻址</a>生成了一个到由字面量值初始化的唯一<a href="#Variables">变量</a>的指针。
 </p>
 
 <pre>
@@ -2117,25 +2088,20 @@ var pointer *Point3D = &amp;Point3D{y: 1000}
 </pre>
 
 <p>
-Note that the <a href="#The_zero_value">zero value</a> for a slice or map
-type is not the same as an initialized but empty value of the same type.
-Consequently, taking the address of an empty slice or map composite literal
-does not have the same effect as allocating a new slice or map value with
-<a href="#Allocation">new</a>.
+	注意的是，切片和 map 类型的<a href="#The_zero_value">零值</a>不同于同类型的初始化过但为空的值。
+	所以，获取空的切片或 map 复合字面量的地址与使用 <a href="#Allocation">new</a> 来分配一个新的切片或 map 的效果不同。
 </p>
 
 <pre>
-p1 := &amp;[]int{}    // p1 points to an initialized, empty slice with value []int{} and length 0
-p2 := new([]int)  // p2 points to an uninitialized slice with value nil and length 0
+p1 := &amp;[]int{}    // p1 指向一个初始化过的值为 []int{} 长度为 0 的空分片
+p2 := new([]int)  // p2 指向一个值为 nil 长度为 0 的未初始化过的分片
 </pre>
 
 <p>
-The length of an array literal is the length specified in the literal type.
-If fewer elements than the length are provided in the literal, the missing
-elements are set to the zero value for the array element type.
-It is an error to provide elements with index values outside the index range
-of the array. The notation <code>...</code> specifies an array length equal
-to the maximum element index plus one.
+	数组字面量的长度是字面量类型所指定的长度。
+	在字面量中，如果少于其长度的元素被提供了，那么缺漏的元素会被设置为数组元素类型的零值。
+	提供其索引值超出了数组索引范围的元素是错误的。
+	符号 <code>...</code> 指定一个数组长度等于其最大元素索引加一。
 </p>
 
 <pre>
@@ -2145,9 +2111,9 @@ days := [...]string{"Sat", "Sun"}  // len(days) == 2
 </pre>
 
 <p>
-A slice literal describes the entire underlying array literal.
-Thus the length and capacity of a slice literal are the maximum
-element index plus one. A slice literal has the form
+	切片字面量描述了整个底层数组字面量。
+	因此一个切片字面量的长度和容量为其最大元素索引加一。
+	切片字面量的格式为
 </p>
 
 <pre>
@@ -2155,7 +2121,7 @@ element index plus one. A slice literal has the form
 </pre>
 
 <p>
-and is shorthand for a slice operation applied to an array:
+	以及针对应用到数组的切片操作的简写为：
 </p>
 
 <pre>
@@ -2164,34 +2130,26 @@ tmp[0 : n]
 </pre>
 
 <p>
-Within a composite literal of array, slice, or map type <code>T</code>,
-elements or map keys that are themselves composite literals may elide the respective
-literal type if it is identical to the element or key type of <code>T</code>.
-Similarly, elements or keys that are addresses of composite literals may elide
-the <code>&amp;T</code> when the element or key type is <code>*T</code>.
+	在数组、切片或者 map 类型 <code>T</code> 的复合字面量中，如果元素或 map 的键本身为复合字面量，当其字面量类型和 <code>T</code> 的元素或键类型一致时，该字面量类型可以省略。
+	类似的，如果元素或键本身为复合字面量的地址，当元素或键的类型为 <code>*T</code> 时，该元素或键可以省略 <code>&amp;T</code>。
 </p>
 
 <pre>
-[...]Point{{1.5, -3.5}, {0, 0}}     // same as [...]Point{Point{1.5, -3.5}, Point{0, 0}}
-[][]int{{1, 2, 3}, {4, 5}}          // same as [][]int{[]int{1, 2, 3}, []int{4, 5}}
-[][]Point{{{0, 1}, {1, 2}}}         // same as [][]Point{[]Point{Point{0, 1}, Point{1, 2}}}
-map[string]Point{"orig": {0, 0}}    // same as map[string]Point{"orig": Point{0, 0}}
-map[Point]string{{0, 0}: "orig"}    // same as map[Point]string{Point{0, 0}: "orig"}
+[...]Point{{1.5, -3.5}, {0, 0}}     // 同 [...]Point{Point{1.5, -3.5}, Point{0, 0}}
+[][]int{{1, 2, 3}, {4, 5}}          // 同 [][]int{[]int{1, 2, 3}, []int{4, 5}}
+[][]Point{{{0, 1}, {1, 2}}}         // 同 [][]Point{[]Point{Point{0, 1}, Point{1, 2}}}
+map[string]Point{"orig": {0, 0}}    // 同 map[string]Point{"orig": Point{0, 0}}
+map[Point]string{{0, 0}: "orig"}    // 同 map[Point]string{Point{0, 0}: "orig"}
 
 type PPoint *Point
-[2]*Point{{1.5, -3.5}, {}}          // same as [2]*Point{&amp;Point{1.5, -3.5}, &amp;Point{}}
-[2]PPoint{{1.5, -3.5}, {}}          // same as [2]PPoint{PPoint(&amp;Point{1.5, -3.5}), PPoint(&amp;Point{})}
+[2]*Point{{1.5, -3.5}, {}}          // 同 [2]*Point{&amp;Point{1.5, -3.5}, &amp;Point{}}
+[2]PPoint{{1.5, -3.5}, {}}          // 同 [2]PPoint{PPoint(&amp;Point{1.5, -3.5}), PPoint(&amp;Point{})}
 </pre>
 
 <p>
-A parsing ambiguity arises when a composite literal using the
-TypeName form of the LiteralType appears as an operand between the
-<a href="#Keywords">keyword</a> and the opening brace of the block
-of an "if", "for", or "switch" statement, and the composite literal
-is not enclosed in parentheses, square brackets, or curly braces.
-In this rare case, the opening brace of the literal is erroneously parsed
-as the one introducing the block of statements. To resolve the ambiguity,
-the composite literal must appear within parentheses.
+	当一个使用 LiteralType 的 TypeName 形式的复合字面量表现为一个在<a href="#Keywords">关键字</a>和 "if"、"for" 或 "switch" 语句块的左花括号之间的操作数，并且该复合字面量不被圆括号、方括号或花括号所包围时，会出现一个解析歧义。
+	在这样子一个罕见的情况下，复合字面量的左花括号错误地被解析为语句块的引入。
+	为了解决这样子的歧义，这个复合字段必须在圆括号内。
 </p>
 
 <pre>
@@ -2200,20 +2158,20 @@ if (x == T{a,b,c}[i]) { … }
 </pre>
 
 <p>
-Examples of valid array, slice, and map literals:
+	有效的数组、切片和 map 字面量的例子：
 </p>
 
 <pre>
-// list of prime numbers
+// 质数列表
 primes := []int{2, 3, 5, 7, 9, 2147483647}
 
-// vowels[ch] is true if ch is a vowel
+// 当 ch 为元音时 vowels[ch] 为真
 vowels := [128]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true, 'y': true}
 
-// the array [10]float32{-1, 0, 0, 0, -0.1, -0.1, 0, 0, 0, -1}
+// 数组 [10]float32{-1, 0, 0, 0, -0.1, -0.1, 0, 0, 0, -1}
 filter := [10]float32{-1, 4: -0.1, -0.1, 9: -1}
 
-// frequencies in Hz for equal-tempered scale (A4 = 440Hz)
+// 十二平均律以 Hz 为单位的频率（A4 = 440Hz）
 noteFrequency := map[string]float32{
 	"C0": 16.35, "D0": 18.35, "E0": 20.60, "F0": 21.83,
 	"G0": 24.50, "A0": 27.50, "B0": 30.87,
@@ -2221,7 +2179,7 @@ noteFrequency := map[string]float32{
 </pre>
 
 
-<h3 id="Function_literals">Function literals</h3>
+<h3 id="Function_literals">函数字面值</h3>
 
 <p>
 A function literal represents an anonymous <a href="#Function_declarations">function</a>.
