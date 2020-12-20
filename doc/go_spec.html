@@ -2182,7 +2182,7 @@ noteFrequency := map[string]float32{
 <h3 id="Function_literals">函数字面值</h3>
 
 <p>
-A function literal represents an anonymous <a href="#Function_declarations">function</a>.
+	函数字面量代表一个匿名<a href="#Function_declarations">函数</a>。
 </p>
 
 <pre class="ebnf">
@@ -2194,7 +2194,7 @@ func(a, b int, z float64) bool { return a*b &lt; int(z) }
 </pre>
 
 <p>
-A function literal can be assigned to a variable or invoked directly.
+	函数字面量可以被赋给一个变量或者直接调用。
 </p>
 
 <pre>
@@ -2203,17 +2203,15 @@ func(ch chan int) { ch &lt;- ACK }(replyChan)
 </pre>
 
 <p>
-Function literals are <i>closures</i>: they may refer to variables
-defined in a surrounding function. Those variables are then shared between
-the surrounding function and the function literal, and they survive as long
-as they are accessible.
+	函数字面量是<i>闭包</i>：它们可以引用外层函数定义的变量。
+	然后这些变量就在外层函数和函数字面量间共享了，并且只要能被访问就可以一直存活。
 </p>
 
 
-<h3 id="Primary_expressions">Primary expressions</h3>
+<h3 id="Primary_expressions">主表达式</h3>
 
 <p>
-Primary expressions are the operands for unary and binary expressions.
+	主表达式是一元表达式和二元表达式的操作数。
 </p>
 
 <pre class="ebnf">
@@ -2249,12 +2247,10 @@ f.p[i].x()
 </pre>
 
 
-<h3 id="Selectors">Selectors</h3>
+<h3 id="Selectors">选择器</h3>
 
 <p>
-For a <a href="#Primary_expressions">primary expression</a> <code>x</code>
-that is not a <a href="#Package_clause">package name</a>, the
-<i>selector expression</i>
+	针对一个不为<a href="#Package_clause">包名</a>的<a href="#Primary_expressions">主表达式</a> <code>x</code>，<i>选择器表达式</i>
 </p>
 
 <pre>
@@ -2262,80 +2258,52 @@ x.f
 </pre>
 
 <p>
-denotes the field or method <code>f</code> of the value <code>x</code>
-(or sometimes <code>*x</code>; see below).
-The identifier <code>f</code> is called the (field or method) <i>selector</i>;
-it must not be the <a href="#Blank_identifier">blank identifier</a>.
-The type of the selector expression is the type of <code>f</code>.
-If <code>x</code> is a package name, see the section on
-<a href="#Qualified_identifiers">qualified identifiers</a>.
+	表示了值 <code>*x</code>（或者有时候为 <code>*x</code>；见下文）的字段或方法 <code>f</code>。
+	标识符 <code>f</code> 被称为（字段或方法）<i>选择器</i>，它一定不能为<a href="#Blank_identifier">空白标识符</a>。
+	选择器表达式的类型为 <code>f</code> 的类型。如果 <code>x</code> 是一个包名，看<a href="#Qualified_identifiers">限定标识符</a>一节。
 </p>
 
 <p>
-A selector <code>f</code> may denote a field or method <code>f</code> of
-a type <code>T</code>, or it may refer
-to a field or method <code>f</code> of a nested
-<a href="#Struct_types">embedded field</a> of <code>T</code>.
-The number of embedded fields traversed
-to reach <code>f</code> is called its <i>depth</i> in <code>T</code>.
-The depth of a field or method <code>f</code>
-declared in <code>T</code> is zero.
-The depth of a field or method <code>f</code> declared in
-an embedded field <code>A</code> in <code>T</code> is the
-depth of <code>f</code> in <code>A</code> plus one.
+	选择器 <code>f</code> 可以表示一个类型 <code>T</code> 的一个字段或方法 <code>f</code>，或者可以指嵌套在 <code>T</code> 中的<a href="#Struct_types">嵌入字段</a>的字段或方法 <code>f</code>。
+	遍历以达到 <code>f</code> 所经历的嵌入字段数被称为 <code>f</code> 在 <code>T</code> 中的<i>深度</i>。
+	在 <code>T</code> 中声明的字段或者方法 <code>f</code> 的深度为零。
+	在 <code>T</code> 中的嵌入字段 <code>A</code> 中声明的字段或者方法 <code>f</code> 的深度为 <code>A</code> 中 <code>f</code> 的深度加一。
 </p>
 
 <p>
-The following rules apply to selectors:
+	以下规则应用于选择器：
 </p>
 
 <ol>
 <li>
-For a value <code>x</code> of type <code>T</code> or <code>*T</code>
-where <code>T</code> is not a pointer or interface type,
-<code>x.f</code> denotes the field or method at the shallowest depth
-in <code>T</code> where there
-is such an <code>f</code>.
-If there is not exactly <a href="#Uniqueness_of_identifiers">one <code>f</code></a>
-with shallowest depth, the selector expression is illegal.
+	对于为类型 <code>T</code> 或 <code>*T</code> 的值 <code>x</code> （<code>T</code> 既不是指针类型也不是接口类型），<code>x.f</code> 表示在 <code>T</code> 中最浅深度的字段或者方法 <code>f</code>。
+	如果不是恰好<a href="#Uniqueness_of_identifiers">一个 <code>f</code></a> 在最浅深度的话，那么这个选择器表达式就是非法的。
 </li>
 
 <li>
-For a value <code>x</code> of type <code>I</code> where <code>I</code>
-is an interface type, <code>x.f</code> denotes the actual method with name
-<code>f</code> of the dynamic value of <code>x</code>.
-If there is no method with name <code>f</code> in the
-<a href="#Method_sets">method set</a> of <code>I</code>, the selector
-expression is illegal.
+	对于为接口类型 <code>I</code> 的值 <code>x</code>，<code>x.f</code> 表示动态值 <code>x</code> 的名为 <code>f</code> 的实际的方法。
+	如果在 <code>I</code> 的<a href="#Method_sets">方法集</a>中没有名为 <code>f</code> 的方法，那么这个选择器表达式就是非法的。
 </li>
 
 <li>
-As an exception, if the type of <code>x</code> is a <a href="#Type_definitions">defined</a>
-pointer type and <code>(*x).f</code> is a valid selector expression denoting a field
-(but not a method), <code>x.f</code> is shorthand for <code>(*x).f</code>.
+	例外情况，如果 <code>x</code> 的类型为一个<a href="#Type_definitions">定义的</a>指针类型并且 <code>(*x).f</code> 是一个有效的表示一个字段（但不是方法）的选择器表达式，那么 <code>x.f</code> 是 <code>(*x).f</code> 的简写
 </li>
 
 <li>
-In all other cases, <code>x.f</code> is illegal.
+	在所有其它情况中，<code>x.f</code> 是非法的。
 </li>
 
 <li>
-If <code>x</code> is of pointer type and has the value
-<code>nil</code> and <code>x.f</code> denotes a struct field,
-assigning to or evaluating <code>x.f</code>
-causes a <a href="#Run_time_panics">run-time panic</a>.
+	如果 <code>x</code> 是指针类型并且值为 <code>nil</code> 并且 <code>x.f</code> 表示一个结构体字段，那么，给 <code>x.f</code> 赋值或求值会导致一个 <a href="#Run_time_panics">run-time panic</a>。
 </li>
 
 <li>
-If <code>x</code> is of interface type and has the value
-<code>nil</code>, <a href="#Calls">calling</a> or
-<a href="#Method_values">evaluating</a> the method <code>x.f</code>
-causes a <a href="#Run_time_panics">run-time panic</a>.
+	如果 <code>x</code> 是接口类型并且值为 <code>nil</code>，那么<a href="#Calls">调用</a>或<a href="#Method_values">求值</a>方法 <code>x.f</code> 会导致一个 <a href="#Run_time_panics">run-time panic</a>。
 </li>
 </ol>
 
 <p>
-For example, given the declarations:
+	举例，给定声明：
 </p>
 
 <pre>
@@ -2361,13 +2329,13 @@ func (*T2) M2()
 
 type Q *T2
 
-var t T2     // with t.T0 != nil
-var p *T2    // with p != nil and (*p).T0 != nil
+var t T2     // 假定 t.T0 != nil
+var p *T2    // 假定 p != nil 并且 (*p).T0 != nil
 var q Q = p
 </pre>
 
 <p>
-one may write:
+	你可以写：
 </p>
 
 <pre>
@@ -2379,30 +2347,27 @@ p.z          // (*p).z
 p.y          // (*p).T1.y
 p.x          // (*(*p).T0).x
 
-q.x          // (*(*q).T0).x        (*q).x is a valid field selector
+q.x          // (*(*q).T0).x        ((*q).x 是一个有效的字段选择器
 
-p.M0()       // ((*p).T0).M0()      M0 expects *T0 receiver
-p.M1()       // ((*p).T1).M1()      M1 expects T1 receiver
-p.M2()       // p.M2()              M2 expects *T2 receiver
-t.M2()       // (&amp;t).M2()           M2 expects *T2 receiver, see section on Calls
+p.M0()       // ((*p).T0).M0()      M0 期望接收者 *T0
+p.M1()       // ((*p).T1).M1()      M1 期望接收者 T1
+p.M2()       // p.M2()              M2 期望接收者 *T2
+t.M2()       // (&amp;t).M2()           M2 期望接收者 *T2，查看调用一节
 </pre>
 
 <p>
-but the following is invalid:
+	但下述是无效的：
 </p>
 
 <pre>
-q.M0()       // (*q).M0 is valid but not a field selector
+q.M0()       // (*q).M0 是有效的，但不是字段选择器
 </pre>
 
 
-<h3 id="Method_expressions">Method expressions</h3>
+<h3 id="Method_expressions">方法表达式</h3>
 
 <p>
-If <code>M</code> is in the <a href="#Method_sets">method set</a> of type <code>T</code>,
-<code>T.M</code> is a function that is callable as a regular function
-with the same arguments as <code>M</code> prefixed by an additional
-argument that is the receiver of the method.
+	如果 <code>M</code> 在类型 <code>T</code> 的<a href="#Method_sets">方法集</a>中，那么 <code>T.M</code> 是一个函数，该函数可以携带和 <code>M</code> 同样的实参像普通函数一样调用，不过会给其前缀一个额外的实参作为该方法的接收者。
 </p>
 
 <pre class="ebnf">
@@ -2411,23 +2376,21 @@ ReceiverType  = Type .
 </pre>
 
 <p>
-Consider a struct type <code>T</code> with two methods,
-<code>Mv</code>, whose receiver is of type <code>T</code>, and
-<code>Mp</code>, whose receiver is of type <code>*T</code>.
+	考虑有两个方法的结构体类型 <code>T</code>，方法一是接收者为类型 <code>T</code> 的 <code>Mv</code>，其二是接收者为类型 <code>*T</code> 的 <code>Mp</code>。
 </p>
 
 <pre>
 type T struct {
 	a int
 }
-func (tv  T) Mv(a int) int         { return 0 }  // value receiver
-func (tp *T) Mp(f float32) float32 { return 1 }  // pointer receiver
+func (tv  T) Mv(a int) int         { return 0 }  // 值接收者
+func (tp *T) Mp(f float32) float32 { return 1 }  // 指针接收者
 
 var t T
 </pre>
 
 <p>
-The expression
+	表达式
 </p>
 
 <pre>
@@ -2435,8 +2398,7 @@ T.Mv
 </pre>
 
 <p>
-yields a function equivalent to <code>Mv</code> but
-with an explicit receiver as its first argument; it has signature
+	产生一个等同于 <code>Mv</code> 但带一个明确的接收者作为其第一个实参的函数；它的签名为
 </p>
 
 <pre>
@@ -2444,8 +2406,7 @@ func(tv T, a int) int
 </pre>
 
 <p>
-That function may be called normally with an explicit receiver, so
-these five invocations are equivalent:
+	这个函数可以在带一个明确的接收者情况下被正常地调用，所以以下五种调用是等同的：
 </p>
 
 <pre>
@@ -2457,7 +2418,7 @@ f2 := (T).Mv; f2(t, 7)
 </pre>
 
 <p>
-Similarly, the expression
+	类似的，表达式
 </p>
 
 <pre>
@@ -2465,7 +2426,7 @@ Similarly, the expression
 </pre>
 
 <p>
-yields a function value representing <code>Mp</code> with signature
+	产生一个签名为如下的代表 <code>Mp</code> 的函数值
 </p>
 
 <pre>
@@ -2473,8 +2434,7 @@ func(tp *T, f float32) float32
 </pre>
 
 <p>
-For a method with a value receiver, one can derive a function
-with an explicit pointer receiver, so
+	对于一个带值接收者的方法，可以推导出一个带明确指针接收者的函数，所以
 </p>
 
 <pre>
@@ -2482,7 +2442,7 @@ with an explicit pointer receiver, so
 </pre>
 
 <p>
-yields a function value representing <code>Mv</code> with signature
+	产生一个签名为如下的代表 <code>Mv</code> 的函数值
 </p>
 
 <pre>
@@ -2490,34 +2450,24 @@ func(tv *T, a int) int
 </pre>
 
 <p>
-Such a function indirects through the receiver to create a value
-to pass as the receiver to the underlying method;
-the method does not overwrite the value whose address is passed in
-the function call.
+	这样的一个函数通过接收者创建一个值间接地将其作为接收者传递给底层函数；这个方法在函数调用中不会覆盖那个地址被传递的值。
 </p>
 
 <p>
-The final case, a value-receiver function for a pointer-receiver method,
-is illegal because pointer-receiver methods are not in the method set
-of the value type.
+	最后一种情况，值接收者的函数对指针接收者的方法是非法的，因为指针接收者的方法不在该值类型的方法集中。
 </p>
 
 <p>
-Function values derived from methods are called with function call syntax;
-the receiver is provided as the first argument to the call.
-That is, given <code>f := T.Mv</code>, <code>f</code> is invoked
-as <code>f(t, 7)</code> not <code>t.f(7)</code>.
-To construct a function that binds the receiver, use a
-<a href="#Function_literals">function literal</a> or
-<a href="#Method_values">method value</a>.
+	从方法推导出的函数值是用函数调用语法来调用的；接收者作为调用的第一个实参。也就是，给定 <code>f := T.Mv</code>，<code>f</code> 是作为 <code>f(t, 7)</code> 而非 <code>t.f(7)</code> 被调用的。
+	使用<a href="#Function_literals">函数字面量</a>或<a href="#Method_values">方法值</a>来构建一个绑定了接收者的函数。
 </p>
 
 <p>
-It is legal to derive a function value from a method of an interface type.
-The resulting function takes an explicit receiver of that interface type.
+	从一个接口类型的方法中得到一个函数值是合法的。
+	所得到的函数使用该接口类型的显式的接收者。
 </p>
 
-<h3 id="Method_values">Method values</h3>
+<h3 id="Method_values">方法值</h3>
 
 <p>
 If the expression <code>x</code> has static type <code>T</code> and
