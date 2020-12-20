@@ -2470,33 +2470,25 @@ func(tv *T, a int) int
 <h3 id="Method_values">方法值</h3>
 
 <p>
-If the expression <code>x</code> has static type <code>T</code> and
-<code>M</code> is in the <a href="#Method_sets">method set</a> of type <code>T</code>,
-<code>x.M</code> is called a <i>method value</i>.
-The method value <code>x.M</code> is a function value that is callable
-with the same arguments as a method call of <code>x.M</code>.
-The expression <code>x</code> is evaluated and saved during the evaluation of the
-method value; the saved copy is then used as the receiver in any calls,
-which may be executed later.
+	如果表达式 <code>x</code> 有静态类型 <code>T</code>，并且 <code>M</code> 在类型 <code>T</code> 的<a href="#Method_sets">方法集</a>中，那么 <code>x.M</code> 被称为一个<i>方法值/i>。
+	方法值 <code>x.M</code> 是一个可以用与 <code>x.M</code> 的方法调用的相同的实参来调用函数值。
+	表达式 <code>x</code> 在该方法值的求值过程中被求值和保存；保存的副本被用在任意调用中（可能会在后续被执行的）作为接收者。
 </p>
 
 <p>
-The type <code>T</code> may be an interface or non-interface type.
+	类型 <code>T</code> 可以为接口或者非接口类型。
 </p>
 
 <p>
-As in the discussion of <a href="#Method_expressions">method expressions</a> above,
-consider a struct type <code>T</code> with two methods,
-<code>Mv</code>, whose receiver is of type <code>T</code>, and
-<code>Mp</code>, whose receiver is of type <code>*T</code>.
+	就像上面<a href="#Method_expressions">方法表达式</a>所讨论的，考虑一个带两个方法的结构体 <code>T</code>，方法一是接收者为类型 <code>T</code> 的 <code>Mv</code>，其二是接收者为类型 <code>*T</code> 的 <code>Mp</code>。
 </p>
 
 <pre>
 type T struct {
 	a int
 }
-func (tv  T) Mv(a int) int         { return 0 }  // value receiver
-func (tp *T) Mp(f float32) float32 { return 1 }  // pointer receiver
+func (tv  T) Mv(a int) int         { return 0 }  // 值接收者
+func (tp *T) Mp(f float32) float32 { return 1 }  // 指针接收者
 
 var t T
 var pt *T
@@ -2504,7 +2496,7 @@ func makeT() T
 </pre>
 
 <p>
-The expression
+	表达式
 </p>
 
 <pre>
@@ -2512,7 +2504,7 @@ t.Mv
 </pre>
 
 <p>
-yields a function value of type
+	产生了一个类型如下的函数值
 </p>
 
 <pre>
@@ -2520,7 +2512,7 @@ func(int) int
 </pre>
 
 <p>
-These two invocations are equivalent:
+	这两种调用是等同的：
 </p>
 
 <pre>
@@ -2529,7 +2521,7 @@ f := t.Mv; f(7)
 </pre>
 
 <p>
-Similarly, the expression
+	类似的，表达式
 </p>
 
 <pre>
@@ -2537,7 +2529,7 @@ pt.Mp
 </pre>
 
 <p>
-yields a function value of type
+	产生了一个类型如下的函数值
 </p>
 
 <pre>
@@ -2545,38 +2537,35 @@ func(float32) float32
 </pre>
 
 <p>
-As with <a href="#Selectors">selectors</a>, a reference to a non-interface method with a value receiver
-using a pointer will automatically dereference that pointer: <code>pt.Mv</code> is equivalent to <code>(*pt).Mv</code>.
+	就<a href="#Selectors">选择器</a>来说，如果以值作为接收者的非接口方法使用了指针来引用，那么会自动解除到该指针的引用：<code>pt.Mv</code> 等同于 <code>(*pt).Mv</code>。
 </p>
 
 <p>
-As with <a href="#Calls">method calls</a>, a reference to a non-interface method with a pointer receiver
-using an addressable value will automatically take the address of that value: <code>t.Mp</code> is equivalent to <code>(&amp;t).Mp</code>.
+	就<a href="#Calls">方法调用</a>来说，如果以指针作为接收者的非接口方法使用了可寻址值来引用，那么会自动获取该值的地址来引用：<code>t.Mp</code> 等同于 <code>(&amp;t).Mp</code>。
 </p>
 
 <pre>
-f := t.Mv; f(7)   // like t.Mv(7)
-f := pt.Mp; f(7)  // like pt.Mp(7)
-f := pt.Mv; f(7)  // like (*pt).Mv(7)
-f := t.Mp; f(7)   // like (&amp;t).Mp(7)
-f := makeT().Mp   // invalid: result of makeT() is not addressable
+f := t.Mv; f(7)   // 就像 t.Mv(7)
+f := pt.Mp; f(7)  // 就像 pt.Mp(7)
+f := pt.Mv; f(7)  // 就像 (*pt).Mv(7)
+f := t.Mp; f(7)   // 就像 (&amp;t).Mp(7)
+f := makeT().Mp   // 无效的: makeT() 的结果是不可寻址的
 </pre>
 
 <p>
-Although the examples above use non-interface types, it is also legal to create a method value
-from a value of interface type.
+	虽然以上的例子使用了非接口类型，但是从接口类型的值来创建一个方法值同样是合法的。
 </p>
 
 <pre>
 var i interface { M(int) } = myVal
-f := i.M; f(7)  // like i.M(7)
+f := i.M; f(7)  // 就像 i.M(7)
 </pre>
 
 
-<h3 id="Index_expressions">Index expressions</h3>
+<h3 id="Index_expressions">索引表达式</h3>
 
 <p>
-A primary expression of the form
+	如下形式的主表达式
 </p>
 
 <pre>
@@ -2584,36 +2573,31 @@ a[x]
 </pre>
 
 <p>
-denotes the element of the array, pointer to array, slice, string or map <code>a</code> indexed by <code>x</code>.
-The value <code>x</code> is called the <i>index</i> or <i>map key</i>, respectively.
-The following rules apply:
+	表示了可被 <code>x</code> 索引的数组、到数组的指针、切片、字符串或者被 <code>x</code> 索引的 map <code>a</code> 的元素。
+	值 <code>x</code> 分别被称为<i>索引</i> 或 <i>map 键</i>。以下规则应用于：
 </p>
 
 <p>
-If <code>a</code> is not a map:
+	如果 <code>a</code> 不是一个 map：
 </p>
 <ul>
-	<li>the index <code>x</code> must be of integer type or an untyped constant</li>
-	<li>a constant index must be non-negative and
-	    <a href="#Representability">representable</a> by a value of type <code>int</code></li>
-	<li>a constant index that is untyped is given type <code>int</code></li>
-	<li>the index <code>x</code> is <i>in range</i> if <code>0 &lt;= x &lt; len(a)</code>,
-	    otherwise it is <i>out of range</i></li>
+	<li>索引 <code>x</code> 必须是整数类型或者无类型常量</li>
+	<li>常量索引必须为非负且可以被类型 <code>int</code> <a href="#Representability">所表示的</a>的一个值</li>
+	<li>无类型的常量索引会被给定一个类型 <code>int</code></li>
+	<li>当 <code>0 &lt;= x &lt; len(a)</code> 时，索引 <code>x</code> <i>在范围内</i>，否则它就<i>超出了范围</i></li>
 </ul>
 
 <p>
-For <code>a</code> of <a href="#Array_types">array type</a> <code>A</code>:
+	对于为<a href="#Array_types">数组类型</a> <code>A</code> 的 <code>a</code>：
 </p>
 <ul>
-	<li>a <a href="#Constants">constant</a> index must be in range</li>
-	<li>if <code>x</code> is out of range at run time,
-	    a <a href="#Run_time_panics">run-time panic</a> occurs</li>
-	<li><code>a[x]</code> is the array element at index <code>x</code> and the type of
-	    <code>a[x]</code> is the element type of <code>A</code></li>
+	<li><a href="#Constants">常量</a>索引必须在范围内</li>
+	<li>如果在运行时 <code>x</code> 超出了范围，那么会发生一个<a href="#Run_time_panics">run-time panic</a></li>
+	<li><code>a[x]</code> 是一个在索引 <code>x</code> 处的数组元素，且 <code>a[x]</code> 的类型是 <code>A</code> 的元素类型</li>
 </ul>
 
 <p>
-For <code>a</code> of <a href="#Pointer_types">pointer</a> to array type:
+	对于到数组类型的<a href="#Pointer_types">指针</a> <code>a</code>：
 </p>
 <ul>
 	<li><code>a[x]</code> is shorthand for <code>(*a)[x]</code></li>
