@@ -2470,7 +2470,7 @@ func(tv *T, a int) int
 <h3 id="Method_values">方法值</h3>
 
 <p>
-	如果表达式 <code>x</code> 有静态类型 <code>T</code>，并且 <code>M</code> 在类型 <code>T</code> 的<a href="#Method_sets">方法集</a>中，那么 <code>x.M</code> 被称为一个<i>方法值/i>。
+	如果表达式 <code>x</code> 有静态类型 <code>T</code>，并且 <code>M</code> 在类型 <code>T</code> 的<a href="#Method_sets">方法集</a>中，那么 <code>x.M</code> 被称为一个<i>方法值</i>。
 	方法值 <code>x.M</code> 是一个可以用与 <code>x.M</code> 的方法调用的相同的实参来调用函数值。
 	表达式 <code>x</code> 在该方法值的求值过程中被求值和保存；保存的副本被用在任意调用中（可能会在后续被执行的）作为接收者。
 </p>
@@ -2600,54 +2600,42 @@ a[x]
 	对于到数组类型的<a href="#Pointer_types">指针</a> <code>a</code>：
 </p>
 <ul>
-	<li><code>a[x]</code> is shorthand for <code>(*a)[x]</code></li>
+	<li><code>a[x]</code> 是 <code>(*a)[x]</code> 的简写</li>
 </ul>
 
 <p>
-For <code>a</code> of <a href="#Slice_types">slice type</a> <code>S</code>:
+	对于为<a href="#Slice_types">切片类型</a> <code>S</code> 的 <code>a</code>：
 </p>
 <ul>
-	<li>if <code>x</code> is out of range at run time,
-	    a <a href="#Run_time_panics">run-time panic</a> occurs</li>
-	<li><code>a[x]</code> is the slice element at index <code>x</code> and the type of
-	    <code>a[x]</code> is the element type of <code>S</code></li>
+	<li>如果在运行时 <code>x</code> 超出了范围，那么会发生一个 <a href="#Run_time_panics">run-time panic</a></li>
+	<li><code>a[x]</code> 是在索引 <code>x</code> 处的切片元素，且 <code>a[x]</code> 的类型是 <code>S</code> 的元素类型</li>
 </ul>
 
 <p>
-For <code>a</code> of <a href="#String_types">string type</a>:
+	对于<a href="#String_types">字符串类型</a> <code>a</code>：
 </p>
 <ul>
-	<li>a <a href="#Constants">constant</a> index must be in range
-	    if the string <code>a</code> is also constant</li>
-	<li>if <code>x</code> is out of range at run time,
-	    a <a href="#Run_time_panics">run-time panic</a> occurs</li>
-	<li><code>a[x]</code> is the non-constant byte value at index <code>x</code> and the type of
-	    <code>a[x]</code> is <code>byte</code></li>
-	<li><code>a[x]</code> may not be assigned to</li>
+	<li>当字符串 <code>a</code> 是常量时，<a href="#Constants">常量</a>索引必须在范围内</li>
+	<li>如果在运行时 <code>x</code> 超出了范围，那么会发生一个 <a href="#Run_time_panics">run-time panic</a></li>
+	<li><code>a[x]</code> 是在索引 <code>x</code> 处的非常量字节，并且 <code>a[x]</code> 的类型为 <code>byte</code></li>
+	<li><code>a[x]</code> 不能被赋值</li>
 </ul>
 
 <p>
-For <code>a</code> of <a href="#Map_types">map type</a> <code>M</code>:
+	对于为<a href="#Map_types">map 类型</a> <code>M</code> 的 <code>a</code>：
 </p>
 <ul>
-	<li><code>x</code>'s type must be
-	    <a href="#Assignability">assignable</a>
-	    to the key type of <code>M</code></li>
-	<li>if the map contains an entry with key <code>x</code>,
-	    <code>a[x]</code> is the map element with key <code>x</code>
-	    and the type of <code>a[x]</code> is the element type of <code>M</code></li>
-	<li>if the map is <code>nil</code> or does not contain such an entry,
-	    <code>a[x]</code> is the <a href="#The_zero_value">zero value</a>
-	    for the element type of <code>M</code></li>
+	<li><code>x</code> 的类型必须是<a href="#Assignability">可分配</a>为 <code>M</code> 的键类型的</li>
+	<li>如果 map 带键为 <code>x</code> 的条目，那么 <code>a[x]</code> 是带键 <code>x</code> 的 map 值，并且 <code>a[x]</code> 的类型为 <code>M</code> 的值类型</li>
+	<li>如果 map 为 <code>nil</code> 或者不存这样这样子的一个条目，那么 <code>a[x]</code> 是针对 <code>M</code> 的值类型的<a href="#The_zero_value">零值</a></li>
 </ul>
 
 <p>
-Otherwise <code>a[x]</code> is illegal.
+	其它情况下 <code>a[x]</code> 是非法的。
 </p>
 
 <p>
-An index expression on a map <code>a</code> of type <code>map[K]V</code>
-used in an <a href="#Assignments">assignment</a> or initialization of the special form
+	在类型为 <code>map[K]V</code> 的 map <code>a</code> 中的用在<a href="#Assignments">赋值</a>或特殊格式的初始化中的索引表达式
 </p>
 
 <pre>
@@ -2657,29 +2645,25 @@ var v, ok = a[x]
 </pre>
 
 <p>
-yields an additional untyped boolean value. The value of <code>ok</code> is
-<code>true</code> if the key <code>x</code> is present in the map, and
-<code>false</code> otherwise.
+	产生了一个额外的无类型的布尔值。当键 <code>x</code> 存在于 map 中时，<code>ok</code> 的值为 <code>true</code>，否则为 <code>false</code>。
 </p>
 
 <p>
-Assigning to an element of a <code>nil</code> map causes a
-<a href="#Run_time_panics">run-time panic</a>.
+	给 <code>nil</code> map 的元素赋值会导致一个 <a href="#Run_time_panics">run-time panic</a>。
 </p>
 
 
-<h3 id="Slice_expressions">Slice expressions</h3>
+<h3 id="Slice_expressions">切片表达式</h3>
 
 <p>
-Slice expressions construct a substring or slice from a string, array, pointer
-to array, or slice. There are two variants: a simple form that specifies a low
-and high bound, and a full form that also specifies a bound on the capacity.
+	切片表达式根据字符串、数组、指向数组或切片的指针构建一个子字符串或者切片。
+	有两种变体：一种简单的形式，它指定一个下限和一个上限；一种完整的形式，它还指定一个容量的界限。
 </p>
 
-<h4>Simple slice expressions</h4>
+<h4>简单的切片表达式</h4>
 
 <p>
-For a string, array, pointer to array, or slice <code>a</code>, the primary expression
+	对于一个字符串、数组、到数组的指针或者分片 <code>a</code>，主表达式
 </p>
 
 <pre>
@@ -2687,11 +2671,10 @@ a[low : high]
 </pre>
 
 <p>
-constructs a substring or slice. The <i>indices</i> <code>low</code> and
-<code>high</code> select which elements of operand <code>a</code> appear
-in the result. The result has indices starting at 0 and length equal to
-<code>high</code>&nbsp;-&nbsp;<code>low</code>.
-After slicing the array <code>a</code>
+	构造了一个子字符串或者切片。
+	索引 <code>low</code> 和 <code>high</code> 选择了操作数 <code>a</code> 的哪些元素作为结果被显示。
+	结果有从零开始且长度等于 <code>high</code> - <code>low</code> 的索引。
+	在分片了数组 <code>a</code> 后
 </p>
 
 <pre>
@@ -2700,7 +2683,7 @@ s := a[1:4]
 </pre>
 
 <p>
-the slice <code>s</code> has type <code>[]int</code>, length 3, capacity 4, and elements
+	切片 <code>s</code> 有类型 <code>[]int</code>，长度 3，容量 4，以及元素
 </p>
 
 <pre>
@@ -2710,57 +2693,48 @@ s[2] == 4
 </pre>
 
 <p>
-For convenience, any of the indices may be omitted. A missing <code>low</code>
-index defaults to zero; a missing <code>high</code> index defaults to the length of the
-sliced operand:
+	为了方便，每一个索引都可能被省略。
+	缺少的 <code>low</code> 索引默认为零；缺少的 <code>high</code> 索引默认为被切片的操作数的长度：
 </p>
 
 <pre>
-a[2:]  // same as a[2 : len(a)]
-a[:3]  // same as a[0 : 3]
-a[:]   // same as a[0 : len(a)]
+a[2:]  // 同 a[2 : len(a)]
+a[:3]  // 同 a[0 : 3]
+a[:]   // 同 a[0 : len(a)]
 </pre>
 
 <p>
-If <code>a</code> is a pointer to an array, <code>a[low : high]</code> is shorthand for
-<code>(*a)[low : high]</code>.
+	如果 <code>a</code> 为到数组的指针，那么 <code>a[low : high]</code> 为 <code>(*a)[low : high]</code> 的简写。
 </p>
 
 <p>
-For arrays or strings, the indices are <i>in range</i> if
-<code>0</code> &lt;= <code>low</code> &lt;= <code>high</code> &lt;= <code>len(a)</code>,
-otherwise they are <i>out of range</i>.
-For slices, the upper index bound is the slice capacity <code>cap(a)</code> rather than the length.
-A <a href="#Constants">constant</a> index must be non-negative and
-<a href="#Representability">representable</a> by a value of type
-<code>int</code>; for arrays or constant strings, constant indices must also be in range.
-If both indices are constant, they must satisfy <code>low &lt;= high</code>.
-If the indices are out of range at run time, a <a href="#Run_time_panics">run-time panic</a> occurs.
+	对于数组或者字符串，如果 <code>0</code> &lt;= <code>low</code> &lt;= <code>high</code> &lt;= <code>len(a)</code>，那么索引是<i>在范围内</i> 的，否则就<i>超出了范围</i>。
+	对于切片，上索引边界是切片的容量 <code>cap(a)</code> 而不是其长度。
+	<a href="#Constants">常量</a>索引必须为非负且是可以被类型 <code>int</code> <a href="#Representability">所表示的</a>；对于数组和常量字符串而言，常量索引也必须在范围内。
+	如果两个索引都是常量，那么它们必须满足 <code>low &lt;= high</code>。
+	如果在运行时索引超出了范围，那么会发生<a href="#Run_time_panics">run-time panic</a>。
 </p>
 
 <p>
-Except for <a href="#Constants">untyped strings</a>, if the sliced operand is a string or slice,
-the result of the slice operation is a non-constant value of the same type as the operand.
-For untyped string operands the result is a non-constant value of type <code>string</code>.
-If the sliced operand is an array, it must be <a href="#Address_operators">addressable</a>
-and the result of the slice operation is a slice with the same element type as the array.
+	除了<a href="#Constants">无类型的字符串</a>以外，如果被切片的操作数是一个字符串或者切片，那么切片操作的结果为一个和该操作数具有相同类型的非常量值。
+	对于无类型字符串操作数而言，其结果是一个类型为 <code>string</code> 的非常量值。
+	如果被切片的操作数是一个数组，那么它必须是<a href="#Address_operators">可被寻址的</a>，并且切片操作的结果为和该数组具有相同元素类型的切片。
 </p>
 
 <p>
-If the sliced operand of a valid slice expression is a <code>nil</code> slice, the result
-is a <code>nil</code> slice. Otherwise, if the result is a slice, it shares its underlying
-array with the operand.
+	如果一个有效的切片表达式的被切片的操作数是一个 <code>nil</code> 切片，那么结果是一个 <code>nil</code> 切片。
+	否则，结果会共享该操作数的底层数组。
 </p>
 
 <pre>
 var a [10]int
-s1 := a[3:7]   // underlying array of s1 is array a; &amp;s1[2] == &amp;a[5]
-s2 := s1[1:4]  // underlying array of s2 is underlying array of s1 which is array a; &amp;s2[1] == &amp;a[5]
-s2[1] = 42     // s2[1] == s1[2] == a[5] == 42; they all refer to the same underlying array element
+s1 := a[3:7]   // s1 的底层数组是数组 a； &s1[2] == &a[5]
+s2 := s1[1:4]  // s2 的底层数组是 s1 的底层数组 a； &s2[1] == &a[5]
+s2[1] = 42     // s2[1] == s1[2] == a[5] == 42；它们指的都是相同的底层数组元素
 </pre>
 
 
-<h4>Full slice expressions</h4>
+<h4>完整的切片表达式</h4>
 
 <p>
 For an array, pointer to array, or slice <code>a</code> (but not a string), the primary expression
