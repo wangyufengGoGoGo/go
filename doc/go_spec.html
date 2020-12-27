@@ -2737,7 +2737,7 @@ s2[1] = 42     // s2[1] == s1[2] == a[5] == 42；它们指的都是相同的底�
 <h4>完整的切片表达式</h4>
 
 <p>
-For an array, pointer to array, or slice <code>a</code> (but not a string), the primary expression
+	对于数组、到数组的指针或者切片 <code>a</code>（不是一个字符串），主表达式
 </p>
 
 <pre>
@@ -2745,10 +2745,10 @@ a[low : high : max]
 </pre>
 
 <p>
-constructs a slice of the same type, and with the same length and elements as the simple slice
-expression <code>a[low : high]</code>. Additionally, it controls the resulting slice's capacity
-by setting it to <code>max - low</code>. Only the first index may be omitted; it defaults to 0.
-After slicing the array <code>a</code>
+	构成了一个有相同类型的切片，并且带有和简单的切片表达式 <code>a[low : high]</code> 一样的长度和元素。
+	此外，它通过设置切片的容量为 <code>max - low</code> 来控制产生的切片的容量。
+	只有第一个索引是可以被省略的；默认为零。
+	在切片数组 <code>a</code> 后
 </p>
 
 <pre>
@@ -2757,7 +2757,7 @@ t := a[1:3:5]
 </pre>
 
 <p>
-the slice <code>t</code> has type <code>[]int</code>, length 2, capacity 4, and elements
+	切片 <code>t</code> 有类型 <code>[]int</code>，长度 2，容量 4，以及元素
 </p>
 
 <pre>
@@ -2766,27 +2766,21 @@ t[1] == 3
 </pre>
 
 <p>
-As for simple slice expressions, if <code>a</code> is a pointer to an array,
-<code>a[low : high : max]</code> is shorthand for <code>(*a)[low : high : max]</code>.
-If the sliced operand is an array, it must be <a href="#Address_operators">addressable</a>.
+	和简单的切片表达式一样，如果 <code>a</code> 是一个到数组的指针，那么 <code>a[low : high : max]</code> 是 <code>(*a)[low : high : max]</code> 的简写。
+	如果被切片的操作数是一个数组，那么它必须是<a href="#Address_operators">可被寻址的</a>。
 </p>
 
 <p>
-The indices are <i>in range</i> if <code>0 &lt;= low &lt;= high &lt;= max &lt;= cap(a)</code>,
-otherwise they are <i>out of range</i>.
-A <a href="#Constants">constant</a> index must be non-negative and
-<a href="#Representability">representable</a> by a value of type
-<code>int</code>; for arrays, constant indices must also be in range.
-If multiple indices are constant, the constants that are present must be in range relative to each
-other.
-If the indices are out of range at run time, a <a href="#Run_time_panics">run-time panic</a> occurs.
+	如果 <code>0 &lt;= low &lt;= high &lt;= max &lt;= cap(a)</code>，那么索引是<i>在范围内</i> 的，否则就<i>超出了范围</i>。
+	<a href="#Constants">常量</a>索引必须是非负的且可以被类型 <code>int</code> <a href="#Representability">所代表</a>的值；对于数组，常量索引也必须在范围内。
+	如果多个索引为常量，那么存在的常量必须在相对彼此的范围内。
+	如果在运行时索引超出了范围，那么会出现一个<a href="#Run_time_panics">run-time panic</a>。
 </p>
 
-<h3 id="Type_assertions">Type assertions</h3>
+<h3 id="Type_assertions">类型断言</h3>
 
 <p>
-For an expression <code>x</code> of <a href="#Interface_types">interface type</a>
-and a type <code>T</code>, the primary expression
+	对于一个<a href="#Interface_types">接口类型</a>的表达式 <code>x</code> 以及一个类型 <code>T</code>，主表达式
 </p>
 
 <pre>
@@ -2794,44 +2788,35 @@ x.(T)
 </pre>
 
 <p>
-asserts that <code>x</code> is not <code>nil</code>
-and that the value stored in <code>x</code> is of type <code>T</code>.
-The notation <code>x.(T)</code> is called a <i>type assertion</i>.
+	断言 <code>x</code> 不为 <code>nil</code> 并且存储在 <code>x</code> 中的值具有类型 <code>T</code>。
+	记法 <code>x.(T)</code> 被称为<i>类型断言</i>。
 </p>
 <p>
-More precisely, if <code>T</code> is not an interface type, <code>x.(T)</code> asserts
-that the dynamic type of <code>x</code> is <a href="#Type_identity">identical</a>
-to the type <code>T</code>.
-In this case, <code>T</code> must <a href="#Method_sets">implement</a> the (interface) type of <code>x</code>;
-otherwise the type assertion is invalid since it is not possible for <code>x</code>
-to store a value of type <code>T</code>.
-If <code>T</code> is an interface type, <code>x.(T)</code> asserts that the dynamic type
-of <code>x</code> implements the interface <code>T</code>.
+	更准确地来说，如果 <code>T</code> 不是一个接口类型，那么 <code>x.(T)</code> 断言 <code>x</code> 的动态类型和类型 <code>T</code> <a href="#Type_identity">一致</a>。
+	在这种情况下，<code>T</code> 必须<a href="#Method_sets">实现</a> <code>x</code> 的（接口）类型；否则类型断言是无效的，因为对于 <code>x</code> 来说存储一个类型为 <code>T</code> 的值是不可能的。
+	如果 <code>T</code> 是一个接口类型，那么 <code>x.(T)</code> 断言 <code>T</code> 的动态类型实现了接口 <code>T</code>。
 </p>
 <p>
-If the type assertion holds, the value of the expression is the value
-stored in <code>x</code> and its type is <code>T</code>. If the type assertion is false,
-a <a href="#Run_time_panics">run-time panic</a> occurs.
-In other words, even though the dynamic type of <code>x</code>
-is known only at run time, the type of <code>x.(T)</code> is
-known to be <code>T</code> in a correct program.
+	如果类型断言成立，那么表达式的值为存储在 <code>x</code> 中的值，并且其类型为 <code>T</code>。
+	如果类型断言不成立，会发生一个 <a href="#Run_time_panics">run-time panic</a>。
+	换句话来说，即使 <code>x</code> 的动态类型仅在运行时已知，<code>x.(T)</code> 的类型也可以在一个正确的程序中被已知为 <code>T</code>。
 </p>
 
 <pre>
-var x interface{} = 7          // x has dynamic type int and value 7
-i := x.(int)                   // i has type int and value 7
+var x interface{} = 7          // x 有动态类型 int 以及值 7
+i := x.(int)                   // i 有类型 int 以及值 7
 
 type I interface { m() }
 
 func f(y I) {
-	s := y.(string)        // illegal: string does not implement I (missing method m)
-	r := y.(io.Reader)     // r has type io.Reader and the dynamic type of y must implement both I and io.Reader
+	s := y.(string)        // 非法: string 没有实现 I (缺少方法 m)
+	r := y.(io.Reader)     // r 有类型 io.Reader ，并且 y 的动态类型必须同时实现 I 和 io.Reader
 	…
 }
 </pre>
 
 <p>
-A type assertion used in an <a href="#Assignments">assignment</a> or initialization of the special form
+	用于<a href="#Assignments">赋值</a>或如下特殊格式的初始化中的类型断言
 </p>
 
 <pre>
@@ -2842,18 +2827,17 @@ var v, ok T1 = x.(T)
 </pre>
 
 <p>
-yields an additional untyped boolean value. The value of <code>ok</code> is <code>true</code>
-if the assertion holds. Otherwise it is <code>false</code> and the value of <code>v</code> is
-the <a href="#The_zero_value">zero value</a> for type <code>T</code>.
-No <a href="#Run_time_panics">run-time panic</a> occurs in this case.
+	产生一个额外的无类型的布尔值。
+	如果断言成功，那么 <code>ok</code> 的值为 <code>true</code>。
+	否则为 <code>false</code>，并且 <code>v</code> 的值为类型 <code>T</code> 的<a href="#The_zero_value">零值</a>。
+	这种情况下不会发生 <a href="#Run_time_panics">run-time panic</a>。
 </p>
 
 
-<h3 id="Calls">Calls</h3>
+<h3 id="Calls">调用</h3>
 
 <p>
-Given an expression <code>f</code> of function type
-<code>F</code>,
+	给定一个函数类型为 <code>F</code> 的表达式 <code>f</code>，
 </p>
 
 <pre>
@@ -2861,49 +2845,32 @@ f(a1, a2, … an)
 </pre>
 
 <p>
-calls <code>f</code> with arguments <code>a1, a2, … an</code>.
-Except for one special case, arguments must be single-valued expressions
-<a href="#Assignability">assignable</a> to the parameter types of
-<code>F</code> and are evaluated before the function is called.
-The type of the expression is the result type
-of <code>F</code>.
-A method invocation is similar but the method itself
-is specified as a selector upon a value of the receiver type for
-the method.
+	带实参 <code>a1, a2, … an</code> 调用了 <code>f</code>。
+	除了一种特殊情况以外，实参必须是单一值的<a href="#Assignability">可分配</a>给 <code>F</code> 的参数类型的表达式，并且它们在函数调用之前就被求值好了。
+	上述函数表达式的类型是 <code>F</code> 的结果类型。
+	方法调用是类似的，但是方法本身是被指定为一个在该方法的接收者的值之上的选择器。
 </p>
 
 <pre>
-math.Atan2(x, y)  // function call
+math.Atan2(x, y)  // 函数调用
 var pt *Point
-pt.Scale(3.5)     // method call with receiver pt
+pt.Scale(3.5)     // 带接收者 pt 的方法调用
 </pre>
 
 <p>
-In a function call, the function value and arguments are evaluated in
-<a href="#Order_of_evaluation">the usual order</a>.
-After they are evaluated, the parameters of the call are passed by value to the function
-and the called function begins execution.
-The return parameters of the function are passed by value
-back to the calling function when the function returns.
+	在一个函数调用中，函数值和实参使用<a href="#Order_of_evaluation">通常的顺序</a>被求值。
+	在它们求值好后，调用的参数以值传递给函数，然后被调用的函数开始执行。
+	函数的返回参数在函数返回时以值返回给调用的函数。
 </p>
 
 <p>
-Calling a <code>nil</code> function value
-causes a <a href="#Run_time_panics">run-time panic</a>.
+	调用一个 <code>nil</code> 函数会发生 <a href="#Run_time_panics">run-time panic</a>。
 </p>
 
 <p>
-As a special case, if the return values of a function or method
-<code>g</code> are equal in number and individually
-assignable to the parameters of another function or method
-<code>f</code>, then the call <code>f(g(<i>parameters_of_g</i>))</code>
-will invoke <code>f</code> after binding the return values of
-<code>g</code> to the parameters of <code>f</code> in order.  The call
-of <code>f</code> must contain no parameters other than the call of <code>g</code>,
-and <code>g</code> must have at least one return value.
-If <code>f</code> has a final <code>...</code> parameter, it is
-assigned the return values of <code>g</code> that remain after
-assignment of regular parameters.
+	作为一个特殊情况，如果一个函数或方法 <code>g</code> 的返回值数量上等于且可以分别被分配给另一个函数或方法 <code>f</code> 的参数，那么调用 <code>f(g(<i>parameters_of_g</i>))</code> 将会在按序绑定了 <code>g</code> 的返回值到 <code>f</code> 的参数后调用 <code>f</code>。
+	<code>f</code> 这个调用必须排除 <code>g</code> 调用以外的参数，并且 <code>g</code> 必须要有最少一个返回值。
+	如果 <code>f</code> 有一个最终的 <code>...</code> 参数，这个参数会被分配那些在普通参数赋值完之后的剩余的 <code>g</code> 的返回值。
 </p>
 
 <pre>
@@ -2921,12 +2888,8 @@ if Join(Split(value, len(value)/2)) != value {
 </pre>
 
 <p>
-A method call <code>x.m()</code> is valid if the <a href="#Method_sets">method set</a>
-of (the type of) <code>x</code> contains <code>m</code> and the
-argument list can be assigned to the parameter list of <code>m</code>.
-If <code>x</code> is <a href="#Address_operators">addressable</a> and <code>&amp;x</code>'s method
-set contains <code>m</code>, <code>x.m()</code> is shorthand
-for <code>(&amp;x).m()</code>:
+	如果 <code>x</code> 的（类型的）<a href="#Method_sets">方法集</a>包含了 <code>m</code>，并且实参列表可以被分配给 <code>m</code> 的形参列表，那么方法调用 <code>x.m()</code> 是有效的。
+	如果 <code>x</code> 是<a href="#Address_operators">可被寻址的</a>并且 <code>&amp;x</code> 的方法集包含了 <code>m</code>，那么 <code>x.m()</code> 是 <code>(&amp;x).m()</code> 的简写：
 </p>
 
 <pre>
@@ -2935,27 +2898,20 @@ p.Scale(3.5)
 </pre>
 
 <p>
-There is no distinct method type and there are no method literals.
+	这里没有明确的方法类型，也没有方法字面量。
 </p>
 
-<h3 id="Passing_arguments_to_..._parameters">Passing arguments to <code>...</code> parameters</h3>
+<h3 id="Passing_arguments_to_..._parameters">传递实参给 <code>...</code> 参数</h3>
 
 <p>
-If <code>f</code> is <a href="#Function_types">variadic</a> with a final
-parameter <code>p</code> of type <code>...T</code>, then within <code>f</code>
-the type of <code>p</code> is equivalent to type <code>[]T</code>.
-If <code>f</code> is invoked with no actual arguments for <code>p</code>,
-the value passed to <code>p</code> is <code>nil</code>.
-Otherwise, the value passed is a new slice
-of type <code>[]T</code> with a new underlying array whose successive elements
-are the actual arguments, which all must be <a href="#Assignability">assignable</a>
-to <code>T</code>. The length and capacity of the slice is therefore
-the number of arguments bound to <code>p</code> and may differ for each
-call site.
+	如果 <code>f</code> 是带最终参数 <code>p</code>（其类型为 <code>...T</code>）的 <a href="#Function_types">variadic</a>，那么在 <code>f</code> 内，<code>p</code> 的类型等同于类型 <code>[]T</code>。
+	如果 <code>f</code> 在调用时没有实参给 <code>p</code>，那么传递给 <code>p</code> 的值为 <code>nil</code>。
+	否则，传递的值是一个新的类型为 <code>[]T</code> 的切片，这个切片带一个底层数组，这个底层数组的连续的元素作为实参，并且必须<a href="#Assignability">可分配</a>给 <code>T</code>。
+	因此该分配的长度和容量是绑定到 <code>p</code> 的实参的数量，而且每次调用可能会不同。
 </p>
 
 <p>
-Given the function and calls
+	给定函数和调用
 </p>
 <pre>
 func Greeting(prefix string, who ...string)
@@ -2964,19 +2920,16 @@ Greeting("hello:", "Joe", "Anna", "Eileen")
 </pre>
 
 <p>
-within <code>Greeting</code>, <code>who</code> will have the value
-<code>nil</code> in the first call, and
-<code>[]string{"Joe", "Anna", "Eileen"}</code> in the second.
+	在 <code>Greeting</code> 中，<code>who</code> 的值第一次调用时为 <code>nil</code>，在第二次调用时为 <code>[]string{"Joe", "Anna", "Eileen"}</code>。
 </p>
 
 <p>
-If the final argument is assignable to a slice type <code>[]T</code>, it is
-passed unchanged as the value for a <code>...T</code> parameter if the argument
-is followed by <code>...</code>. In this case no new slice is created.
+	如果最终的实参可分配给一个切片类型 <code>[]T</code>，那么如果这个实参后跟着 <code>...</code> 的话，它就会在不改变值的情况下传递给一个 <code>...T</code> 参数。
+	在这种情况下，不会创建新的切片。
 </p>
 
 <p>
-Given the slice <code>s</code> and call
+	给定一个切片 <code>s</code> 和调用
 </p>
 
 <pre>
@@ -2985,15 +2938,14 @@ Greeting("goodbye:", s...)
 </pre>
 
 <p>
-within <code>Greeting</code>, <code>who</code> will have the same value as <code>s</code>
-with the same underlying array.
+	在 <code>Greeting</code> 内，<code>who</code> 有和 <code>s</code> 有同一个值和同一个底层数组。
 </p>
 
 
-<h3 id="Operators">Operators</h3>
+<h3 id="Operators">运算符</h3>
 
 <p>
-Operators combine operands into expressions.
+	运算符把操作数结合进一个表达式。
 </p>
 
 <pre class="ebnf">
@@ -3009,36 +2961,28 @@ unary_op   = "+" | "-" | "!" | "^" | "*" | "&amp;" | "&lt;-" .
 </pre>
 
 <p>
-Comparisons are discussed <a href="#Comparison_operators">elsewhere</a>.
-For other binary operators, the operand types must be <a href="#Type_identity">identical</a>
-unless the operation involves shifts or untyped <a href="#Constants">constants</a>.
-For operations involving constants only, see the section on
-<a href="#Constant_expressions">constant expressions</a>.
+	比较运算符会在<a href="#Comparison_operators">其它地方</a>讨论。
+	对于其它二元运算符来说，操作数类型必须是<a href="#Type_identity">一致的</a>，除非运算涉及位移或者无类型的<a href="#Constants">常量</a>。
+	对于只涉及常量的运算，看<a href="#Constant_expressions">常量表达式</a>一节。
 </p>
 
 <p>
-Except for shift operations, if one operand is an untyped <a href="#Constants">constant</a>
-and the other operand is not, the constant is implicitly <a href="#Conversions">converted</a>
-to the type of the other operand.
+	除了位移运算之外，如果一个操作数是无类型<a href="#Constants">常量</a>而另一个操作数不是，那么该常量会被隐式地<a href="#Conversions">转换</a>为另一个操作数的类型。
 </p>
 
 <p>
-The right operand in a shift expression must have integer type
-or be an untyped constant <a href="#Representability">representable</a> by a
-value of type <code>uint</code>.
-If the left operand of a non-constant shift expression is an untyped constant,
-it is first implicitly converted to the type it would assume if the shift expression were
-replaced by its left operand alone.
+	在位移表达式的右侧的操作数必须为整数类型，或者可以被 <code>uint</code> 类型的值<a href="#Representability">所表示的</a>无类型的常量。
+	如果一个非常量位移表达式的左侧的操作数是一个无符号常量，那么它会先被隐式地转换为假如位移表达式被其左侧操作数单独替换后的类型。
 </p>
 
 <pre>
 var s uint = 33
-var i = 1&lt;&lt;s                  // 1 has type int
-var j int32 = 1&lt;&lt;s            // 1 has type int32; j == 0
-var k = uint64(1&lt;&lt;s)          // 1 has type uint64; k == 1&lt;&lt;33
-var m int = 1.0&lt;&lt;s            // 1.0 has type int; m == 0 if ints are 32bits in size
-var n = 1.0&lt;&lt;s == j           // 1.0 has type int32; n == true
-var o = 1&lt;&lt;s == 2&lt;&lt;s          // 1 and 2 have type int; o == true if ints are 32bits in size
+var i = 1&lt;&lt;s                  // 1 的类型为 int
+var j int32 = 1&lt;&lt;s            // 1 的类型为 int32; j == 0
+var k = uint64(1&lt;&lt;s)          // 1 的类型为 uint64; k == 1<<33
+var m int = 1.0&lt;&lt;s            // 1.0 的类型为 int; 如果此处 int 为 32 比特大小的话， m == 0
+var n = 1.0&lt;&lt;s == j           // 1.0 的类型为 int32; n == true
+var o = 1&lt;&lt;s == 2&lt;&lt;s          // 1 和 2 的类型为 int; 如果此处 int 为 32 比特大小的话， o == true
 var p = 1&lt;&lt;s == 1&lt;&lt;33         // illegal if ints are 32bits in size: 1 has type int, but 1&lt;&lt;33 overflows int
 var u = 1.0&lt;&lt;s                // illegal: 1.0 has type float64, cannot shift
 var u1 = 1.0&lt;&lt;s != 0          // illegal: 1.0 has type float64, cannot shift
