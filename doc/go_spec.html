@@ -3064,8 +3064,7 @@ x = q*y + r  and  |r| &lt; |y|
 </pre>
 
 <p>
-with <code>x / y</code> truncated towards zero
-(<a href="https://en.wikipedia.org/wiki/Modulo_operation">"truncated division"</a>).
+	随着 <code>x / y</code> 截断到零（<a href="https://en.wikipedia.org/wiki/Modulo_operation">"截断除法"</a>）。
 </p>
 
 <pre>
@@ -3077,10 +3076,7 @@ with <code>x / y</code> truncated towards zero
 </pre>
 
 <p>
-The one exception to this rule is that if the dividend <code>x</code> is
-the most negative value for the int type of <code>x</code>, the quotient
-<code>q = x / -1</code> is equal to <code>x</code> (and <code>r = 0</code>)
-due to two's-complement <a href="#Integer_overflow">integer overflow</a>:
+	这个规则有一个例外，如果对于 <code>x</code> 的整数类型来说，被除数 <code>x</code> 是该类型中最负的那个值，那么，因为二进制补码的<a href="#Integer_overflow">整数溢出</a>，商 <code>q = x / -1</code> 等于 <code>x</code>（并且 <code>r = 0</code>）：
 </p>
 
 <pre>
@@ -3092,11 +3088,9 @@ int64    -9223372036854775808
 </pre>
 
 <p>
-If the divisor is a <a href="#Constants">constant</a>, it must not be zero.
-If the divisor is zero at run time, a <a href="#Run_time_panics">run-time panic</a> occurs.
-If the dividend is non-negative and the divisor is a constant power of 2,
-the division may be replaced by a right shift, and computing the remainder may
-be replaced by a bitwise AND operation:
+	如果除数是一个<a href="#Constants">常量</a>，那么它一定不能为零。
+	如果在运行时除数为零，那么会发生一个<a href="#Run_time_panics">run-time panic</a>。
+	如果被除数不为负值并且除数可以表示为以 2 为底数的一个次方常量，那么除法可以被向右位移所替换，计算余数可以被按位与运算符所替换：
 </p>
 
 <pre>
@@ -3106,98 +3100,74 @@ be replaced by a bitwise AND operation:
 </pre>
 
 <p>
-The shift operators shift the left operand by the shift count specified by the
-right operand, which must be non-negative. If the shift count is negative at run time,
-a <a href="#Run_time_panics">run-time panic</a> occurs.
-The shift operators implement arithmetic shifts if the left operand is a signed
-integer and logical shifts if it is an unsigned integer.
-There is no upper limit on the shift count. Shifts behave
-as if the left operand is shifted <code>n</code> times by 1 for a shift
-count of <code>n</code>.
-As a result, <code>x &lt;&lt; 1</code> is the same as <code>x*2</code>
-and <code>x &gt;&gt; 1</code> is the same as
-<code>x/2</code> but truncated towards negative infinity.
+	位移运算符通过右侧操作数（必须为非负）所指定的位移数来位移左侧的操作数。
+	如果在运行时位移数为负，那么会发生一个 <a href="#Run_time_panics">run-time panic</a>。
+	如果左侧操作数是一个带符号的整数，那么位移运算符实现算数位移；如果是一个不带符号的整数，那么实现逻辑位移。
+	位移数是没有上限的。
+	对于 <code>n</code> 个位移数来说，位移行为犹如左侧操作数以间隔 1 来位移 <code>n</code> 次。
+	因此，<code>x &lt;&lt; 1</code> 等于 <code>x*2</code> 而 <code>x &gt;&gt; 1</code> 等于 <code>x/2</code>，不过向右位移会向负无穷截断。
 </p>
 
 <p>
-For integer operands, the unary operators
-<code>+</code>, <code>-</code>, and <code>^</code> are defined as
-follows:
+	对于整数操作数，一元运算符 <code>+</code>，<code>-</code> 和 <code>^</code> 有如下定义：
 </p>
 
 <pre class="grammar">
-+x                          is 0 + x
--x    negation              is 0 - x
-^x    bitwise complement    is m ^ x  with m = "all bits set to 1" for unsigned x
-                                      and  m = -1 for signed x
++x                          是 0 + x
+-x    取其负值             	是 0 - x
+^x    按位补码    			是 m ^ x  对于无符号x，m = "所有位都设置为 1"，对于有符号 x，m = -1
 </pre>
 
 
-<h4 id="Integer_overflow">Integer overflow</h4>
+<h4 id="Integer_overflow">整数溢出</h4>
 
 <p>
-For unsigned integer values, the operations <code>+</code>,
-<code>-</code>, <code>*</code>, and <code>&lt;&lt;</code> are
-computed modulo 2<sup><i>n</i></sup>, where <i>n</i> is the bit width of
-the <a href="#Numeric_types">unsigned integer</a>'s type.
-Loosely speaking, these unsigned integer operations
-discard high bits upon overflow, and programs may rely on "wrap around".
+	对于无符号整数值来说，<code>+</code>，<code>-</code>，<code>*</code> 和 <code>&lt;&lt;</code> 运算是以 2<sup><i>n</i></sup> 为模来计算的，<i>n</i> 为<a href="#Numeric_types">无符号整数</a>类型的位宽。
+	大致来说就是，这些无符号整数运算丢弃了溢出的高位，并且程序可以依赖于 "wrap around"。
 </p>
 <p>
-For signed integers, the operations <code>+</code>,
-<code>-</code>, <code>*</code>, <code>/</code>, and <code>&lt;&lt;</code> may legally
-overflow and the resulting value exists and is deterministically defined
-by the signed integer representation, the operation, and its operands.
-Overflow does not cause a <a href="#Run_time_panics">run-time panic</a>.
-A compiler may not optimize code under the assumption that overflow does
-not occur. For instance, it may not assume that <code>x &lt; x + 1</code> is always true.
+	对于带符号整数值来说，<code>+</code>，<code>-</code>，<code>*</code>，<code>/</code> 和 <code>&lt;&lt;</code> 运算可以合法地溢出，其产生的值是存在的并且可以被带符号整数表示法、其运算和操作数明确地定义。
+	溢出不会发生 <a href="#Run_time_panics">run-time panic</a>。
+	编译器不会在不发生溢出这个假设情况下来优化代码。
+	比如，它不会假设 <code>x &lt; x + 1</code> 始终是真。
 </p>
 
 
-<h4 id="Floating_point_operators">Floating-point operators</h4>
+<h4 id="Floating_point_operators">浮点运算符</h4>
 
 <p>
-For floating-point and complex numbers,
-<code>+x</code> is the same as <code>x</code>,
-while <code>-x</code> is the negation of <code>x</code>.
-The result of a floating-point or complex division by zero is not specified beyond the
-IEEE-754 standard; whether a <a href="#Run_time_panics">run-time panic</a>
-occurs is implementation-specific.
+	对于浮点数和复数来说，<code>+x</code> 和 <code>x</code> 是一样的，但是 <code>-x</code> 是负的 <code>x</code>。
+	除了 IEEE-754 标准外，没有规定浮点数或者复数除以零的值；是否发生 <a href="#Run_time_panics">run-time panic</a> 是由具体实现规定的。
 </p>
 
 <p>
-An implementation may combine multiple floating-point operations into a single
-fused operation, possibly across statements, and produce a result that differs
-from the value obtained by executing and rounding the instructions individually.
-An explicit floating-point type <a href="#Conversions">conversion</a> rounds to
-the precision of the target type, preventing fusion that would discard that rounding.
+	某个实现可能会在声明中结合多个浮点运算符为单一的融合运算符，然后产生一个与单独执行指令再取整所不同的值。
+	一个显示的浮点类型<a href="#Conversions">转换</a>会约到目标类型的精度，避免了融合会丢弃该舍入。
 </p>
 
 <p>
-For instance, some architectures provide a "fused multiply and add" (FMA) instruction
-that computes <code>x*y + z</code> without rounding the intermediate result <code>x*y</code>.
-These examples show when a Go implementation can use that instruction:
+	比如，有些架构提供了一个“积和熔加运算”（FMA）指令，该指令在运算 <code>x*y + z</code> 是不会先约取中间结果 <code>x*y</code>。
+	这些例子展示了什么时候 Go 实现会使用这个指令：
 </p>
 
 <pre>
-// FMA allowed for computing r, because x*y is not explicitly rounded:
+// FMA 允许被用来计算 r, 因为 x*y 不会被明确地约取：
 r  = x*y + z
 r  = z;   r += x*y
 t  = x*y; r = t + z
 *p = x*y; r = *p + z
 r  = x*y + float64(z)
 
-// FMA disallowed for computing r, because it would omit rounding of x*y:
+// FMA 不允许被用来计算 r, 因为它会省略 x*y 的舍入:
 r  = float64(x*y) + z
 r  = z; r += float64(x*y)
 t  = float64(x*y); r = t + z
 </pre>
 
-<h4 id="String_concatenation">String concatenation</h4>
+<h4 id="String_concatenation">字符串连接</h4>
 
 <p>
-Strings can be concatenated using the <code>+</code> operator
-or the <code>+=</code> assignment operator:
+	字符串使用使用 <code>+</code> 运算符或者 <code>+=</code> 赋值运算符来连接。
 </p>
 
 <pre>
@@ -3206,141 +3176,116 @@ s += " and good bye"
 </pre>
 
 <p>
-String addition creates a new string by concatenating the operands.
+	字符串加法通过连接操作数来创建了一个新的字符串。
 </p>
 
 
-<h3 id="Comparison_operators">Comparison operators</h3>
+<h3 id="Comparison_operators">比较运算符</h3>
 
 <p>
-Comparison operators compare two operands and yield an untyped boolean value.
+	比较运算符比较两个操作数，然后产生一个无类型的布尔值。
 </p>
 
 <pre class="grammar">
-==    equal
-!=    not equal
-&lt;     less
-&lt;=    less or equal
-&gt;     greater
-&gt;=    greater or equal
+==    等于
+!=    不等于
+&lt;     小于
+&lt;=    小于等于
+&gt;     大于
+&gt;=    大于等于
 </pre>
 
 <p>
-In any comparison, the first operand
-must be <a href="#Assignability">assignable</a>
-to the type of the second operand, or vice versa.
+	在每一个比较中，第一个操作数必须是<a href="#Assignability">可分配</a>给第二个操作数的类型的，或者反过来。
 </p>
 <p>
-The equality operators <code>==</code> and <code>!=</code> apply
-to operands that are <i>comparable</i>.
-The ordering operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code>
-apply to operands that are <i>ordered</i>.
-These terms and the result of the comparisons are defined as follows:
+	相等运算符 <code>==</code> 和 <code>!=</code> 应用到<i>可比较的</i> 操作数上。
+	排序运算符 <code>&lt;</code>，<code>&lt;=</code>，<code>&gt;</code> 或 <code>&gt;=</code> 应用到<i>可排序的</i> 操作数上。
+	术语以及比较的结果定义如下：
 </p>
 
 <ul>
 	<li>
-	Boolean values are comparable.
-	Two boolean values are equal if they are either both
-	<code>true</code> or both <code>false</code>.
+		布尔值是可比较的。如果两个布尔值都为 <code>true</code> 或者 <code>false</code>，那么它们相等。
 	</li>
 
 	<li>
-	Integer values are comparable and ordered, in the usual way.
+		通常情况下，整数值是可比较且可排序的。
 	</li>
 
 	<li>
-	Floating-point values are comparable and ordered,
-	as defined by the IEEE-754 standard.
+		浮点数值是可比较且可排序的，就像 IEEE-754 标准定义的。
 	</li>
 
 	<li>
-	Complex values are comparable.
-	Two complex values <code>u</code> and <code>v</code> are
-	equal if both <code>real(u) == real(v)</code> and
-	<code>imag(u) == imag(v)</code>.
+		复数值是可比较的。
+		如果存在两个复数值 <code>u</code> 和 <code>v</code>，满足 <code>real(u) == real(v)</code> 并且 <code>imag(u) == imag(v)</code> 的话，那么它们相等。
 	</li>
 
 	<li>
-	String values are comparable and ordered, lexically byte-wise.
+		字符串值是可按字节顺序比较且排序的（按照字节的词法）。
 	</li>
 
 	<li>
-	Pointer values are comparable.
-	Two pointer values are equal if they point to the same variable or if both have value <code>nil</code>.
-	Pointers to distinct <a href="#Size_and_alignment_guarantees">zero-size</a> variables may or may not be equal.
+		指针值是可比较的。
+		如果两个指针指向同一个变量，或者两个都为 <code>nil</code> 的话，那么它们相等。
+		指向不同<a href="#Size_and_alignment_guarantees">零值</a>变量的指针可能相同也可能不同。
 	</li>
 
 	<li>
-	Channel values are comparable.
-	Two channel values are equal if they were created by the same call to
-	<a href="#Making_slices_maps_and_channels"><code>make</code></a>
-	or if both have value <code>nil</code>.
+		Channel 值是可比较的。如果两个 Channel 值由同一个 <a href="#Making_slices_maps_and_channels"><code>make</code></a> 调用来创建或者两个的值都为 <code>nil</code>，那么它们相同。
 	</li>
 
 	<li>
-	Interface values are comparable.
-	Two interface values are equal if they have <a href="#Type_identity">identical</a> dynamic types
-	and equal dynamic values or if both have value <code>nil</code>.
+		接口值是可比较的。
+		如果两个接口值有<a href="#Type_identity">一致的</a>动态类型以及相同的动态值，或者两个的值都为 <code>nil</code>，那么它们相同。
 	</li>
 
 	<li>
-	A value <code>x</code> of non-interface type <code>X</code> and
-	a value <code>t</code> of interface type <code>T</code> are comparable when values
-	of type <code>X</code> are comparable and
-	<code>X</code> implements <code>T</code>.
-	They are equal if <code>t</code>'s dynamic type is identical to <code>X</code>
-	and <code>t</code>'s dynamic value is equal to <code>x</code>.
+		当非接口类型 <code>X</code> 的值是可比较的且 <code>x</code> 实现了接口类型 <code>T</code>，那么 <code>X</code> 的值 <code>x</code> 和 <code>T</code> 的值 <code>t</code> 是可比较的。
+		如果 <code>t</code> 的动态类型和 <code>X</code> 一致并且 <code>t</code> 的动态值等于 <code>x</code> 的话，那么它们相等。
 	</li>
 
 	<li>
-	Struct values are comparable if all their fields are comparable.
-	Two struct values are equal if their corresponding
-	non-<a href="#Blank_identifier">blank</a> fields are equal.
+		当结构体的所有字段都是可比较的，那么该结构体是可比较的。
+		如果两个结构体的对应的非<a href="#Blank_identifier">空白</a>字段相等，那么两个结构体相等。
 	</li>
 
 	<li>
-	Array values are comparable if values of the array element type are comparable.
-	Two array values are equal if their corresponding elements are equal.
+		如果数组的元素值是可比较的，那么该数组是可比较的。如果两个数组对应的元素是相等的，那么两个数组相等。
 	</li>
 </ul>
 
 <p>
-A comparison of two interface values with identical dynamic types
-causes a <a href="#Run_time_panics">run-time panic</a> if values
-of that type are not comparable.  This behavior applies not only to direct interface
-value comparisons but also when comparing arrays of interface values
-or structs with interface-valued fields.
+	当两个比较中的接口值的动态类型一致，但是该类型的值是不可比较的时候，会发生一个 <a href="#Run_time_panics">run-time panic</a>。
+	这种情况不仅仅发生在接口值比较上，同样也会发生在比较接口值数组或者带接口值字段的结构体上。
 </p>
 
 <p>
-Slice, map, and function values are not comparable.
-However, as a special case, a slice, map, or function value may
-be compared to the predeclared identifier <code>nil</code>.
-Comparison of pointer, channel, and interface values to <code>nil</code>
-is also allowed and follows from the general rules above.
+	切片、map 和函数值是不可比较的。
+	不过作为一个特例，一个切片、map 或者函数值可以和预先声明的标识符 <code>nil</code> 来比较。
+	指针、channel 和接口值与 <code>nil</code> 的比较也是允许的，并遵循上述通用规则。
 </p>
 
 <pre>
-const c = 3 &lt; 4            // c is the untyped boolean constant true
+const c = 3 &lt; 4            // c 是无类型布尔常量"真"
 
 type MyBool bool
 var x, y int
 var (
-	// The result of a comparison is an untyped boolean.
-	// The usual assignment rules apply.
-	b3        = x == y // b3 has type bool
-	b4 bool   = x == y // b4 has type bool
-	b5 MyBool = x == y // b5 has type MyBool
+	// 比较的结果为一个无类型的布尔值。
+	// 应用通用赋值规则。
+	b3        = x == y // b3 类型为 bool
+	b4 bool   = x == y // b4 类型为 bool
+	b5 MyBool = x == y // 类型为 MyBool
 )
 </pre>
 
-<h3 id="Logical_operators">Logical operators</h3>
+<h3 id="Logical_operators">逻辑运算符</h3>
 
 <p>
-Logical operators apply to <a href="#Boolean_types">boolean</a> values
-and yield a result of the same type as the operands.
-The right operand is evaluated conditionally.
+	逻辑运算符应用于<a href="#Boolean_types">布尔</a>值，并产生一个和操作数相同类型的结果。
+	右侧的操作数是按条件来求值的。
 </p>
 
 <pre class="grammar">
@@ -3350,28 +3295,18 @@ The right operand is evaluated conditionally.
 </pre>
 
 
-<h3 id="Address_operators">Address operators</h3>
+<h3 id="Address_operators">地址运算符</h3>
 
 <p>
-For an operand <code>x</code> of type <code>T</code>, the address operation
-<code>&amp;x</code> generates a pointer of type <code>*T</code> to <code>x</code>.
-The operand must be <i>addressable</i>,
-that is, either a variable, pointer indirection, or slice indexing
-operation; or a field selector of an addressable struct operand;
-or an array indexing operation of an addressable array.
-As an exception to the addressability requirement, <code>x</code> may also be a
-(possibly parenthesized)
-<a href="#Composite_literals">composite literal</a>.
-If the evaluation of <code>x</code> would cause a <a href="#Run_time_panics">run-time panic</a>,
-then the evaluation of <code>&amp;x</code> does too.
+	对于类型为 <code>T</code> 的操作数 <code>x</code> 来说，地址运算 <code>&amp;x</code> 生成了一个类型为 <code>*T</code> 的到 <code>x</code> 的指针。
+	该操作数必须是<i>可被寻址的</i>，也就是，一个变量、指针间接 pointer indirection、或切片索引操作；或一个可寻址的结构体操作数的字段选择器；或一个可寻址的数组的数组索引操作。
+	作为可被寻址要求的一个例外，<code>x</code> 也可以是（可能是括起来的）复合字面值。
+	如果 <code>x</code> 的求值会导致一个 <a href="#Run_time_panics">run-time panic</a>，那么 <code>&amp;x</code> 的求值也会。
 </p>
 
 <p>
-For an operand <code>x</code> of pointer type <code>*T</code>, the pointer
-indirection <code>*x</code> denotes the <a href="#Variables">variable</a> of type <code>T</code> pointed
-to by <code>x</code>.
-If <code>x</code> is <code>nil</code>, an attempt to evaluate <code>*x</code>
-will cause a <a href="#Run_time_panics">run-time panic</a>.
+	对于指针类型 <code>*T</code> 的操作数 <code>x</code> 来说，指针间接 <code>*x</code> 表示被 <code>x</code> 指向的类型为 <code>T</code> 的<a href="#Variables">变量</a>。
+	如果 <code>x</code> 是 <code>nil</code>，那么对于 <code>*x</code> 的求值尝试会导致一个 <a href="#Run_time_panics">run-time panic</a>。
 </p>
 
 <pre>
@@ -3382,12 +3317,12 @@ will cause a <a href="#Run_time_panics">run-time panic</a>.
 *pf(x)
 
 var x *int = nil
-*x   // causes a run-time panic
-&amp;*x  // causes a run-time panic
+*x   // 导致一个 run-time panic
+&amp;*x  // 导致一个 run-time panic
 </pre>
 
 
-<h3 id="Receive_operator">Receive operator</h3>
+<h3 id="Receive_operator">接收运算符</h3>
 
 <p>
 For an operand <code>ch</code> of <a href="#Channel_types">channel type</a>,
