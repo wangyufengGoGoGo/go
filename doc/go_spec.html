@@ -2983,29 +2983,27 @@ var k = uint64(1&lt;&lt;s)          // 1 的类型为 uint64; k == 1<<33
 var m int = 1.0&lt;&lt;s            // 1.0 的类型为 int; 如果此处 int 为 32 比特大小的话， m == 0
 var n = 1.0&lt;&lt;s == j           // 1.0 的类型为 int32; n == true
 var o = 1&lt;&lt;s == 2&lt;&lt;s          // 1 和 2 的类型为 int; 如果此处 int 为 32 比特大小的话， o == true
-var p = 1&lt;&lt;s == 1&lt;&lt;33         // illegal if ints are 32bits in size: 1 has type int, but 1&lt;&lt;33 overflows int
-var u = 1.0&lt;&lt;s                // illegal: 1.0 has type float64, cannot shift
-var u1 = 1.0&lt;&lt;s != 0          // illegal: 1.0 has type float64, cannot shift
-var u2 = 1&lt;&lt;s != 1.0          // illegal: 1 has type float64, cannot shift
-var v float32 = 1&lt;&lt;s          // illegal: 1 has type float32, cannot shift
-var w int64 = 1.0&lt;&lt;33         // 1.0&lt;&lt;33 is a constant shift expression
-var x = a[1.0&lt;&lt;s]             // 1.0 has type int; x == a[0] if ints are 32bits in size
-var a = make([]byte, 1.0&lt;&lt;s)  // 1.0 has type int; len(a) == 0 if ints are 32bits in size
+var p = 1&lt;&lt;s == 1&lt;&lt;33         // 如果 int 的大小为 32 位，则为非法：1 的类型为 int，但 1<<33 溢出 int
+var u = 1.0&lt;&lt;s                // 非法: 1.0 的类型为 float64, 不能位移
+var u1 = 1.0&lt;&lt;s != 0          // 非法: 1.0 的类型为 float64, 不能位移
+var u2 = 1&lt;&lt;s != 1.0          // 非法: 1 的类型为 float64, 不能位移
+var v float32 = 1&lt;&lt;s          // 非法: 1 的类型为 float32, 不能位移
+var w int64 = 1.0&lt;&lt;33         // 1.0<<33 是一个常量位移表达式
+var x = a[1.0&lt;&lt;s]             // 1.0 的类型为 int；如果 int 是 32 位的话， x == a[0]
+var a = make([]byte, 1.0&lt;&lt;s)  // 1.0 的类型为 int；如果 int 是 32 位的话， len(a) == 0
 </pre>
 
 
-<h4 id="Operator_precedence">Operator precedence</h4>
+<h4 id="Operator_precedence">运算符优先级</h4>
 <p>
-Unary operators have the highest precedence.
-As the  <code>++</code> and <code>--</code> operators form
-statements, not expressions, they fall
-outside the operator hierarchy.
-As a consequence, statement <code>*p++</code> is the same as <code>(*p)++</code>.
+	一元运算符有最高的优先级。
+	由于 <code>++</code> 和 <code>--</code> 运算符构成了语句（而不是表达式），超出了运算符的结构。
+	因此，语句 <code>*p++</code> 等同于 <code>(*p)++</code>。
+</p>
+
 <p>
-There are five precedence levels for binary operators.
-Multiplication operators bind strongest, followed by addition
-operators, comparison operators, <code>&amp;&amp;</code> (logical AND),
-and finally <code>||</code> (logical OR):
+	对于二元运算符来说有五个优先级。
+	乘法运算符束缚力最强，接下来是加法运算符，比较运算符，<code>&amp;&amp;</code>（逻辑与），和最后的 <code>||</code>（逻辑或）：
 </p>
 
 <pre class="grammar">
@@ -3018,8 +3016,7 @@ Precedence    Operator
 </pre>
 
 <p>
-Binary operators of the same precedence associate from left to right.
-For instance, <code>x / y * z</code> is the same as <code>(x / y) * z</code>.
+	同一优先级的二元运算符按从左到右的顺序结合。比如，<code>x / y * z</code> 等同于 <code>(x / y) * z</code>。
 </p>
 
 <pre>
@@ -3032,38 +3029,34 @@ x == y+1 &amp;&amp; &lt;-chanPtr &gt; 0
 </pre>
 
 
-<h3 id="Arithmetic_operators">Arithmetic operators</h3>
+<h3 id="Arithmetic_operators">算数运算符</h3>
 <p>
-Arithmetic operators apply to numeric values and yield a result of the same
-type as the first operand. The four standard arithmetic operators (<code>+</code>,
-<code>-</code>, <code>*</code>, <code>/</code>) apply to integer,
-floating-point, and complex types; <code>+</code> also applies to strings.
-The bitwise logical and shift operators apply to integers only.
+	算数运算符应用于数字值，并产生一个和第一个操作数具有相同类型的结果。
+	四个标准的算数运算符（<code>+</code>，<code>-</code>，<code>*</code>，<code>/</code>）应用于整数、浮点数和复数类型，<code>+</code> 还可以应用于字符串。
+	位逻辑运算符和位移运算符仅应用于整数。
 </p>
 
 <pre class="grammar">
-+    sum                    integers, floats, complex values, strings
--    difference             integers, floats, complex values
-*    product                integers, floats, complex values
-/    quotient               integers, floats, complex values
-%    remainder              integers
++    和                    	整数，浮点数，复数值，字符串
+-    差             		整数，浮点数，复数值
+*    积                		整数，浮点数，复数值
+/    商               		整数，浮点数，复数值
+%    余          		    整数
 
-&amp;    bitwise AND            integers
-|    bitwise OR             integers
-^    bitwise XOR            integers
-&amp;^   bit clear (AND NOT)    integers
+&amp;    按位与（AND）          	整数
+|    按位或（OR）         	整数
+^    按位异或（XOR）          整数
+&amp;^   按位清除（AND NOT）    	整数
 
-&lt;&lt;   left shift             integer &lt;&lt; unsigned integer
-&gt;&gt;   right shift            integer &gt;&gt; unsigned integer
+&lt;&lt;   向左位移            	整数 << 无符号整数
+&gt;&gt;   向右位移            	整数 >> 无符号整数
 </pre>
 
 
-<h4 id="Integer_operators">Integer operators</h4>
+<h4 id="Integer_operators">整数运算符</h4>
 
 <p>
-For two integer values <code>x</code> and <code>y</code>, the integer quotient
-<code>q = x / y</code> and remainder <code>r = x % y</code> satisfy the following
-relationships:
+	对于两个整数值 <code>x</code> 和 <code>y</code>，其整数商 <code>q = x / y</code> 和余数 <code>r = x % y</code> 满足如下关系：
 </p>
 
 <pre>
