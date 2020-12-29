@@ -3325,23 +3325,18 @@ var x *int = nil
 <h3 id="Receive_operator">接收运算符</h3>
 
 <p>
-
-For an operand <code>ch</code> of <a href="#Channel_types">channel type</a>,
-the value of the receive operation <code>&lt;-ch</code> is the value received
-from the channel <code>ch</code>. The channel direction must permit receive operations,
-and the type of the receive operation is the element type of the channel.
-The expression blocks until a value is available.
-Receiving from a <code>nil</code> channel blocks forever.
-A receive operation on a <a href="#Close">closed</a> channel can always proceed
-immediately, yielding the element type's <a href="#The_zero_value">zero value</a>
-after any previously sent values have been received.
+	对于 <a href="#Channel_types">channel 类型</a>的操作数 <code>ch</code> 来说，接收操作 <code>&lt;-ch</code> 的值是从 channel <code>ch</code> 接收到的值。
+	channel 方向必须允许接收操作，并且接收操作的类型为 channel 的元素类型。
+	直到一个值可用前该表达式都会阻塞。
+	从一个 <code>nil</code> channel 接收值会永远阻塞下去。
+	针对一个 <a href="#Close">closed</a> channel 的接收操作总是会立即进行，并在之前已经发送完成的值被接收完毕后产生一个该元素类型的<a href="#The_zero_value">零值</a>。
 </p>
 
 <pre>
 v1 := &lt;-ch
 v2 = &lt;-ch
 f(&lt;-ch)
-&lt;-strobe  // wait until clock pulse and discard received value
+&lt;-strobe  // 等待，直到时钟脉冲一次，并丢弃接收的值
 </pre>
 
 <p>
@@ -3356,27 +3351,20 @@ var x, ok T = &lt;-ch
 </pre>
 
 <p>
-yields an additional untyped boolean result reporting whether the
-communication succeeded. The value of <code>ok</code> is <code>true</code>
-if the value received was delivered by a successful send operation to the
-channel, or <code>false</code> if it is a zero value generated because the
-channel is closed and empty.
+	产生一个额外的无类型的布尔值用于报告通信是否成功。
+	如果接收的值被到该 channel 的成功的发送操作传递过来，那么 <code>ok</code> 的值为 <code>true</code>，如果因为该 channel 已经关闭且为空，接收到的是零值，那么 <code>ok</code> 为 <code>false</code>。
 </p>
 
 
-<h3 id="Conversions">Conversions</h3>
+<h3 id="Conversions">转换</h3>
 
 <p>
-A conversion changes the <a href="#Types">type</a> of an expression
-to the type specified by the conversion.
-A conversion may appear literally in the source, or it may be <i>implied</i>
-by the context in which an expression appears.
+	转换会把一个表达式的<a href="#Types">类型</a>变成被该转换所指定的类型。
+	一个转换可能会从字面上出现在源中，也可能<i>隐含在</i> 表达式所在的上下文中。
 </p>
 
 <p>
-An <i>explicit</i> conversion is an expression of the form <code>T(x)</code>
-where <code>T</code> is a type and <code>x</code> is an expression
-that can be converted to type <code>T</code>.
+	一个<i>显式的</i> 转换是 <code>T(x)</code> 这样子形式的表达式，其中 <code>T</code> 是一个类型而 <code>x</code> 是一个可以被转换到类型 <code>T</code> 的一个表达式。
 </p>
 
 <pre class="ebnf">
@@ -3384,92 +3372,74 @@ Conversion = Type "(" Expression [ "," ] ")" .
 </pre>
 
 <p>
-If the type starts with the operator <code>*</code> or <code>&lt;-</code>,
-or if the type starts with the keyword <code>func</code>
-and has no result list, it must be parenthesized when
-necessary to avoid ambiguity:
+	如果类型由运算符 <code>*</code> 或者 <code>&lt;-</code> 开头，或者由关键字 <code>func</code> 开头并且没有结果列表，那么当必要时它必须被括起来以避免混淆：
 </p>
 
 <pre>
-*Point(p)        // same as *(Point(p))
-(*Point)(p)      // p is converted to *Point
-&lt;-chan int(c)    // same as &lt;-(chan int(c))
-(&lt;-chan int)(c)  // c is converted to &lt;-chan int
-func()(x)        // function signature func() x
-(func())(x)      // x is converted to func()
-(func() int)(x)  // x is converted to func() int
-func() int(x)    // x is converted to func() int (unambiguous)
+*Point(p)        // 同 *(Point(p))
+(*Point)(p)      // p 被转换为 *Point
+&lt;-chan int(c)    // 同 &lt;-(chan int(c))
+(&lt;-chan int)(c)  // 同 <-(chan int(c))
+func()(x)        // 函数签名 func() x
+(func())(x)      // x 被转换为 func()
+(func() int)(x)  // x 被转换为 func() int
+func() int(x)    // x 被转换为 func() int (非歧义表达式)
 </pre>
 
 <p>
-A <a href="#Constants">constant</a> value <code>x</code> can be converted to
-type <code>T</code> if <code>x</code> is <a href="#Representability">representable</a>
-by a value of <code>T</code>.
-As a special case, an integer constant <code>x</code> can be explicitly converted to a
-<a href="#String_types">string type</a> using the
-<a href="#Conversions_to_and_from_a_string_type">same rule</a>
-as for non-constant <code>x</code>.
+	如果一个<a href="#Constants">常量</a>值 <code>x</code> 可以被类型为 <code>T</code> 的值<a href="#Representability">所表示</a>，那么 <code>x</code> 可以被转换为 <code>T</code>。
+	特殊情况下，整数常量 <code>x</code> 可以使用像非常量 <code>x</code> <a href="#Conversions_to_and_from_a_string_type">一样的规则</a>被显示地转换为<a href="#String_types">字符串类型</a>。
 </p>
 
 <p>
-Converting a constant yields a typed constant as result.
+	常量转换产生一个带类型的常量来作为结果。
 </p>
 
 <pre>
-uint(iota)               // iota value of type uint
-float32(2.718281828)     // 2.718281828 of type float32
-complex128(1)            // 1.0 + 0.0i of type complex128
-float32(0.49999999)      // 0.5 of type float32
-float64(-1e-1000)        // 0.0 of type float64
-string('x')              // "x" of type string
-string(0x266c)           // "♬" of type string
-MyString("foo" + "bar")  // "foobar" of type MyString
-string([]byte{'a'})      // not a constant: []byte{'a'} is not a constant
-(*int)(nil)              // not a constant: nil is not a constant, *int is not a boolean, numeric, or string type
-int(1.2)                 // illegal: 1.2 cannot be represented as an int
-string(65.0)             // illegal: 65.0 is not an integer constant
+uint(iota)               // unit 类型的 iota 值
+float32(2.718281828)     // float32 类型的 2.718281828
+complex128(1)            // complex128 类型的 1.0 + 0.0i
+float32(0.49999999)      // float32 类型的 0.5
+float64(-1e-1000)        // float64 类型的 0.0
+string('x')              // string 类型的 "x"
+string(0x266c)           // string 类型的 "♬"
+MyString("foo" + "bar")  // MyString 类型的 "foobar"
+string([]byte{'a'})      // 不是常量: []byte{'a'} 不是常量
+(*int)(nil)              // 不是常量: nil 不是常量， *int 不是布尔、数值或字符串类型
+int(1.2)                 // 非法: 1.2 不能被 int 表示
+string(65.0)             // 非法: 65.0 不是整数常量
 </pre>
 
 <p>
-A non-constant value <code>x</code> can be converted to type <code>T</code>
-in any of these cases:
+	非常量值 <code>x</code> 在以下这些情况下可以被转换为类型 <code>T</code>：
 </p>
 
 <ul>
 	<li>
-	<code>x</code> is <a href="#Assignability">assignable</a>
-	to <code>T</code>.
+		<code>x</code> <a href="#Assignability">可分配</a>给 <code>T</code>。
 	</li>
 	<li>
-	ignoring struct tags (see below),
-	<code>x</code>'s type and <code>T</code> have <a href="#Type_identity">identical</a>
-	<a href="#Types">underlying types</a>.
+		忽略结构体标签（见下文），<code>x</code> 的类型和 <code>T</code> 有<a href="#Type_identity">一致的</a><a href="#Types">潜在类型</a>。
 	</li>
 	<li>
-	ignoring struct tags (see below),
-	<code>x</code>'s type and <code>T</code> are pointer types
-	that are not <a href="#Type_definitions">defined types</a>,
-	and their pointer base types have identical underlying types.
+		忽略结构体标签（见下文），<code>x</code> 的类型和 <code>T</code> 都不是<a href="#Type_definitions">定义的</a>指针类型，并且它们的基础类型有一致的潜在类型。
 	</li>
 	<li>
-	<code>x</code>'s type and <code>T</code> are both integer or floating
-	point types.
+		<code>x</code> 的类型和 <code>T</code> 都是整数或者浮点数类型。
 	</li>
 	<li>
-	<code>x</code>'s type and <code>T</code> are both complex types.
+		<code>x</code> 的类型和 <code>T</code> 都是复数类型。
 	</li>
 	<li>
-	<code>x</code> is an integer or a slice of bytes or runes
-	and <code>T</code> is a string type.
+		<code>x</code> 是一个整数或一个字节或 rune 切片，并且 <code>T</code> 是字符串类型。
 	</li>
 	<li>
-	<code>x</code> is a string and <code>T</code> is a slice of bytes or runes.
+		<code>x</code> 是一个字符串并且 <code>T</code> 是一个字节或者 rune 切片。
 	</li>
 </ul>
 
 <p>
-<a href="#Struct_types">Struct tags</a> are ignored when comparing struct types
-for identity for the purpose of conversion:
+	在为了转换的目的而比较结构体类型是否一致时，<a href="#Struct_types">结构体的标签</a>是被忽略的：
 </p>
 
 <pre>
@@ -3489,68 +3459,53 @@ var data *struct {
 	} `json:"address"`
 }
 
-var person = (*Person)(data)  // ignoring tags, the underlying types are identical
+var person = (*Person)(data)  // 忽略标签，潜在类型是一致的
 </pre>
 
 <p>
-Specific rules apply to (non-constant) conversions between numeric types or
-to and from a string type.
-These conversions may change the representation of <code>x</code>
-and incur a run-time cost.
-All other conversions only change the type but not the representation
-of <code>x</code>.
+	数字类型之间或者数字类型和字符串类型之间的（非常量）转换有特殊的规则。
+	这些转换可能改变 <code>x</code> 的表现方式并产生运行时成本。
+	所有其它的转换仅改变其类型而不会改变 <code>x</code> 的表现形式。
 </p>
 
 <p>
-There is no linguistic mechanism to convert between pointers and integers.
-The package <a href="#Package_unsafe"><code>unsafe</code></a>
-implements this functionality under
-restricted circumstances.
+	没有语言机制可以在指针和整数间做转换。
+	在一些受限制的情况下，包 <a href="#Package_unsafe"><code>unsafe</code></a> 实现了这个功能。
 </p>
 
-<h4>Conversions between numeric types</h4>
+<h4>数字类型间的转换</h4>
 
 <p>
-For the conversion of non-constant numeric values, the following rules apply:
+	以下的规则应用于非常量数值间的转换：
 </p>
 
 <ol>
 <li>
-When converting between integer types, if the value is a signed integer, it is
-sign extended to implicit infinite precision; otherwise it is zero extended.
-It is then truncated to fit in the result type's size.
-For example, if <code>v := uint16(0x10F0)</code>, then <code>uint32(int8(v)) == 0xFFFFFFF0</code>.
-The conversion always yields a valid value; there is no indication of overflow.
+	当在整数类型间做转换时，如果值是一个带符号整数，那么它会用符号位扩展到隐式的无限精度；否则它会用零扩展。
+	然后它会截断以满足结果类型的大小。
+	比如，如果 <code>v := uint16(0x10F0)</code>，那么 <code>uint32(int8(v)) == 0xFFFFFFF0</code>。
+	这种转换总是会产生一个有效的值；也不会有溢出指示。
 </li>
 <li>
-When converting a floating-point number to an integer, the fraction is discarded
-(truncation towards zero).
+	当转换浮点数到整数时，小数部分会被丢弃（截断到零）。
 </li>
 <li>
-When converting an integer or floating-point number to a floating-point type,
-or a complex number to another complex type, the result value is rounded
-to the precision specified by the destination type.
-For instance, the value of a variable <code>x</code> of type <code>float32</code>
-may be stored using additional precision beyond that of an IEEE-754 32-bit number,
-but float32(x) represents the result of rounding <code>x</code>'s value to
-32-bit precision. Similarly, <code>x + 0.1</code> may use more than 32 bits
-of precision, but <code>float32(x + 0.1)</code> does not.
+	当转换整数或者浮点数到浮点数类型，或者复数到其它复数类型时，结果值会约到目标类型所规定的精度。
+	比如，<code>float32</code> 类型变量 <code>x</code> 的值可能使用超过 IEEE-754 32 位数的精度保存着，但是 float32(x) 表示的是把 <code>x</code> 的值约到 32 位精度的结果。
+	类似的，<code>x + 0.1</code> 可能使用了超过 32 位精度，但是 <code>float32(x + 0.1)</code> 则不然。
 </li>
 </ol>
 
 <p>
-In all non-constant conversions involving floating-point or complex values,
-if the result type cannot represent the value the conversion
-succeeds but the result value is implementation-dependent.
+	在所有涉及浮点数或复数的非常量转换中，如果结果类型不能表示转换后的值，转换依旧是成功的，但结果值依赖实现。
 </p>
 
-<h4 id="Conversions_to_and_from_a_string_type">Conversions to and from a string type</h4>
+<h4 id="Conversions_to_and_from_a_string_type">字符串类型之间的转换</h4>
 
 <ol>
 <li>
-Converting a signed or unsigned integer value to a string type yields a
-string containing the UTF-8 representation of the integer. Values outside
-the range of valid Unicode code points are converted to <code>"\uFFFD"</code>.
+	将有符号或无符号整数值转换为字符串类型会产生一个包含整数的UTF-8表示形式的字符串
+	超过有效 Unicode 码位范围的值会被转换为 <code>"\uFFFD"</code>。
 
 <pre>
 string('a')       // "a"
@@ -3562,8 +3517,7 @@ MyString(0x65e5)  // "\u65e5" == "日" == "\xe6\x97\xa5"
 </li>
 
 <li>
-Converting a slice of bytes to a string type yields
-a string whose successive bytes are the elements of the slice.
+	转换字节切片到字符串类型会产生一个以该切片的元素作为连续字节的字符串。
 
 <pre>
 string([]byte{'h', 'e', 'l', 'l', '\xc3', '\xb8'})   // "hellø"
@@ -3576,9 +3530,7 @@ string(MyBytes{'h', 'e', 'l', 'l', '\xc3', '\xb8'})  // "hellø"
 </li>
 
 <li>
-Converting a slice of runes to a string type yields
-a string that is the concatenation of the individual rune values
-converted to strings.
+	转换 rune 切片到字符串会产生一个把独立的 rune 值转换为 string 后再串联的字符串。
 
 <pre>
 string([]rune{0x767d, 0x9d6c, 0x7fd4})   // "\u767d\u9d6c\u7fd4" == "白鵬翔"
@@ -3591,8 +3543,7 @@ string(MyRunes{0x767d, 0x9d6c, 0x7fd4})  // "\u767d\u9d6c\u7fd4" == "白鵬翔"
 </li>
 
 <li>
-Converting a value of a string type to a slice of bytes type
-yields a slice whose successive elements are the bytes of the string.
+	转换字符串类型的值到字节类型的切片会产生一个以该字符串的字节作为连续元素的切片。
 
 <pre>
 []byte("hellø")   // []byte{'h', 'e', 'l', 'l', '\xc3', '\xb8'}
@@ -3603,8 +3554,7 @@ MyBytes("hellø")  // []byte{'h', 'e', 'l', 'l', '\xc3', '\xb8'}
 </li>
 
 <li>
-Converting a value of a string type to a slice of runes type
-yields a slice containing the individual Unicode code points of the string.
+	转换字符串类型到 rune 类型切片会产生一个包含该字符串独立 Unicode 码位的切片。
 
 <pre>
 []rune(MyString("白鵬翔"))  // []rune{0x767d, 0x9d6c, 0x7fd4}
@@ -3616,169 +3566,133 @@ MyRunes("白鵬翔")           // []rune{0x767d, 0x9d6c, 0x7fd4}
 </ol>
 
 
-<h3 id="Constant_expressions">Constant expressions</h3>
+<h3 id="Constant_expressions">常量表达式</h3>
 
 <p>
-Constant expressions may contain only <a href="#Constants">constant</a>
-operands and are evaluated at compile time.
+	常量表达式仅包含<a href="#Constants">常量</a>操作数，且是在编译的时候进行计算的。
 </p>
 
 <p>
-Untyped boolean, numeric, and string constants may be used as operands
-wherever it is legal to use an operand of boolean, numeric, or string type,
-respectively.
+	不管以布尔、数字或者字符串类型作为操作数是否合法，使用对应的无类型的布尔、数字和字符串常量作为操作数是可以的。
 </p>
 
 <p>
-A constant <a href="#Comparison_operators">comparison</a> always yields
-an untyped boolean constant.  If the left operand of a constant
-<a href="#Operators">shift expression</a> is an untyped constant, the
-result is an integer constant; otherwise it is a constant of the same
-type as the left operand, which must be of
-<a href="#Numeric_types">integer type</a>.
+	常量<a href="#Comparison_operators">比较</a>总是会产生一个无类型的布尔常量。
+	如果常量<a href="#Operators">位移表达式</a>的左侧操作数是一个无类型常量，那么其结果是一个整数常量；否则就是和左侧操作数同一类型的常量（必须是<a href="#Numeric_types">整数类型</a>）。
 </p>
 
 <p>
-Any other operation on untyped constants results in an untyped constant of the
-same kind; that is, a boolean, integer, floating-point, complex, or string
-constant.
-If the untyped operands of a binary operation (other than a shift) are of
-different kinds, the result is of the operand's kind that appears later in this
-list: integer, rune, floating-point, complex.
-For example, an untyped integer constant divided by an
-untyped complex constant yields an untyped complex constant.
+	任何其它在无类型常量上的操作结果是同一个类别的无类型常量；也就是：布尔、整数、浮点数、复数或者字符串常量。
+	如果一个二元运算（非位移）的无类型操作数是不同类的，那么其结果是在如下列表中靠后显示的操作数的类：整数、rune、浮点数、复数。
+	举例：无类型整数常量除以无类型复数常量会产生一个无类型的复数常量。
 </p>
 
 <pre>
-const a = 2 + 3.0          // a == 5.0   (untyped floating-point constant)
-const b = 15 / 4           // b == 3     (untyped integer constant)
-const c = 15 / 4.0         // c == 3.75  (untyped floating-point constant)
-const Θ float64 = 3/2      // Θ == 1.0   (type float64, 3/2 is integer division)
-const Π float64 = 3/2.     // Π == 1.5   (type float64, 3/2. is float division)
-const d = 1 &lt;&lt; 3.0         // d == 8     (untyped integer constant)
-const e = 1.0 &lt;&lt; 3         // e == 8     (untyped integer constant)
-const f = int32(1) &lt;&lt; 33   // illegal    (constant 8589934592 overflows int32)
-const g = float64(2) &gt;&gt; 1  // illegal    (float64(2) is a typed floating-point constant)
-const h = "foo" &gt; "bar"    // h == true  (untyped boolean constant)
-const j = true             // j == true  (untyped boolean constant)
-const k = 'w' + 1          // k == 'x'   (untyped rune constant)
-const l = "hi"             // l == "hi"  (untyped string constant)
-const m = string(k)        // m == "x"   (type string)
-const Σ = 1 - 0.707i       //            (untyped complex constant)
-const Δ = Σ + 2.0e-4       //            (untyped complex constant)
-const Φ = iota*1i - 1/1i   //            (untyped complex constant)
+const a = 2 + 3.0          // a == 5.0   (无类型浮点数常量)
+const b = 15 / 4           // b == 3     (无类型整数常量)
+const c = 15 / 4.0         // c == 3.75  (无类型浮点数常量)
+const Θ float64 = 3/2      // Θ == 1.0   (类型为 float64, 3/2 是整数除法)
+const Π float64 = 3/2.     // Π == 1.5   (类型为 float64, 3/2. 是浮点除法)
+const d = 1 &lt;&lt; 3.0         // d == 8     (无类型整数常量)
+const e = 1.0 &lt;&lt; 3         // e == 8     (无类型整数常量)
+const f = int32(1) &lt;&lt; 33   // illegal    (常量 8589934592 对于 int32 来说溢出了)
+const g = float64(2) &gt;&gt; 1  // illegal    (float64(2) 是一个带类型的浮点数常量)
+const h = "foo" &gt; "bar"    // h == true  (无类型布尔常量)
+const j = true             // j == true  (无类型布尔常量)
+const k = 'w' + 1          // k == 'x'   (无类型 rune 常量)
+const l = "hi"             // l == "hi"  (无类型字符串常量)
+const m = string(k)        // m == "x"   (字符串类型)
+const Σ = 1 - 0.707i       //            (无类型复数常量)
+const Δ = Σ + 2.0e-4       //            (无类型复数常量)
+const Φ = iota*1i - 1/1i   //            (无类型复数常量)
 </pre>
 
 <p>
-Applying the built-in function <code>complex</code> to untyped
-integer, rune, or floating-point constants yields
-an untyped complex constant.
+	把内置函数 <code>complex</code> 应用到无类型整数、rune 或者浮点数常量会产生一个无类型的复数常量。
 </p>
 
 <pre>
-const ic = complex(0, c)   // ic == 3.75i  (untyped complex constant)
-const iΘ = complex(0, Θ)   // iΘ == 1i     (type complex128)
+const ic = complex(0, c)   // ic == 3.75i  (无类型复数常量)
+const iΘ = complex(0, Θ)   // iΘ == 1i     (complex128 类型)
 </pre>
 
 <p>
-Constant expressions are always evaluated exactly; intermediate values and the
-constants themselves may require precision significantly larger than supported
-by any predeclared type in the language. The following are legal declarations:
+	常量表达式总是会被精确地求值；中间值和常量本身可能会需求比任何在语言中预定义的类型所支持的更大的精度。
+	以下都是合法的声明：
 </p>
 
 <pre>
-const Huge = 1 &lt;&lt; 100         // Huge == 1267650600228229401496703205376  (untyped integer constant)
-const Four int8 = Huge &gt;&gt; 98  // Four == 4                                (type int8)
+const Huge = 1 &lt;&lt; 100         // Huge == 1267650600228229401496703205376  (无类型整数常量)
+const Four int8 = Huge &gt;&gt; 98  // Four == 4                                (int8 类型)
 </pre>
 
 <p>
-The divisor of a constant division or remainder operation must not be zero:
+	常量除法或取余操作的除数一定不能是零：
 </p>
 
 <pre>
-3.14 / 0.0   // illegal: division by zero
+3.14 / 0.0   // 非法的：除数不能为零
 </pre>
 
 <p>
-The values of <i>typed</i> constants must always be accurately
-<a href="#Representability">representable</a> by values
-of the constant type. The following constant expressions are illegal:
+	<i>带类型的</i> 的常量的值必须是能被该常量类型所精确得<a href="#Representability">表示的</a>。
+	以下常量表达式是非法的：
 </p>
 
 <pre>
-uint(-1)     // -1 cannot be represented as a uint
-int(3.14)    // 3.14 cannot be represented as an int
-int64(Huge)  // 1267650600228229401496703205376 cannot be represented as an int64
-Four * 300   // operand 300 cannot be represented as an int8 (type of Four)
-Four * 100   // product 400 cannot be represented as an int8 (type of Four)
+uint(-1)     // -1 不能作为 uint 来表示
+int(3.14)    // 3.14 不能作为 int 来表示
+int64(Huge)  // 1267650600228229401496703205376 不能作为 int64 来表示
+Four * 300   // 操作数 300 不能作为 int8 (Four 的类型) 来表示
+Four * 100   // 乘积 400 不能作为 int8 (Four 的类型) 来表示
 </pre>
 
 <p>
-The mask used by the unary bitwise complement operator <code>^</code> matches
-the rule for non-constants: the mask is all 1s for unsigned constants
-and -1 for signed and untyped constants.
+	用于一元按位补码运算符 <code>^</code> 的掩码符合非常量的规则：对于无符号常量来说所有位都是 1，而对于带符号且无类型的常量来说，则是一个 -1。
 </p>
 
 <pre>
-^1         // untyped integer constant, equal to -2
-uint8(^1)  // illegal: same as uint8(-2), -2 cannot be represented as a uint8
-^uint8(1)  // typed uint8 constant, same as 0xFF ^ uint8(1) = uint8(0xFE)
-int8(^1)   // same as int8(-2)
-^int8(1)   // same as -1 ^ int8(1) = -2
+^1         // 无类型整数常量，等于 -2
+uint8(^1)  // 非法的: 相当于 uint8(-2)， -2 不能被 uint8 所表示
+^uint8(1)  // 带类型的 uint8 常量， 相当于 0xFF ^ uint8(1) = uint8(0xFE)
+int8(^1)   // 相当于 int8(-2)
+^int8(1)   // 相当于 -1 ^ int8(1) = -2
 </pre>
 
 <p>
-Implementation restriction: A compiler may use rounding while
-computing untyped floating-point or complex constant expressions; see
-the implementation restriction in the section
-on <a href="#Constants">constants</a>.  This rounding may cause a
-floating-point constant expression to be invalid in an integer
-context, even if it would be integral when calculated using infinite
-precision, and vice versa.
+	实现限制：编译器可能会在计算无类型浮点数或者复数常量表达式时凑整；请参阅<a href="#Constants">常量</a>一节中的实现限制。
+	该凑整可能导致在整数上下文内的浮点数常量表达式失效，即使它将在使用无限精度计算时是不可或缺的，反之亦然。
 </p>
 
 
-<h3 id="Order_of_evaluation">Order of evaluation</h3>
+<h3 id="Order_of_evaluation">求值顺序</h3>
 
 <p>
-At package level, <a href="#Package_initialization">initialization dependencies</a>
-determine the evaluation order of individual initialization expressions in
-<a href="#Variable_declarations">variable declarations</a>.
-Otherwise, when evaluating the <a href="#Operands">operands</a> of an
-expression, assignment, or
-<a href="#Return_statements">return statement</a>,
-all function calls, method calls, and
-communication operations are evaluated in lexical left-to-right
-order.
+	在包的级别上，<a href="#Package_initialization">初始化依赖</a>确定了<a href="#Variable_declarations">变量声明</a>中独立的初始化表达式的求值顺序。
+	其它方面，当对表达式、赋值或者 <a href="#Return_statements">return 语句</a>的<a href="#Operands">操作数</a>进行求值时，所有的函数调用、方法调用和通讯操作都是以词法的从左至右的顺序被求值的。
 </p>
 
 <p>
-For example, in the (function-local) assignment
+	比如，在（函数本地）赋值
 </p>
 <pre>
 y[f()], ok = g(h(), i()+x[j()], &lt;-c), k()
 </pre>
 <p>
-the function calls and communication happen in the order
-<code>f()</code>, <code>h()</code>, <code>i()</code>, <code>j()</code>,
-<code>&lt;-c</code>, <code>g()</code>, and <code>k()</code>.
-However, the order of those events compared to the evaluation
-and indexing of <code>x</code> and the evaluation
-of <code>y</code> is not specified.
+	函数调用和通讯是按照 <code>f()</code>，<code>h()</code>，<code>i()</code>，<code>j()</code>，<code>&lt;-c</code>，<code>g()</code> 和 <code>k()</code> 的顺序发生的。
+	不过，以上这些事件相比较于 <code>x</code> 的求值和索引，以及 <code>y</code> 的求值的顺序则是没有规定的。
 </p>
 
 <pre>
 a := 1
 f := func() int { a++; return a }
-x := []int{a, f()}            // x may be [1, 2] or [2, 2]: evaluation order between a and f() is not specified
-m := map[int]int{a: 1, a: 2}  // m may be {2: 1} or {2: 2}: evaluation order between the two map assignments is not specified
-n := map[int]int{a: f()}      // n may be {2: 3} or {3: 3}: evaluation order between the key and the value is not specified
+x := []int{a, f()}            // x 可以是 [1, 2] 或是 [2, 2]： a 和 f() 的求值顺序没有被规定
+m := map[int]int{a: 1, a: 2}  // m 可以是 {2: 1} 或是 {2: 2}： 两个映射赋值的求值顺序没有被规定
+n := map[int]int{a: f()}      // n 可以是 {2: 3} 或是 {3: 3}： 键和值的求值顺序没有被规定
 </pre>
 
 <p>
-At package level, initialization dependencies override the left-to-right rule
-for individual initialization expressions, but not for operands within each
-expression:
+	在包的级别上，初始化依赖会覆盖掉针对独立初始化表达式的从左至右的规则，但是不会针对在每个表达式中的操作数：
 </p>
 
 <pre>
@@ -3788,27 +3702,23 @@ func f() int        { return c }
 func g() int        { return a }
 func sqr(x int) int { return x*x }
 
-// functions u and v are independent of all other variables and functions
+// 函数 u 和 v 独立于其它所有的变量和函数
 </pre>
 
 <p>
-The function calls happen in the order
-<code>u()</code>, <code>sqr()</code>, <code>v()</code>,
-<code>f()</code>, <code>v()</code>, and <code>g()</code>.
+	函数调用是按照 <code>u()</code>，<code>sqr()</code>，<code>v()</code>，<code>f()</code>，<code>v()</code> and <code>g()</code> 的顺序发生的。
 </p>
 
 <p>
-Floating-point operations within a single expression are evaluated according to
-the associativity of the operators.  Explicit parentheses affect the evaluation
-by overriding the default associativity.
-In the expression <code>x + (y + z)</code> the addition <code>y + z</code>
-is performed before adding <code>x</code>.
+	在单一表达式中的浮点数操作是根据运算符的结合性来求值的。
+	明确的括号会通过覆盖默认的结合性来影响求值。
+	在表达式 <code>x + (y + z)</code> 中，加法 <code>y + z</code> 在加 <code>x</code> 前被执行。
 </p>
 
-<h2 id="Statements">Statements</h2>
+<h2 id="Statements">语句</h2>
 
 <p>
-Statements control execution.
+	语句控制着执行。
 </p>
 
 <pre class="ebnf">
@@ -3821,7 +3731,7 @@ Statement =
 SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | ShortVarDecl .
 </pre>
 
-<h3 id="Terminating_statements">Terminating statements</h3>
+<h3 id="Terminating_statements">终止语句</h3>
 
 <p>
 A <i>terminating statement</i> prevents execution of all statements that lexically
