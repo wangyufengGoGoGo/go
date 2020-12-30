@@ -3734,88 +3734,80 @@ SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | S
 <h3 id="Terminating_statements">终止语句</h3>
 
 <p>
-A <i>terminating statement</i> prevents execution of all statements that lexically
-appear after it in the same <a href="#Blocks">block</a>. The following statements
-are terminating:
+	<i>终止语句</i> 阻止了同一个<a href="#Blocks">块</a>中在其后（词法上）出现的语句的执行。
+	以下语句是终结的：
 </p>
 
 <ol>
 <li>
-	A <a href="#Return_statements">"return"</a> or
-    	<a href="#Goto_statements">"goto"</a> statement.
+	<a href="#Return_statements">"return"</a> 或者 <a href="#Goto_statements">"goto"</a> 语句。
 	<!-- ul below only for regular layout -->
 	<ul> </ul>
 </li>
 
 <li>
-	A call to the built-in function
-	<a href="#Handling_panics"><code>panic</code></a>.
+	对内置函数 <a href="#Handling_panics"><code>panic</code></a> 的调用。
 	<!-- ul below only for regular layout -->
 	<ul> </ul>
 </li>
 
 <li>
-	A <a href="#Blocks">block</a> in which the statement list ends in a terminating statement.
+	语句列表以终止语句结束的<a href="#Blocks">块</a>。
 	<!-- ul below only for regular layout -->
 	<ul> </ul>
 </li>
 
 <li>
-	An <a href="#If_statements">"if" statement</a> in which:
+	满足如下条件的 <a href="#If_statements">"if" 语句</a>：
 	<ul>
-	<li>the "else" branch is present, and</li>
-	<li>both branches are terminating statements.</li>
+	<li>"else" 分支存在</li>
+	<li>两个分支都是终止语句。</li>
 	</ul>
 </li>
 
 <li>
-	A <a href="#For_statements">"for" statement</a> in which:
+	满足如下的 <a href="#For_statements">"for" 语句</a>：
 	<ul>
-	<li>there are no "break" statements referring to the "for" statement, and</li>
-	<li>the loop condition is absent.</li>
+	<li>没有针对这个 "for" 语句的 "break" 语句</li>
+	<li>循环条件为空。</li>
 	</ul>
 </li>
 
 <li>
-	A <a href="#Switch_statements">"switch" statement</a> in which:
+	满足如下的 <a href="#Switch_statements">"switch" 语句</a>：
 	<ul>
-	<li>there are no "break" statements referring to the "switch" statement,</li>
-	<li>there is a default case, and</li>
-	<li>the statement lists in each case, including the default, end in a terminating
-	    statement, or a possibly labeled <a href="#Fallthrough_statements">"fallthrough"
-	    statement</a>.</li>
+	<li>没有针对这个 "switch" 语句的 "break" 语句</li>
+	<li>有一个 default case</li>
+	<li>在每个 case 中（包括默认的）的语句列表以终止语句或者一个可能标记为 <a href="#Fallthrough_statements">"fallthrough" 的语句</a>结束。</li>
 	</ul>
 </li>
 
 <li>
-	A <a href="#Select_statements">"select" statement</a> in which:
+	满足如下的 <a href="#Select_statements">"select" 语句</a>：
 	<ul>
-	<li>there are no "break" statements referring to the "select" statement, and</li>
-	<li>the statement lists in each case, including the default if present,
-	    end in a terminating statement.</li>
+	<li>没有针对这个 "select" 语句的 "break" 语句</li>
+	<li>在每个 case 中（包括默认的）的语句列表是存在的并以终止语句结束。</li>
 	</ul>
 </li>
 
 <li>
-	A <a href="#Labeled_statements">labeled statement</a> labeling
-	a terminating statement.
+	标记终止语句的<a href="#Labeled_statements">标签语句</a>。
 </li>
 </ol>
 
 <p>
-All other statements are not terminating.
+	所有其它语句都不是终止的。
 </p>
 
 <p>
-A <a href="#Blocks">statement list</a> ends in a terminating statement if the list
-is not empty and its final non-empty statement is terminating.
+	如果语句列表非空且其最后的非空语句是终止的，那么这个<a href="#Blocks">语句列表</a>以终结语句结束。
 </p>
 
 
-<h3 id="Empty_statements">Empty statements</h3>
+<h3 id="Empty_statements">空语句</h3>
 
 <p>
-The empty statement does nothing.
+	空语句什么都不做。
 </p>
 
 <pre class="ebnf">
@@ -3823,11 +3815,10 @@ EmptyStmt = .
 </pre>
 
 
-<h3 id="Labeled_statements">Labeled statements</h3>
+<h3 id="Labeled_statements">标签语句</h3>
 
 <p>
-A labeled statement may be the target of a <code>goto</code>,
-<code>break</code> or <code>continue</code> statement.
+	标签语句可以是 <code>goto</code>，<code>break</code> 或 <code>continue</code> 语句的目标。
 </p>
 
 <pre class="ebnf">
@@ -3840,13 +3831,11 @@ Error: log.Panic("error encountered")
 </pre>
 
 
-<h3 id="Expression_statements">Expression statements</h3>
+<h3 id="Expression_statements">表达式语句</h3>
 
 <p>
-With the exception of specific built-in functions,
-function and method <a href="#Calls">calls</a> and
-<a href="#Receive_operator">receive operations</a>
-can appear in statement context. Such statements may be parenthesized.
+	除了特定的内置函数外，函数和方法<a href="#Calls">调用</a>以及<a href="#Receive_operator">接收操作</a>可以出现在语句上下文中。
+	这种语句可能会被括起来。
 </p>
 
 <pre class="ebnf">
@@ -3854,7 +3843,7 @@ ExpressionStmt = Expression .
 </pre>
 
 <p>
-The following built-in functions are not permitted in statement context:
+	下述内置函数不允许出现在语句上下文中：
 </p>
 
 <pre>
@@ -3867,18 +3856,15 @@ h(x+y)
 f.Close()
 &lt;-ch
 (&lt;-ch)
-len("foo")  // illegal if len is the built-in function
+len("foo")  // 如果 len 是内置函数，那么是非法的
 </pre>
 
 
-<h3 id="Send_statements">Send statements</h3>
+<h3 id="Send_statements">发送语句</h3>
 
 <p>
-A send statement sends a value on a channel.
-The channel expression must be of <a href="#Channel_types">channel type</a>,
-the channel direction must permit send operations,
-and the type of the value to be sent must be <a href="#Assignability">assignable</a>
-to the channel's element type.
+	发送语句在 channel 上发送一个值。
+	channel 表达式必须是<a href="#Channel_types">channel 类型</a>，channel 方向必须允许发送操作，并且，发送值的类型必须<a href="#Assignability">可分配</a>为 channel 的元素类型。
 </p>
 
 <pre class="ebnf">
@@ -3887,26 +3873,23 @@ Channel  = Expression .
 </pre>
 
 <p>
-Both the channel and the value expression are evaluated before communication
-begins. Communication blocks until the send can proceed.
-A send on an unbuffered channel can proceed if a receiver is ready.
-A send on a buffered channel can proceed if there is room in the buffer.
-A send on a closed channel proceeds by causing a <a href="#Run_time_panics">run-time panic</a>.
-A send on a <code>nil</code> channel blocks forever.
+	channel 和值表达式都会在通讯开始前被求值。直到发送进行前，通讯都是阻塞的。
+	如果接收者准备好了那么在无缓冲的 channel 上的发送就可以进行了。
+	如果缓冲区还有空间那么在带缓冲的 channel 上的发送就可以进行。
+	在关闭的 channel 上进行发送会产生一个 <a href="#Run_time_panics">run-time panic</a>。
+	在值为 <code>nil</code> 的 channel 上的发送是会永久阻塞的。
 </p>
 
 <pre>
-ch &lt;- 3  // send value 3 to channel ch
+ch &lt;- 3  // 发送值 3 到信道 ch
 </pre>
 
 
-<h3 id="IncDec_statements">IncDec statements</h3>
+<h3 id="IncDec_statements">自增或自减语句</h3>
 
 <p>
-The "++" and "--" statements increment or decrement their operands
-by the untyped <a href="#Constants">constant</a> <code>1</code>.
-As with an assignment, the operand must be <a href="#Address_operators">addressable</a>
-or a map index expression.
+	"++" 和 "--" 语句用无类型<a href="#Constants">常量</a> <code>1</code> 来增加或减少其操作数。
+	和赋值一样，这个操作数必须是<a href="#Address_operators">可被寻址的</a>或者是一个映射索引表达式。
 </p>
 
 <pre class="ebnf">
@@ -3914,18 +3897,17 @@ IncDecStmt = Expression ( "++" | "--" ) .
 </pre>
 
 <p>
-The following <a href="#Assignments">assignment statements</a> are semantically
-equivalent:
+	以下<a href="#Assignments">赋值语句</a>在语义上是等同的：
 </p>
 
 <pre class="grammar">
-IncDec statement    Assignment
+自增或自减语句　   		 赋值
 x++                 x += 1
 x--                 x -= 1
 </pre>
 
 
-<h3 id="Assignments">Assignments</h3>
+<h3 id="Assignments">赋值</h3>
 
 <pre class="ebnf">
 Assignment = ExpressionList assign_op ExpressionList .
@@ -3934,28 +3916,21 @@ assign_op = [ add_op | mul_op ] "=" .
 </pre>
 
 <p>
-Each left-hand side operand must be <a href="#Address_operators">addressable</a>,
-a map index expression, or (for <code>=</code> assignments only) the
-<a href="#Blank_identifier">blank identifier</a>.
-Operands may be parenthesized.
+	每个左侧的操作数必须是<a href="#Address_operators">可被寻址的</a>、一个映射索引表达式或（只对 <code>=</code> 赋值来说）<a href="#Blank_identifier">空白标识符</a>。
+	操作数可能会被括起来。
 </p>
 
 <pre>
 x = 1
 *p = f()
 a[i] = 23
-(k) = &lt;-ch  // same as: k = &lt;-ch
+(k) = &lt;-ch  // 同： k = &lt;-ch
 </pre>
 
 <p>
-An <i>assignment operation</i> <code>x</code> <i>op</i><code>=</code>
-<code>y</code> where <i>op</i> is a binary <a href="#Arithmetic_operators">arithmetic operator</a>
-is equivalent to <code>x</code> <code>=</code> <code>x</code> <i>op</i>
-<code>(y)</code> but evaluates <code>x</code>
-only once.  The <i>op</i><code>=</code> construct is a single token.
-In assignment operations, both the left- and right-hand expression lists
-must contain exactly one single-valued expression, and the left-hand
-expression must not be the blank identifier.
+	当 <i>op</i> 是一个二元<a href="#Arithmetic_operators">算数运算符</a>时，<i>赋值操作</i> <code>x</code> <i>op</i><code>=</code> <code>y</code> 等同于 <code>x</code> <code>=</code> <code>x</code> <i>op</i> <code>(y)</code>，不过 <code>x</code> 仅求值一次。
+	<i>op</i><code>=</code> 构造是一个单独的记号。
+	在赋值操作中，左侧和右侧的表达式列表都必须含有一个确切的单一值表达式，并且左侧的表达式不能为空白标识符。
 </p>
 
 <pre>
@@ -3964,14 +3939,10 @@ i &amp;^= 1&lt;&lt;n
 </pre>
 
 <p>
-A tuple assignment assigns the individual elements of a multi-valued
-operation to a list of variables.  There are two forms.  In the
-first, the right hand operand is a single multi-valued expression
-such as a function call, a <a href="#Channel_types">channel</a> or
-<a href="#Map_types">map</a> operation, or a <a href="#Type_assertions">type assertion</a>.
-The number of operands on the left
-hand side must match the number of values.  For instance, if
-<code>f</code> is a function returning two values,
+	多元赋值分配多值运算的独立的值到一个变量列表。
+	有两种形式。
+	第一种，右侧的操作数是譬如函数调用、<a href="#Channel_types">channel</a>、<a href="#Map_types">map</a> 运算、<a href="#Type_assertions">类型断言</a>这样的单个多值表达式。
+	左侧的操作数的个数必须和值的个数匹配。比如，如果 <code>f</code> 是一个返回两个值的函数，
 </p>
 
 <pre>
@@ -3979,11 +3950,8 @@ x, y = f()
 </pre>
 
 <p>
-assigns the first value to <code>x</code> and the second to <code>y</code>.
-In the second form, the number of operands on the left must equal the number
-of expressions on the right, each of which must be single-valued, and the
-<i>n</i>th expression on the right is assigned to the <i>n</i>th
-operand on the left:
+	分配第一个值给 <code>x</code> 第二个给 code>y</code>。
+	第二种形式，左侧操作数的个数必须等于右侧表达式的个数，每个表达式必须是单一的值，并且右侧第 <i>n</i> 个表达式会分配给左侧第 <i>n</i> 个操作数：
 </p>
 
 <pre>
@@ -3991,81 +3959,69 @@ one, two, three = '一', '二', '三'
 </pre>
 
 <p>
-The <a href="#Blank_identifier">blank identifier</a> provides a way to
-ignore right-hand side values in an assignment:
+	在赋值中，<a href="#Blank_identifier">空白标识符</a>提供了一个忽略右侧值的方法：
 </p>
 
 <pre>
-_ = x       // evaluate x but ignore it
-x, _ = f()  // evaluate f() but ignore second result value
+_ = x       // 对 x 求值，但是会忽略它
+x, _ = f()  // 对 f() 求值，但是忽略了它的第二个结果值
 </pre>
 
 <p>
-The assignment proceeds in two phases.
-First, the operands of <a href="#Index_expressions">index expressions</a>
-and <a href="#Address_operators">pointer indirections</a>
-(including implicit pointer indirections in <a href="#Selectors">selectors</a>)
-on the left and the expressions on the right are all
-<a href="#Order_of_evaluation">evaluated in the usual order</a>.
-Second, the assignments are carried out in left-to-right order.
+	赋值会分两个阶段进行。
+	第一阶段，左侧的<a href="#Index_expressions">索引表达式</a>和<a href="#Address_operators">指针间接</a>（包括在<a href="#Selectors">选择器</a>中的隐式的指针间接）以及右侧的表达式都会按照<a href="#Order_of_evaluation">通常的顺序来求值</a>。
+	第二阶段，赋值按从左至右的顺序进行。
 </p>
 
 <pre>
-a, b = b, a  // exchange a and b
+a, b = b, a  // 交换 a 和 b
 
 x := []int{1, 2, 3}
 i := 0
-i, x[i] = 1, 2  // set i = 1, x[0] = 2
+i, x[i] = 1, 2  // 设 i = 1, x[0] = 2
 
 i = 0
-x[i], i = 2, 1  // set x[0] = 2, i = 1
+x[i], i = 2, 1  // 设 x[0] = 2, i = 1
 
-x[0], x[0] = 1, 2  // set x[0] = 1, then x[0] = 2 (so x[0] == 2 at end)
+x[0], x[0] = 1, 2  // 先设 x[0] = 1, 然后 x[0] = 2 （所以最后 x[0] == 2）
 
-x[1], x[3] = 4, 5  // set x[1] = 4, then panic setting x[3] = 5.
+x[1], x[3] = 4, 5  // 设 x[1] = 4, 然后设 x[3] = 5
 
 type Point struct { x, y int }
 var p *Point
-x[2], p.x = 6, 7  // set x[2] = 6, then panic setting p.x = 7
+x[2], p.x = 6, 7  // 设 x[2] = 6, 然后设 p.x = 7
 
 i = 2
 x = []int{3, 5, 7}
-for i, x[i] = range x {  // set i, x[2] = 0, x[0]
+for i, x[i] = range x {  // 设 i, x[2] = 0, x[0]
 	break
 }
-// after this loop, i == 0 and x == []int{3, 5, 3}
+// 循环结束后， i == 0 且 x == []int{3, 5, 3}
 </pre>
 
 <p>
-In assignments, each value must be <a href="#Assignability">assignable</a>
-to the type of the operand to which it is assigned, with the following special cases:
+	在赋值中，每个值都必须是<a href="#Assignability">可分配</a>给需要分配的操作数的类型的，不过会有以下特殊情况：
 </p>
 
 <ol>
 <li>
-	Any typed value may be assigned to the blank identifier.
+	任何类型的值都可以被分配给空白标识符。
 </li>
 
 <li>
-	If an untyped constant
-	is assigned to a variable of interface type or the blank identifier,
-	the constant is first implicitly <a href="#Conversions">converted</a> to its
-	 <a href="#Constants">default type</a>.
+	当无类型常量被分配给一个接口类型变量或是空白标识符时，常量会先被隐式地<a href="#Conversions">转换</a>为它的<a href="#Constants">默认类型</a>。
 </li>
 
 <li>
-	If an untyped boolean value is assigned to a variable of interface type or
-	the blank identifier, it is first implicitly converted to type <code>bool</code>.
+	当无类型布尔值被分配给一个接口类型变量或是空白标识符时，它会先被隐式地转换为<code>布尔类型</code>。
 </li>
 </ol>
 
-<h3 id="If_statements">If statements</h3>
+<h3 id="If_statements">If 语句</h3>
 
 <p>
-"If" statements specify the conditional execution of two branches
-according to the value of a boolean expression.  If the expression
-evaluates to true, the "if" branch is executed, otherwise, if
-present, the "else" branch is executed.
+	"if" 语句根据布尔表达式的值来指定两个分支的条件执行。
+	当表达式求值得真时， "if" 分支被执行，否则执行 "else" 分支（存在的话）。
 </p>
 
 <pre class="ebnf">
@@ -4079,8 +4035,7 @@ if x &gt; max {
 </pre>
 
 <p>
-The expression may be preceded by a simple statement, which
-executes before the expression is evaluated.
+	表达式前面可能会有一个简单的语句，这个语句会在表达式求值之前被执行。
 </p>
 
 <pre>
@@ -4094,13 +4049,11 @@ if x := f(); x &lt; y {
 </pre>
 
 
-<h3 id="Switch_statements">Switch statements</h3>
+<h3 id="Switch_statements">Switch 语句</h3>
 
 <p>
-"Switch" statements provide multi-way execution.
-An expression or type specifier is compared to the "cases"
-inside the "switch" to determine which branch
-to execute.
+	"switch" 语句提供了多路执行。
+	表达式或者类型指示符会和在 "switch" 内的 "case" 做比较去确定执行哪一个分支。
 </p>
 
 <pre class="ebnf">
@@ -4108,30 +4061,19 @@ SwitchStmt = ExprSwitchStmt | TypeSwitchStmt .
 </pre>
 
 <p>
-There are two forms: expression switches and type switches.
-In an expression switch, the cases contain expressions that are compared
-against the value of the switch expression.
-In a type switch, the cases contain types that are compared against the
-type of a specially annotated switch expression.
-The switch expression is evaluated exactly once in a switch statement.
+	有两种形式：表达式开关（switch）和类型开关。
+	在表达式开关中，case 包含了要与 switch 表达式的值比较的表达式。
+	在类型开关中，case 包含了要与特别说明的 switch 表达式的类型比较的类型。
+	switch 表达式在一个开关语句中仅求值一次。
 </p>
 
-<h4 id="Expression_switches">Expression switches</h4>
+<h4 id="Expression_switches">表达式开关</h4>
 
 <p>
-In an expression switch,
-the switch expression is evaluated and
-the case expressions, which need not be constants,
-are evaluated left-to-right and top-to-bottom; the first one that equals the
-switch expression
-triggers execution of the statements of the associated case;
-the other cases are skipped.
-If no case matches and there is a "default" case,
-its statements are executed.
-There can be at most one default case and it may appear anywhere in the
-"switch" statement.
-A missing switch expression is equivalent to the boolean value
-<code>true</code>.
+	在表达式开关中，switch 表达式和 case 表达式（不能是常量）是按照从左至右、从上之下的顺序进行求值的；第一个和 switch 表达式相等的 case 中对应的语句会被触发执行；其它 case 会被跳过。
+	如果没有 case 匹配且有一个 "default" case，那么会执行这个 case 的语句。
+	最多有一个默认 case ，它可以出现在 "switch" 语句的任意位置。
+	当 switch 表达式不存在时，相当于是一个布尔值 <code>true</code>。
 </p>
 
 <pre class="ebnf">
@@ -4141,40 +4083,27 @@ ExprSwitchCase = "case" ExpressionList | "default" .
 </pre>
 
 <p>
-If the switch expression evaluates to an untyped constant, it is first implicitly
-<a href="#Conversions">converted</a> to its <a href="#Constants">default type</a>;
-if it is an untyped boolean value, it is first implicitly converted to type <code>bool</code>.
-The predeclared untyped value <code>nil</code> cannot be used as a switch expression.
+	如果 switch 表达式求值为一个无类型常量，它会先被隐式地<a href="#Conversions">转换</a>为它的<a href="#Constants">默认类型</a>；如果它是一个无类型的布尔值，它会先被隐式地转换为类型 <code>bool</code>。
+	预定义的无类型值 <code>nil</code> 不能用在 switch 表达式中。
 </p>
 
 <p>
-If a case expression is untyped, it is first implicitly <a href="#Conversions">converted</a>
-to the type of the switch expression.
-For each (possibly converted) case expression <code>x</code> and the value <code>t</code>
-of the switch expression, <code>x == t</code> must be a valid <a href="#Comparison_operators">comparison</a>.
+	如果 case 表达式是无类型的，那么它会先被隐式地<a href="#Conversions">转换</a>为 switch 表达式的类型。
+	对于每个（可能是转换过的） case <a href="#Comparison_operators">表达式</a> <code>x</code> 和 switch 表达式的值 <code>t</code>，<code>x == t</code> 必定是一个有效的<a href="#Comparison_operators">比较</a>。
 </p>
 
 <p>
-In other words, the switch expression is treated as if it were used to declare and
-initialize a temporary variable <code>t</code> without explicit type; it is that
-value of <code>t</code> against which each case expression <code>x</code> is tested
-for equality.
+	也就是说， switch 表达式就像是被用来声明和初始化一个没有明确类型的临时变量 <code>t</code>；为了测试相等性，这个临时变量 <code>t</code> 的值会和每一个 case 表达式 <code>x</code> 做判断。
 </p>
 
 <p>
-In a case or default clause, the last non-empty statement
-may be a (possibly <a href="#Labeled_statements">labeled</a>)
-<a href="#Fallthrough_statements">"fallthrough" statement</a> to
-indicate that control should flow from the end of this clause to
-the first statement of the next clause.
-Otherwise control flows to the end of the "switch" statement.
-A "fallthrough" statement may appear as the last statement of all
-but the last clause of an expression switch.
+	在一个 case 或 default 子句中，最后的非空语句可能是一个（可能是<a href="#Labeled_statements">标签</a>的）<a href="#Fallthrough_statements">"fallthrough" 语句</a>用来指示控制应该从本子句流出以流入下个子句的第一个语句。
+	不然的话控制会流到 "switch" 语句的末尾。
+	"fallthrough" 语句可以作为除了表达式开关的最后一个子句外的其它所有子句的最后一条语句出现。
 </p>
 
 <p>
-The switch expression may be preceded by a simple statement, which
-executes before the expression is evaluated.
+	switch 表达式可以前缀一个简单的语句，这个语句会在表达式之前被求值。
 </p>
 
 <pre>
@@ -4184,7 +4113,7 @@ case 0, 1, 2, 3: s1()
 case 4, 5, 6, 7: s2()
 }
 
-switch x := f(); {  // missing switch expression means "true"
+switch x := f(); {  // 缺少 switch 表达式就意味着 "true"
 case x &lt; 0: return -x
 default: return x
 }
@@ -4197,19 +4126,16 @@ case x == 4: f3()
 </pre>
 
 <p>
-Implementation restriction: A compiler may disallow multiple case
-expressions evaluating to the same constant.
-For instance, the current compilers disallow duplicate integer,
-floating point, or string constants in case expressions.
+	实现限制：编译器可能会不允许多个 case 表达式求值结果为相同的常量。
+	例如，现在的编译器不允许重复的整数、浮点数或字符串常量出现在 case 表达式中。
 </p>
 
-<h4 id="Type_switches">Type switches</h4>
+<h4 id="Type_switches">类型开关</h4>
 
 <p>
-A type switch compares types rather than values. It is otherwise similar
-to an expression switch. It is marked by a special switch expression that
-has the form of a <a href="#Type_assertions">type assertion</a>
-using the reserved word <code>type</code> rather than an actual type:
+	类型开关用于比较类型而不是值。
+	其它方面和表达式开关类似。
+	它的标识是一个特殊的 switch 表达式，这个表达式形式是一个使用了保留字 <code>type</code> 而不是一个实际类型的<a href="#Type_assertions">类型断言</a>。
 </p>
 
 <pre>
@@ -4219,12 +4145,9 @@ switch x.(type) {
 </pre>
 
 <p>
-Cases then match actual types <code>T</code> against the dynamic type of the
-expression <code>x</code>. As with type assertions, <code>x</code> must be of
-<a href="#Interface_types">interface type</a>, and each non-interface type
-<code>T</code> listed in a case must implement the type of <code>x</code>.
-The types listed in the cases of a type switch must all be
-<a href="#Type_identity">different</a>.
+	然后 case 匹配实际的类型 <code>T</code> 而不是表达式 <code>x</code> 的动态类型。
+	与类型断言一样，<code>x</code> 必须是<a href="#Interface_types">接口类型</a>，并且在 case 中的每一个非接口类型 <code>T</code> 必须实现 <code>x</code> 的类型。
+	在类型开关的 case 中的类型必须都是<a href="#Type_identity">不同的</a>。
 </p>
 
 <pre class="ebnf">
@@ -4236,47 +4159,39 @@ TypeList        = Type { "," Type } .
 </pre>
 
 <p>
-The TypeSwitchGuard may include a
-<a href="#Short_variable_declarations">short variable declaration</a>.
-When that form is used, the variable is declared at the end of the
-TypeSwitchCase in the <a href="#Blocks">implicit block</a> of each clause.
-In clauses with a case listing exactly one type, the variable
-has that type; otherwise, the variable has the type of the expression
-in the TypeSwitchGuard.
+	TypeSwitchGuard 可能会包含一个<a href="#Short_variable_declarations">短变量声明</a>。
+	当用了这种形式的话，变量会在每个子句的 TypeSwitchCase 末尾的<a href="#Blocks">隐式块</a>中被声明。
+	在只列出一个类型的 case 的子句中，变量类型就是这个类型；否则，变量类型为 TypeSwitchGuard 中表达式的类型。
 </p>
 
 <p>
-Instead of a type, a case may use the predeclared identifier
-<a href="#Predeclared_identifiers"><code>nil</code></a>;
-that case is selected when the expression in the TypeSwitchGuard
-is a <code>nil</code> interface value.
-There may be at most one <code>nil</code> case.
+	不同于类型， case 可以使用预声明的标识符 <a href="#Predeclared_identifiers"><code>nil</code></a>；这种会在 TypeSwitchGuard 中的表达式为 <code>nil</code> 接口值时被选择。
+	只能最多一个 <code>nil</code> case。
 </p>
 
 <p>
-Given an expression <code>x</code> of type <code>interface{}</code>,
-the following type switch:
+	给定一个 <code>interface{}</code> 类型的表达式 <code>x</code>，以下类型开关：
 </p>
 
 <pre>
 switch i := x.(type) {
 case nil:
-	printString("x is nil")                // type of i is type of x (interface{})
+	printString("x is nil")                // i 类型为 x 的类型（interface{}）
 case int:
-	printInt(i)                            // type of i is int
+	printInt(i)                            // i 类型为 int
 case float64:
-	printFloat64(i)                        // type of i is float64
+	printFloat64(i)                        // i 类型为 float64
 case func(int) float64:
-	printFunction(i)                       // type of i is func(int) float64
+	printFunction(i)                       // i 类型为 func(int) float64
 case bool, string:
-	printString("type is bool or string")  // type of i is type of x (interface{})
+	printString("type is bool or string")  // i 类型为 x 的类型（interface{}）
 default:
-	printString("don't know the type")     // type of i is type of x (interface{})
+	printString("don't know the type")     // i 类型为 x 的类型（interface{}）
 }
 </pre>
 
 <p>
-could be rewritten:
+	可以被重写为：
 </p>
 
 <pre>
