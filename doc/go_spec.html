@@ -2858,7 +2858,7 @@ pt.Scale(3.5)     // 带接收者 pt 的方法调用
 </pre>
 
 <p>
-	在一个函数调用中，函数值和实参使用<a href="#Order_of_evaluation">通常的顺序</a>被求值。
+	在一个函数调用中，函数值和实参使用<a href="#Order_of_evaluation">通常的顺序</a>执行。
 	在它们求值好后，调用的参数以值传递给函数，然后被调用的函数开始执行。
 	函数的返回参数在函数返回时以值返回给调用的函数。
 </p>
@@ -3669,7 +3669,7 @@ int8(^1)   // 相当于 int8(-2)
 
 <p>
 	在包的级别上，<a href="#Package_initialization">初始化依赖</a>确定了<a href="#Variable_declarations">变量声明</a>中独立的初始化表达式的求值顺序。
-	其它方面，当对表达式、赋值或者 <a href="#Return_statements">return 语句</a>的<a href="#Operands">操作数</a>进行求值时，所有的函数调用、方法调用和通讯操作都是以词法的从左至右的顺序被求值的。
+	其它方面，当对表达式、赋值或者 <a href="#Return_statements">return 语句</a>的<a href="#Operands">操作数</a>进行求值时，所有的函数调用、方法调用和通讯操作都是以词法的从左至右的顺序执行的。
 </p>
 
 <p>
@@ -3873,7 +3873,7 @@ Channel  = Expression .
 </pre>
 
 <p>
-	channel 和值表达式都会在通讯开始前被求值。直到发送进行前，通讯都是阻塞的。
+	channel 和值表达式都会在通讯开始前执行。直到发送进行前，通讯都是阻塞的。
 	如果接收者准备好了那么在无缓冲的 channel 上的发送就可以进行了。
 	如果缓冲区还有空间那么在带缓冲的 channel 上的发送就可以进行。
 	在关闭的 channel 上进行发送会产生一个 <a href="#Run_time_panics">run-time panic</a>。
@@ -4103,7 +4103,7 @@ ExprSwitchCase = "case" ExpressionList | "default" .
 </p>
 
 <p>
-	switch 表达式可以前缀一个简单的语句，这个语句会在表达式之前被求值。
+	switch 表达式可以前缀一个简单的语句，这个语句会在表达式之前执行。
 </p>
 
 <pre>
@@ -4195,43 +4195,42 @@ default:
 </p>
 
 <pre>
-v := x  // x is evaluated exactly once
+v := x  // x 只执行一次
 if v == nil {
-	i := v                                 // type of i is type of x (interface{})
+	i := v                                 // i 类型为 x 的类型（interface{}）
 	printString("x is nil")
 } else if i, isInt := v.(int); isInt {
-	printInt(i)                            // type of i is int
+	printInt(i)                            // i 类型为 int
 } else if i, isFloat64 := v.(float64); isFloat64 {
-	printFloat64(i)                        // type of i is float64
+	printFloat64(i)                        // i 类型为 float64
 } else if i, isFunc := v.(func(int) float64); isFunc {
-	printFunction(i)                       // type of i is func(int) float64
+	printFunction(i)                       // i 类型为 func(int) float64
 } else {
 	_, isBool := v.(bool)
 	_, isString := v.(string)
 	if isBool || isString {
-		i := v                         // type of i is type of x (interface{})
+		i := v                         // i 类型为 x 的类型（interface{}）
 		printString("type is bool or string")
 	} else {
-		i := v                         // type of i is type of x (interface{})
+		i := v                         // i 类型为 x 的类型（interface{}）
 		printString("don't know the type")
 	}
 }
 </pre>
 
 <p>
-The type switch guard may be preceded by a simple statement, which
-executes before the guard is evaluated.
+	TypeSwitchGuard 可以前缀一个简单的语句，这个语句在 guard 之前执行。
 </p>
 
 <p>
-The "fallthrough" statement is not permitted in a type switch.
+	"fallthrough" 语句在类型开关中是不被允许的。
 </p>
 
-<h3 id="For_statements">For statements</h3>
+<h3 id="For_statements">For 语句</h3>
 
 <p>
-A "for" statement specifies repeated execution of a block. There are three forms:
-The iteration may be controlled by a single condition, a "for" clause, or a "range" clause.
+	"for" 语句规定了一个块的重复执行。
+	有三种形式：迭代可以被一个单一条件、一个 "for" 子句或是一个 "range" 子句控制。
 </p>
 
 <pre class="ebnf">
@@ -4239,14 +4238,11 @@ ForStmt = "for" [ Condition | ForClause | RangeClause ] Block .
 Condition = Expression .
 </pre>
 
-<h4 id="For_condition">For statements with single condition</h4>
+<h4 id="For_condition">带单一条件的 for 语句</h4>
 
 <p>
-In its simplest form, a "for" statement specifies the repeated execution of
-a block as long as a boolean condition evaluates to true.
-The condition is evaluated before each iteration.
-If the condition is absent, it is equivalent to the boolean value
-<code>true</code>.
+	在它最简单的形式中， "for" 语句就像一个求值为真的布尔条件一样来规定一个块的重复执行。
+	这个条件的值会在每次迭代前都被求一下。如果条件为空，那么就相当于布尔值 <code>true</code>。
 </p>
 
 <pre>
@@ -4255,15 +4251,12 @@ for a &lt; b {
 }
 </pre>
 
-<h4 id="For_clause">For statements with <code>for</code> clause</h4>
+<h4 id="For_clause">带 <code>for</code> 子句的 For 语句</h4>
 
 <p>
-A "for" statement with a ForClause is also controlled by its condition, but
-additionally it may specify an <i>init</i>
-and a <i>post</i> statement, such as an assignment,
-an increment or decrement statement. The init statement may be a
-<a href="#Short_variable_declarations">short variable declaration</a>, but the post statement must not.
-Variables declared by the init statement are re-used in each iteration.
+	带一个 ForClause 的 "for" 子句也是通过其条件来控制的，但是它会额外指定一个 <i>init</i> 和 <i>post</i> 语句，比如一个赋值、增量或减量语句。
+	Init 语句可以是一个<a href="#Short_variable_declarations">短变量声明</a>，但 post 语句一定不是。
+	通过 init 语句声明的变量会在每次迭代时被重复使用。
 </p>
 
 <pre class="ebnf">
@@ -4279,29 +4272,21 @@ for i := 0; i &lt; 10; i++ {
 </pre>
 
 <p>
-If non-empty, the init statement is executed once before evaluating the
-condition for the first iteration;
-the post statement is executed after each execution of the block (and
-only if the block was executed).
-Any element of the ForClause may be empty but the
-<a href="#Semicolons">semicolons</a> are
-required unless there is only a condition.
-If the condition is absent, it is equivalent to the boolean value
-<code>true</code>.
+	如果非空，init 语句会在首次迭代的条件求值前被执行一次；post 语句会在每次块执行完后被执行（并且只有在块有执行过后）。
+	ForClause 每个元素都可以是空的，但是<a href="#Semicolons">分号</a>是必须要有的，除非仅存在一个条件元素。
+	如果条件为空，那么就相当于布尔值 <code>true</code>。
 </p>
 
 <pre>
-for cond { S() }    is the same as    for ; cond ; { S() }
-for      { S() }    is the same as    for true     { S() }
+for cond { S() }    同    for ; cond ; { S() }
+for      { S() }    同    for true     { S() }
 </pre>
 
-<h4 id="For_range">For statements with <code>range</code> clause</h4>
+<h4 id="For_range">带 <code>range</code> 子句的 For 语句</h4>
 
 <p>
-A "for" statement with a "range" clause
-iterates through all entries of an array, slice, string or map,
-or values received on a channel. For each entry it assigns <i>iteration values</i>
-to corresponding <i>iteration variables</i> if present and then executes the block.
+	带 "range" 子句的 "for" 语句会彻底地迭代数组、切片、字符串或 map 的所有条目，或是从 channel 接收到的值。
+	针对每一个条目，它在分配<i>迭代值</i> 给对应且存在的<i>迭代变量</i> 后再执行语句块。
 </p>
 
 <pre class="ebnf">
@@ -4309,32 +4294,23 @@ RangeClause = [ ExpressionList "=" | IdentifierList ":=" ] "range" Expression .
 </pre>
 
 <p>
-The expression on the right in the "range" clause is called the <i>range expression</i>,
-which may be an array, pointer to an array, slice, string, map, or channel permitting
-<a href="#Receive_operator">receive operations</a>.
-As with an assignment, if present the operands on the left must be
-<a href="#Address_operators">addressable</a> or map index expressions; they
-denote the iteration variables. If the range expression is a channel, at most
-one iteration variable is permitted, otherwise there may be up to two.
-If the last iteration variable is the <a href="#Blank_identifier">blank identifier</a>,
-the range clause is equivalent to the same clause without that identifier.
+	"range" 子句中右侧的表达式被称为<i>范围表达式</i>，它可以是数组、到数组的指针、切片、字符串、map 或是允许<a href="#Receive_operator">接收操作</a>的 channel。
+	和赋值一样，如果左侧操作数存在，那么它一定是<a href="#Address_operators">可被寻址的</a>或 map 索引表达式；它们表示为迭代变量。
+	如果范围表达式是一个信道，那么最多允许一个迭代变量，其它情况下可以最多到两个。
+	如果最后的迭代变量是<a href="#Blank_identifier">空白标识符</a>，那么这个 range 子句和没有这个标识符的子句是相同的。
 </p>
 
 <p>
-The range expression <code>x</code> is evaluated once before beginning the loop,
-with one exception: if at most one iteration variable is present and
-<code>len(x)</code> is <a href="#Length_and_capacity">constant</a>,
-the range expression is not evaluated.
+	范围表达式 <code>x</code> 会在开始此循环前被执行一次，但有一个例外：当存在最多一个迭代变量且 <code>len(x)</code> 是<a href="#Length_and_capacity">常量</a>时，范围表达式是不被执行的。
 </p>
 
 <p>
-Function calls on the left are evaluated once per iteration.
-For each iteration, iteration values are produced as follows
-if the respective iteration variables are present:
+	左侧的函数调用在每次迭代时被执行。
+	对于每个迭代，如果迭代变量存在，那么对应的迭代值是按以下说明产生的：
 </p>
 
 <pre class="grammar">
-Range expression                          1st value          2nd value
+范围表达式                          			第一个值　　         第二个值
 
 array or slice  a  [n]E, *[n]E, or []E    index    i  int    a[i]       E
 string          s  string type            index    i  int    see below  rune
@@ -4344,56 +4320,39 @@ channel         c  chan E, &lt;-chan E       element  e  E
 
 <ol>
 <li>
-For an array, pointer to array, or slice value <code>a</code>, the index iteration
-values are produced in increasing order, starting at element index 0.
-If at most one iteration variable is present, the range loop produces
-iteration values from 0 up to <code>len(a)-1</code> and does not index into the array
-or slice itself. For a <code>nil</code> slice, the number of iterations is 0.
+	对于数组、到数组的指针或是切片值 <code>a</code>，其索引迭代值是从索引 0 开始，以递增次序产生的。
+	如果存在最多一个迭代变量， range 循环会创建从 0 到 <code>len(a)-1</code> 的迭代值，且不会索引进数组或切片内。
+	对于 <code>nil</code> 切片而言，迭代数是 0。
 </li>
 
 <li>
-For a string value, the "range" clause iterates over the Unicode code points
-in the string starting at byte index 0.  On successive iterations, the index value will be the
-index of the first byte of successive UTF-8-encoded code points in the string,
-and the second value, of type <code>rune</code>, will be the value of
-the corresponding code point.  If the iteration encounters an invalid
-UTF-8 sequence, the second value will be <code>0xFFFD</code>,
-the Unicode replacement character, and the next iteration will advance
-a single byte in the string.
+	对于字符串值，"range" 子句从字节索引 0 开始迭代字符串中的 Unicode 码位。
+	在连续的迭代上，索引值是字符串中连续 UTF-8 编码的码位的第一个字节的索引，而第二个值（类型是 <code>rune</code>）是对应的码位的值。
+	如果迭代遇到了无效的 UTF-8 序列，那么第二个值会变成 Unicode 替换字符 <code>0xFFFD</code>，且下一个迭代将在字符串中前进一个字节。
 </li>
 
 <li>
-The iteration order over maps is not specified
-and is not guaranteed to be the same from one iteration to the next.
-If a map entry that has not yet been reached is removed during iteration,
-the corresponding iteration value will not be produced. If a map entry is
-created during iteration, that entry may be produced during the iteration or
-may be skipped. The choice may vary for each entry created and from one
-iteration to the next.
-If the map is <code>nil</code>, the number of iterations is 0.
+	map 的迭代顺序是未指定的，并且不能保证两次完整的迭代是相同的。
+	如果在迭代中某个未接触到的 map 条目被移除了，那么对应的迭代值就不会产生。
+	如果在迭代中新创建了一个 map 条目，那这个条目可能会在迭代中被产生也可能被跳过。
+	对于每个条目的创建或是一个迭代到下一个迭代，选择可能很多样。
+	如果 map 是 <code>nil</code>，迭代数为 0。
 </li>
 
 <li>
-For channels, the iteration values produced are the successive values sent on
-the channel until the channel is <a href="#Close">closed</a>. If the channel
-is <code>nil</code>, the range expression blocks forever.
+	对于 channels，迭代值是在信道上发送的直到 channel <a href="#Close">关闭</a>的连续值。
+	如果信道是 <code>nil</code>，那么范围表达式会永久阻塞。
 </li>
 </ol>
 
 <p>
-The iteration values are assigned to the respective
-iteration variables as in an <a href="#Assignments">assignment statement</a>.
+	迭代值会像<a href="#Assignments">赋值语句</a>一样被赋值给对应的迭代变量。
 </p>
 
 <p>
-The iteration variables may be declared by the "range" clause using a form of
-<a href="#Short_variable_declarations">short variable declaration</a>
-(<code>:=</code>).
-In this case their types are set to the types of the respective iteration values
-and their <a href="#Declarations_and_scope">scope</a> is the block of the "for"
-statement; they are re-used in each iteration.
-If the iteration variables are declared outside the "for" statement,
-after execution their values will be those of the last iteration.
+	迭代变量可以被 "range" 子句使用<a href="#Short_variable_declarations">短变量声明</a>（<code>:=</code>）的形式声明。
+	这种情况下，它们的类型会被设置为对应迭代值的类型，且它们的<a href="#Declarations_and_scope">作用域</a>是 "for" 语句块；这些变量会在每次迭代时复用。
+	如果迭代变量是在 "for" 语句外被声明的，那么在执行完毕后，它们的值会是最后一次迭代的值。
 </p>
 
 <pre>
@@ -4401,26 +4360,26 @@ var testdata *struct {
 	a *[7]int
 }
 for i, _ := range testdata.a {
-	// testdata.a is never evaluated; len(testdata.a) is constant
-	// i ranges from 0 to 6
+	// testdata.a 不会被求值; len(testdata.a) 是常量
+	// i 范围从 0 到 6
 	f(i)
 }
 
 var a [10]string
 for i, s := range a {
-	// type of i is int
-	// type of s is string
+	// i 类型为 int
+  	// s 类型为 string
 	// s == a[i]
 	g(i, s)
 }
 
 var key string
-var val interface{}  // element type of m is assignable to val
+var val interface{}  // m 的元素类型可赋予 val
 m := map[string]int{"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6}
 for key, val = range m {
 	h(key, val)
 }
-// key == last map key encountered in iteration
+// key == 迭代中遇到的最后一个 map 键
 // val == map[key]
 
 var ch chan Work = producer()
@@ -4428,17 +4387,15 @@ for w := range ch {
 	doWork(w)
 }
 
-// empty a channel
+// 空 channel
 for range ch {}
 </pre>
 
 
-<h3 id="Go_statements">Go statements</h3>
+<h3 id="Go_statements">Go 语句</h3>
 
 <p>
-A "go" statement starts the execution of a function call
-as an independent concurrent thread of control, or <i>goroutine</i>,
-within the same address space.
+	"go" 语句在同一地址空间内以独立的并发控制线程或 <i>goroutine</i> 的形式开始执行函数调用。
 </p>
 
 <pre class="ebnf">
@@ -4446,22 +4403,15 @@ GoStmt = "go" Expression .
 </pre>
 
 <p>
-The expression must be a function or method call; it cannot be parenthesized.
-Calls of built-in functions are restricted as for
-<a href="#Expression_statements">expression statements</a>.
+	表达式必须是函数或方法调用；它不能是括起来的。
+	对内置函数的调用会有和<a href="#Expression_statements">表达式语句</a>一样的限制。
 </p>
 
 <p>
-The function value and parameters are
-<a href="#Calls">evaluated as usual</a>
-in the calling goroutine, but
-unlike with a regular call, program execution does not wait
-for the invoked function to complete.
-Instead, the function begins executing independently
-in a new goroutine.
-When the function terminates, its goroutine also terminates.
-If the function has any return values, they are discarded when the
-function completes.
+	在调用的 goroutine 中的函数值和参数是按<a href="#Calls">通常的情况来执行</a>的，但不同于普通调用的是，程序执行不会等待被调用的函数执行完毕。
+	相反，在新的 goroutine 中的函数是独立执行的。
+	当函数终止，其 goroutine 也会终止。
+	如果函数存在任何返回值，这些值会在函数完成时被丢弃。
 </p>
 
 <pre>
@@ -4470,16 +4420,11 @@ go func(ch chan&lt;- bool) { for { sleep(10); ch &lt;- true }} (c)
 </pre>
 
 
-<h3 id="Select_statements">Select statements</h3>
+<h3 id="Select_statements">Select 语句</h3>
 
 <p>
-A "select" statement chooses which of a set of possible
-<a href="#Send_statements">send</a> or
-<a href="#Receive_operator">receive</a>
-operations will proceed.
-It looks similar to a
-<a href="#Switch_statements">"switch"</a> statement but with the
-cases all referring to communication operations.
+	"select" 语句会选择一组或是<a href="#Send_statements">发送</a>或是<a href="#Receive_operator">接收</a>的操作来进行。
+	它看起来和 <a href="#Switch_statements">"switch"</a> 语句类似，但它所有的 case 只涉及通讯操作。
 </p>
 
 <pre class="ebnf">
@@ -4491,58 +4436,44 @@ RecvExpr   = Expression .
 </pre>
 
 <p>
-A case with a RecvStmt may assign the result of a RecvExpr to one or
-two variables, which may be declared using a
-<a href="#Short_variable_declarations">short variable declaration</a>.
-The RecvExpr must be a (possibly parenthesized) receive operation.
-There can be at most one default case and it may appear anywhere
-in the list of cases.
+	带 RecvStmt 的 case 可能会分配 RecvExpr 的结果到一个或两个变量，变量是用<a href="#Short_variable_declarations">短变量声明</a>声明的。
+	RecvExpr 一定是一个（可能是括起来的）接收操作。
+	最多可以有一个默认 case，它可以出现在 case 列表的任意位置。
 </p>
 
 <p>
-Execution of a "select" statement proceeds in several steps:
+	"select" 语句的执行按如下几个步骤进行：
 </p>
 
 <ol>
 <li>
-For all the cases in the statement, the channel operands of receive operations
-and the channel and right-hand-side expressions of send statements are
-evaluated exactly once, in source order, upon entering the "select" statement.
-The result is a set of channels to receive from or send to,
-and the corresponding values to send.
-Any side effects in that evaluation will occur irrespective of which (if any)
-communication operation is selected to proceed.
-Expressions on the left-hand side of a RecvStmt with a short variable declaration
-or assignment are not yet evaluated.
+	对于语句中的所有 case 来说，其接收操作和 channel 的 channel 操作数以及发送语句右侧的表达式会在进入 "select" 语句时以源码的顺序被执行仅一次。
+	结果是需要接收或发送的 channel 集，以及对应的需要发送的值。
+	无论选择哪个（如果有）通讯操作进行，在这个求值中的任何副作用都会发生。
+	RecvStmt 左侧的带短变量声明或赋值的表达式还不会被求值。
 </li>
 
 <li>
-If one or more of the communications can proceed,
-a single one that can proceed is chosen via a uniform pseudo-random selection.
-Otherwise, if there is a default case, that case is chosen.
-If there is no default case, the "select" statement blocks until
-at least one of the communications can proceed.
+	如果可以发生一个或多个通讯，通过统一的伪随机选择确定一个来进行。
+	否则，如果有一个默认的 case，那么这个 case 会被选择。
+	如果没有默认的 case，那么这个 "select" 语句会阻塞，直到至少发生了一个通讯。
 </li>
 
 <li>
-Unless the selected case is the default case, the respective communication
-operation is executed.
+	除非被选择的 case 是默认的 case，否则各自的通讯操作会被执行。
 </li>
 
 <li>
-If the selected case is a RecvStmt with a short variable declaration or
-an assignment, the left-hand side expressions are evaluated and the
-received value (or values) are assigned.
+	如果被选择的 case 是一个带短变量声明或赋值的 RecvStmt，那么左侧的表达式会被求值且接收到的值会被分配。
 </li>
 
 <li>
-The statement list of the selected case is executed.
+	执行所选择的 case 的语句列表。
 </li>
 </ol>
 
 <p>
-Since communication on <code>nil</code> channels can never proceed,
-a select with only <code>nil</code> channels and no default case blocks forever.
+	由于在 <code>nil</code> channels 上的通讯永不会进行，所以只带 <code>nil</code> channels 且没有默认 case 的 select 会永久阻塞。
 </p>
 
 <pre>
@@ -4554,38 +4485,36 @@ case i1 = &lt;-c1:
 	print("received ", i1, " from c1\n")
 case c2 &lt;- i2:
 	print("sent ", i2, " to c2\n")
-case i3, ok := (&lt;-c3):  // same as: i3, ok := &lt;-c3
+case i3, ok := (&lt;-c3):  // 同： i3, ok := &lt;-c3
 	if ok {
 		print("received ", i3, " from c3\n")
 	} else {
 		print("c3 is closed\n")
 	}
 case a[f()] = &lt;-c4:
-	// same as:
+	// 同：
 	// case t := &lt;-c4
 	//	a[f()] = t
 default:
 	print("no communication\n")
 }
 
-for {  // send random sequence of bits to c
+for {  // 发送（伪）随机比特序列到 c
 	select {
-	case c &lt;- 0:  // note: no statement, no fallthrough, no folding of cases
+	case c &lt;- 0:  // n注意：没有语句，没有 fallthrough，没有可折叠的 case
 	case c &lt;- 1:
 	}
 }
 
-select {}  // block forever
+select {}  // 永久阻塞
 </pre>
 
 
-<h3 id="Return_statements">Return statements</h3>
+<h3 id="Return_statements">Return 语句</h3>
 
 <p>
-A "return" statement in a function <code>F</code> terminates the execution
-of <code>F</code>, and optionally provides one or more result values.
-Any functions <a href="#Defer_statements">deferred</a> by <code>F</code>
-are executed before <code>F</code> returns to its caller.
+	函数 <code>F</code> 中的 "return" 语句会终止 <code>F</code> 的执行，并可选择地提供一个或更多的返回值。
+	任何被 <code>F</code> <a href="#Defer_statements">推迟</a>的函数会在 <code>F</code> 返回到它调用者前被执行。
 </p>
 
 <pre class="ebnf">
@@ -4860,17 +4789,17 @@ the function completes.
 
 <pre>
 lock(l)
-defer unlock(l)  // unlocking happens before surrounding function returns
+defer unlock(l)  // 解锁发生在环绕函数返回前
 
-// prints 3 2 1 0 before surrounding function returns
+// 在环绕函数返回前打印 3 2 1 0
 for i := 0; i &lt;= 3; i++ {
 	defer fmt.Print(i)
 }
 
-// f returns 42
+// f 会返回 42
 func f() (result int) {
 	defer func() {
-		// result is accessed after it was set to 6 by the return statement
+		// 结果会在其被 return 语句设为 6 之后再被访问
 		result *= 7
 	}()
 	return 6
