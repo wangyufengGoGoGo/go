@@ -4522,8 +4522,7 @@ ReturnStmt = "return" [ ExpressionList ] .
 </pre>
 
 <p>
-In a function without a result type, a "return" statement must not
-specify any result values.
+	在没有结果类型的函数中，"return" 语句一定不指定任何返回值。
 </p>
 <pre>
 func noResult() {
@@ -4532,15 +4531,12 @@ func noResult() {
 </pre>
 
 <p>
-There are three ways to return values from a function with a result
-type:
+	带有结果类型的函数有三种返回值：
 </p>
 
 <ol>
-	<li>The return value or values may be explicitly listed
-		in the "return" statement. Each expression must be single-valued
-		and <a href="#Assignability">assignable</a>
-		to the corresponding element of the function's result type.
+	<li>一个或多个返回值可以在 "return" 语句中明确列出
+		每个表达式一定是单一值的且是<a href="#Assignability">可分配</a>给对应的函数返回类型的元素。
 <pre>
 func simpleF() int {
 	return 2
@@ -4551,23 +4547,17 @@ func complexF1() (re float64, im float64) {
 }
 </pre>
 	</li>
-	<li>The expression list in the "return" statement may be a single
-		call to a multi-valued function. The effect is as if each value
-		returned from that function were assigned to a temporary
-		variable with the type of the respective value, followed by a
-		"return" statement listing these variables, at which point the
-		rules of the previous case apply.
+	<li>在 "return" 语句中的表达式列表可以是对多值函数的单一调用。
+		效果就犹如从这个函数返回的值被分配给带对应值类型的一个临时变量，然后这些变量会跟随在 "return" 语句后，并适用上述情况指明的规则。
 <pre>
 func complexF2() (re float64, im float64) {
 	return complexF1()
 }
 </pre>
 	</li>
-	<li>The expression list may be empty if the function's result
-		type specifies names for its <a href="#Function_types">result parameters</a>.
-		The result parameters act as ordinary local variables
-		and the function may assign values to them as necessary.
-		The "return" statement returns the values of these variables.
+	<li>如果函数结果值对其<a href="#Function_types">结果参数</a>规定了名字，那么表达式列表可以为空。
+		结果参数会作为本地变量，函数也可以在需要时给它们赋值。
+		"return" 语句会返回这些变量的值。
 <pre>
 func complexF3() (re float64, im float64) {
 	re = 7.0
@@ -4584,36 +4574,27 @@ func (devnull) Write(p []byte) (n int, _ error) {
 </ol>
 
 <p>
-Regardless of how they are declared, all the result values are initialized to
-the <a href="#The_zero_value">zero values</a> for their type upon entry to the
-function. A "return" statement that specifies results sets the result parameters before
-any deferred functions are executed.
+	不管它们是如何声明的，在进入函数时，所有结果值都会被初始化为其类型的<a href="#The_zero_value">零值</a>。
+	指定结果的 "return" 语句会在任何推迟函数执行前设置结果参数。
 </p>
 
 <p>
-Implementation restriction: A compiler may disallow an empty expression list
-in a "return" statement if a different entity (constant, type, or variable)
-with the same name as a result parameter is in
-<a href="#Declarations_and_scope">scope</a> at the place of the return.
+	实现限制：当一个和结果参数同名的实体（常量、类型或变量）在 return 位置的<a href="#Declarations_and_scope">作用域</a>内时，编译器会不允许空的表达式列表出现在 "return" 语句中。
 </p>
 
 <pre>
 func f(n int) (res int, err error) {
 	if _, err := f(n-1); err != nil {
-		return  // invalid return statement: err is shadowed
+		return  // 无效的返回语句：err 被遮蔽了
 	}
 	return
 }
 </pre>
 
-<h3 id="Break_statements">Break statements</h3>
+<h3 id="Break_statements">Break 语句</h3>
 
 <p>
-A "break" statement terminates execution of the innermost
-<a href="#For_statements">"for"</a>,
-<a href="#Switch_statements">"switch"</a>, or
-<a href="#Select_statements">"select"</a> statement
-within the same function.
+	"break" 语句终止在相同函数内最内层的 <a href="#For_statements">"for"</a>，<a href="#Switch_statements">"switch"</a> 或 <a href="#Select_statements">"select"</a> 语句的执行。
 </p>
 
 <pre class="ebnf">
@@ -4621,9 +4602,7 @@ BreakStmt = "break" [ Label ] .
 </pre>
 
 <p>
-If there is a label, it must be that of an enclosing
-"for", "switch", or "select" statement,
-and that is the one whose execution terminates.
+	如果这里有一个标签，那它必须是一个封闭的 "for"、"switch" 或 "select" 语句，然后这个标签终止执行上面三个语句。
 </p>
 
 <pre>
@@ -4642,12 +4621,11 @@ OuterLoop:
 	}
 </pre>
 
-<h3 id="Continue_statements">Continue statements</h3>
+<h3 id="Continue_statements">Continue 语句</h3>
 
 <p>
-A "continue" statement begins the next iteration of the
-innermost <a href="#For_statements">"for" loop</a> at its post statement.
-The "for" loop must be within the same function.
+	"continue" 语句在发布位置开始执行最内层 "<a href="#For_statements">"for"  循环</a>的下一次迭代。
+	"for" 循环必须在同一个函数内。
 </p>
 
 <pre class="ebnf">
@@ -4655,9 +4633,7 @@ ContinueStmt = "continue" [ Label ] .
 </pre>
 
 <p>
-If there is a label, it must be that of an enclosing
-"for" statement, and that is the one whose execution
-advances.
+	如果有一个标签，则必须是一个封闭的 "for" 语句的标签，并且该标签将继续执行。
 </p>
 
 <pre>
@@ -4672,11 +4648,10 @@ RowLoop:
 	}
 </pre>
 
-<h3 id="Goto_statements">Goto statements</h3>
+<h3 id="Goto_statements">Goto 语句</h3>
 
 <p>
-A "goto" statement transfers control to the statement with the corresponding label
-within the same function.
+	"goto" 语句将控制权转移到同一函数中带有相应标签的语句。
 </p>
 
 <pre class="ebnf">
@@ -4688,25 +4663,23 @@ goto Error
 </pre>
 
 <p>
-Executing the "goto" statement must not cause any variables to come into
-<a href="#Declarations_and_scope">scope</a> that were not already in scope at the point of the goto.
-For instance, this example:
+	执行 "goto" 语句一定不能使任何在 goto 时还没有在<a href="#Declarations_and_scope">作用域</a>中的变量进入作用域中。
+	例如，这个例子：
 </p>
 
 <pre>
-	goto L  // BAD
+	goto L  // 坏的
 	v := 3
 L:
 </pre>
 
 <p>
-is erroneous because the jump to label <code>L</code> skips
-the creation of <code>v</code>.
+	是错误的，因为跳转到标签 <code>L</code> 会眺过 <code>v</code> 的创建。
 </p>
 
 <p>
-A "goto" statement outside a <a href="#Blocks">block</a> cannot jump to a label inside that block.
-For instance, this example:
+	在某个<a href="#Blocks">块</a>外的 "goto" 语句不能跳转到这个块内。
+	例如，这个例子：
 </p>
 
 <pre>
@@ -4723,16 +4696,14 @@ L1:
 </pre>
 
 <p>
-is erroneous because the label <code>L1</code> is inside
-the "for" statement's block but the <code>goto</code> is not.
+	是错误的，因为标签 <code>L1</code> 在 "for" 语句块内，但是 <code>goto</code> 不在。
 </p>
 
-<h3 id="Fallthrough_statements">Fallthrough statements</h3>
+<h3 id="Fallthrough_statements">Fallthrough 语句</h3>
 
 <p>
-A "fallthrough" statement transfers control to the first statement of the
-next case clause in an <a href="#Expression_switches">expression "switch" statement</a>.
-It may be used only as the final non-empty statement in such a clause.
+	"fallthrough" 语句转移控制给<a href="#Expression_switches">表达式 "switch" 语句</a>内下一个 case 子句的第一条语句。
+	它仅作为此类子句的最终非空语句使用。
 </p>
 
 <pre class="ebnf">
@@ -4740,14 +4711,10 @@ FallthroughStmt = "fallthrough" .
 </pre>
 
 
-<h3 id="Defer_statements">Defer statements</h3>
+<h3 id="Defer_statements">Defer 语句</h3>
 
 <p>
-A "defer" statement invokes a function whose execution is deferred
-to the moment the surrounding function returns, either because the
-surrounding function executed a <a href="#Return_statements">return statement</a>,
-reached the end of its <a href="#Function_declarations">function body</a>,
-or because the corresponding goroutine is <a href="#Handling_panics">panicking</a>.
+	"defer" 语句调用一个函数，该函数的执行被推迟到周围函数返回的那一刻，这是因为周围函数执行了一条<a href="#Return_statements">return 语句</a>，到达了<a href="#Function_declarations">函数体</a>的末尾，或者是因为相应的goroutine <a href="#Handling_panics">panicking</a> 了。
 </p>
 
 <pre class="ebnf">
@@ -4755,36 +4722,20 @@ DeferStmt = "defer" Expression .
 </pre>
 
 <p>
-The expression must be a function or method call; it cannot be parenthesized.
-Calls of built-in functions are restricted as for
-<a href="#Expression_statements">expression statements</a>.
+	这个表达式一定是一个函数或者方法调用；它不能是括起来的。
+	对内置函数的调用会如<a href="#Expression_statements">表达式语句</a>一样被限制。
 </p>
 
 <p>
-Each time a "defer" statement
-executes, the function value and parameters to the call are
-<a href="#Calls">evaluated as usual</a>
-and saved anew but the actual function is not invoked.
-Instead, deferred functions are invoked immediately before
-the surrounding function returns, in the reverse order
-they were deferred. That is, if the surrounding function
-returns through an explicit <a href="#Return_statements">return statement</a>,
-deferred functions are executed <i>after</i> any result parameters are set
-by that return statement but <i>before</i> the function returns to its caller.
-If a deferred function value evaluates
-to <code>nil</code>, execution <a href="#Handling_panics">panics</a>
-when the function is invoked, not when the "defer" statement is executed.
+	每次 "defer" 语句执行时，针对调用的函数值和参数是按<a href="#Calls">通常的情况来执行</a>并重新保存的，但实际的函数是不调用的。
+	相反，被推迟的函数会在其环绕函数返回前，按照被推迟的反序被瞬间调用。
+	也就是说，如果围绕函数通过一个明确的<a href="#Return_statements">return 语句</a>返回的话，那么被推迟的函数会在所有被 return 语句所设置的结果参数<i>后</i>，在函数返回到其调用者<i>前</i> 被执行。
+	如果推迟函数求值得 <code>nil</code>，那么在函数被调用时（而不是在 "defer" 语句被执行时），执行会 <a href="#Handling_panics">panics</a>。
 </p>
 
 <p>
-For instance, if the deferred function is
-a <a href="#Function_literals">function literal</a> and the surrounding
-function has <a href="#Function_types">named result parameters</a> that
-are in scope within the literal, the deferred function may access and modify
-the result parameters before they are returned.
-If the deferred function has any return values, they are discarded when
-the function completes.
-(See also the section on <a href="#Handling_panics">handling panics</a>.)
+	例如，如果被推迟的函数是一个<a href="#Function_literals">函数字面量</a>并且其环绕函数有在该字面量作用域内的<a href="#Function_types">命名的结果参数</a>，那么该被推迟的函数可以在那些结果参数被返回前访问并修改它们。
+	如果被推迟的函数有任何返回值，这些值会在函数完成时被丢弃。（也看一下<a href="#Handling_panics">处理恐慌</a>一节）
 </p>
 
 <pre>
@@ -4806,63 +4757,52 @@ func f() (result int) {
 }
 </pre>
 
-<h2 id="Built-in_functions">Built-in functions</h2>
+<h2 id="Built-in_functions">内置函数</h2>
 
 <p>
-Built-in functions are
-<a href="#Predeclared_identifiers">predeclared</a>.
-They are called like any other function but some of them
-accept a type instead of an expression as the first argument.
+	内置函数是<a href="#Predeclared_identifiers">预先声明</a>的。
+	它们和其它任何函数一样调用，但是其中有一些能接受类型而不是表达式作为其第一个实参。
 </p>
 
 <p>
-The built-in functions do not have standard Go types,
-so they can only appear in <a href="#Calls">call expressions</a>;
-they cannot be used as function values.
+	内置函数没有标准的 Go 类型，所以它们只能出现在<a href="#Calls">调用表达式</a>中；它们不能作为函数值来使用。
 </p>
 
 <h3 id="Close">Close</h3>
 
 <p>
-For a channel <code>c</code>, the built-in function <code>close(c)</code>
-records that no more values will be sent on the channel.
-It is an error if <code>c</code> is a receive-only channel.
-Sending to or closing a closed channel causes a <a href="#Run_time_panics">run-time panic</a>.
-Closing the nil channel also causes a <a href="#Run_time_panics">run-time panic</a>.
-After calling <code>close</code>, and after any previously
-sent values have been received, receive operations will return
-the zero value for the channel's type without blocking.
-The multi-valued <a href="#Receive_operator">receive operation</a>
-returns a received value along with an indication of whether the channel is closed.
+	对于 channel <code>c</code>，内置函数 <code>close(c)</code> 标明了将不会再有值被发送到这个 channel。
+	如果 <code>c</code> 是一个仅可接收的 channel，那么会出错。发送到或者关闭一个已经关闭的 channel 会发生 <a href="#Run_time_panics">run-time panic</a>。
+	关闭 nil channel 也会发生 <a href="#Run_time_panics">run-time panic</a>。
+	调用 <code>close</code> 后，以及任何之前被发送的值都被接收后，接收操作不会阻塞而将是会返回对应 channel 类型的零值。
+	多值<a href="#Receive_operator">接收操作</a>会返回一个接收到的值，随同一个 channel 是否已经被关闭的指示符。
 </p>
 
 
-<h3 id="Length_and_capacity">Length and capacity</h3>
+<h3 id="Length_and_capacity">长度和容量</h3>
 
 <p>
-The built-in functions <code>len</code> and <code>cap</code> take arguments
-of various types and return a result of type <code>int</code>.
-The implementation guarantees that the result always fits into an <code>int</code>.
+	内置函数 <code>len</code> 和 <code>cap</code> 获取各种类型的实参并返回一个 <code>int</code> 类型结果。
+	实现会保证结果总是一个 <code>int</code> 值。
 </p>
 
 <pre class="grammar">
-Call      Argument type    Result
+调用       实参类型    		结果
 
-len(s)    string type      string length in bytes
-          [n]T, *[n]T      array length (== n)
-          []T              slice length
-          map[K]T          map length (number of defined keys)
-          chan T           number of elements queued in channel buffer
+len(s)    string type      按字节表示的字符串长度
+          [n]T, *[n]T      数组长度（== n）
+          []T              切片长度
+          map[K]T          map 长度（定义的键的个数）
+          chan T           在 channel 缓冲区内排队的元素个数
 
-cap(s)    [n]T, *[n]T      array length (== n)
-          []T              slice capacity
-          chan T           channel buffer capacity
+cap(s)    [n]T, *[n]T      数组长度（== n）
+          []T              切片容量
+          chan T           channel 缓冲区容量
 </pre>
 
 <p>
-The capacity of a slice is the number of elements for which there is
-space allocated in the underlying array.
-At any time the following relationship holds:
+	切片的容量是为其底层数组所分配的空间所对应的元素个数。
+	任何时间都满足如下关系：
 </p>
 
 <pre>
@@ -4870,41 +4810,32 @@ At any time the following relationship holds:
 </pre>
 
 <p>
-The length of a <code>nil</code> slice, map or channel is 0.
-The capacity of a <code>nil</code> slice or channel is 0.
+	<code>nil</code> 切片、map 或者 channel 的长度是 0。
+	<code>nil</code> 切片或 channel 的容量是 0。
 </p>
 
 <p>
-The expression <code>len(s)</code> is <a href="#Constants">constant</a> if
-<code>s</code> is a string constant. The expressions <code>len(s)</code> and
-<code>cap(s)</code> are constants if the type of <code>s</code> is an array
-or pointer to an array and the expression <code>s</code> does not contain
-<a href="#Receive_operator">channel receives</a> or (non-constant)
-<a href="#Calls">function calls</a>; in this case <code>s</code> is not evaluated.
-Otherwise, invocations of <code>len</code> and <code>cap</code> are not
-constant and <code>s</code> is evaluated.
+	如果 <code>s</code> 是一个字符串常量，那么 <code>len(s)</code> 是一个<a href="#Constants">常量</a>。
+	如果 <code>s</code> 类型是一个数组或到数组的指针且表达式 <code>s</code> 不包含<a href="#Receive_operator">channel 接收</a>或（非常量的）<a href="#Calls">函数调用</a>的话，那么表达式 <code>len(s)</code> 和 <code>cap(s)</code> 是常量；这种情况下，<code>s</code> 是不执行的。
+	否则的话，<code>len</code> 和 <code>cap</code> 的调用不是常量且 <code>s</code> 会被执行。
 </p>
 
 <pre>
 const (
-	c1 = imag(2i)                    // imag(2i) = 2.0 is a constant
-	c2 = len([10]float64{2})         // [10]float64{2} contains no function calls
-	c3 = len([10]float64{c1})        // [10]float64{c1} contains no function calls
-	c4 = len([10]float64{imag(2i)})  // imag(2i) is a constant and no function call is issued
-	c5 = len([10]float64{imag(z)})   // invalid: imag(z) is a (non-constant) function call
+	c1 = imag(2i)                    // imag(2i) = 2.0 是一个常量
+	c2 = len([10]float64{2})         // [10]float64{2} 不包含函数调用
+	c3 = len([10]float64{c1})        // [10]float64{c1} 不包含函数调用
+	c4 = len([10]float64{imag(2i)})  // imag(2i) 是一个常量且没有函数调用
+	c5 = len([10]float64{imag(z)})   // 无效的: imag(z) 是一个非常量的函数调用
 )
 var z complex128
 </pre>
 
-<h3 id="Allocation">Allocation</h3>
+<h3 id="Allocation">分配</h3>
 
 <p>
-The built-in function <code>new</code> takes a type <code>T</code>,
-allocates storage for a <a href="#Variables">variable</a> of that type
-at run time, and returns a value of type <code>*T</code>
-<a href="#Pointer_types">pointing</a> to it.
-The variable is initialized as described in the section on
-<a href="#The_zero_value">initial values</a>.
+	内置函数 <code>new</code> 获取一个类型 <code>T</code>，在运行时为该类型的<a href="#Variables">变量</a>分配地址空间，并返回一个<a href="#Pointer_types">指向</a>它的类型为 <code>*T</code> 的值。
+	这个变量会按照<a href="#The_zero_value">初始化值</a>一节所描述的来初始化。
 </p>
 
 <pre class="grammar">
@@ -4912,7 +4843,7 @@ new(T)
 </pre>
 
 <p>
-For instance
+	例如：
 </p>
 
 <pre>
@@ -4921,124 +4852,96 @@ new(S)
 </pre>
 
 <p>
-allocates storage for a variable of type <code>S</code>,
-initializes it (<code>a=0</code>, <code>b=0.0</code>),
-and returns a value of type <code>*S</code> containing the address
-of the location.
+	为 <code>S</code> 类型变量分配存储空间，初始化它（<code>a=0</code>，<code>b=0.0</code>），然后返回含有位置地址的类型为 <code>*S</code> 的一个值。
 </p>
 
-<h3 id="Making_slices_maps_and_channels">Making slices, maps and channels</h3>
+<h3 id="Making_slices_maps_and_channels">创建切片, maps and channels</h3>
 
 <p>
-The built-in function <code>make</code> takes a type <code>T</code>,
-which must be a slice, map or channel type,
-optionally followed by a type-specific list of expressions.
-It returns a value of type <code>T</code> (not <code>*T</code>).
-The memory is initialized as described in the section on
-<a href="#The_zero_value">initial values</a>.
+	内置函数 make 获取一个切片、map 或 channel 类型 <code>T</code>，可选择性的接一个类型相关的表达式列表。
+	它会返回类型 <code>T</code> 的值（不是 <code>*T</code>）。
+	内存会按照<a href="#The_zero_value">初始化值</a>一节所描述的来初始化。
 </p>
 
 <pre class="grammar">
-Call             Type T     Result
+调用              类型 T     	结果
 
-make(T, n)       slice      slice of type T with length n and capacity n
-make(T, n, m)    slice      slice of type T with length n and capacity m
+make(T, n)       分片      	带 n 长度和容量的类型为 T 的切片
+make(T, n, m)    分片      	带 n 长度和 m 容量的类型为 T 的切片
 
-make(T)          map        map of type T
-make(T, n)       map        map of type T with initial space for approximately n elements
+make(T)          map        类型为 T 的 map
+make(T, n)       map        为约 n 个元素分配了初始化空间的类型为 T 的 map
 
-make(T)          channel    unbuffered channel of type T
-make(T, n)       channel    buffered channel of type T, buffer size n
+make(T)          channel    类型为 T 的无缓冲区 channel
+make(T, n)       channel    类型为 T 的带缓冲区且缓冲区大小为 n 的 channel
 </pre>
 
 
 <p>
-Each of the size arguments <code>n</code> and <code>m</code> must be of integer type
-or an untyped <a href="#Constants">constant</a>.
-A constant size argument must be non-negative and <a href="#Representability">representable</a>
-by a value of type <code>int</code>; if it is an untyped constant it is given type <code>int</code>.
-If both <code>n</code> and <code>m</code> are provided and are constant, then
-<code>n</code> must be no larger than <code>m</code>.
-If <code>n</code> is negative or larger than <code>m</code> at run time,
-a <a href="#Run_time_panics">run-time panic</a> occurs.
+	每个大小实参 <code>n</code> 和 <code>m</code>，必须为整数类型或一个无类型的<a href="#Constants">常量</a>。
+	常量大小实参必须是非负的且可被 <code>int</code> 类型值<a href="#Representability">所表示的</a>；如果它是个无类型常量，那么会被给定类型 <code>int</code>。
+	如果 <code>n</code> 和 <code>m</code> 都提供了且为常量，那么 <code>n</code> 一定不能大于 <code>m</code>。
+	如果在运行时 <code>n</code> 为负值或者大于了 <code>m</code>，那么会发生 <a href="#Run_time_panics">run-time panic</a>。
 </p>
 
 <pre>
-s := make([]int, 10, 100)       // slice with len(s) == 10, cap(s) == 100
-s := make([]int, 1e3)           // slice with len(s) == cap(s) == 1000
-s := make([]int, 1&lt;&lt;63)         // illegal: len(s) is not representable by a value of type int
-s := make([]int, 10, 0)         // illegal: len(s) > cap(s)
-c := make(chan int, 10)         // channel with a buffer size of 10
-m := make(map[string]int, 100)  // map with initial space for approximately 100 elements
+s := make([]int, 10, 100)       // len(s) == 10, cap(s) == 100 的切片
+s := make([]int, 1e3)           // len(s) == cap(s) == 1000 的切片
+s := make([]int, 1&lt;&lt;63)         // 非法的: len(s) 不能被 int 类型的值所表示
+s := make([]int, 10, 0)         // 非法的: len(s) > cap(s)
+c := make(chan int, 10)         // 带大小为 10 的缓冲区的 channel
+m := make(map[string]int, 100)  // 带为约 100 个元素初始化空间的 map
 </pre>
 
 <p>
-Calling <code>make</code> with a map type and size hint <code>n</code> will
-create a map with initial space to hold <code>n</code> map elements.
-The precise behavior is implementation-dependent.
+	带 map 类型和大小提示 <code>n</code> 来调用 <code>make</code> 会创建一个带持有 <code>n</code> 个 map 元素初始化空间的 map。
+	其精度表现是依赖实现的。
 </p>
 
 
-<h3 id="Appending_and_copying_slices">Appending to and copying slices</h3>
+<h3 id="Appending_and_copying_slices">添加和拷贝切片</h3>
 
 <p>
-The built-in functions <code>append</code> and <code>copy</code> assist in
-common slice operations.
-For both functions, the result is independent of whether the memory referenced
-by the arguments overlaps.
+	内置函数 <code>append</code> 和 <code>copy</code> 会协助常见的切片操作。
+	对于这两个函数，其结果和实参的内存引用是否重叠无关。
 </p>
 
 <p>
-The <a href="#Function_types">variadic</a> function <code>append</code>
-appends zero or more values <code>x</code>
-to <code>s</code> of type <code>S</code>, which must be a slice type, and
-returns the resulting slice, also of type <code>S</code>.
-The values <code>x</code> are passed to a parameter of type <code>...T</code>
-where <code>T</code> is the <a href="#Slice_types">element type</a> of
-<code>S</code> and the respective
-<a href="#Passing_arguments_to_..._parameters">parameter passing rules</a> apply.
-As a special case, <code>append</code> also accepts a first argument
-assignable to type <code>[]byte</code> with a second argument of
-string type followed by <code>...</code>. This form appends the
-bytes of the string.
+	<a href="#Function_types">variadic</a> 函数 <code>append</code> 附加零个或多个值 <code>x</code> 到必须为切片类型的 <code>S</code> 类型的 <code>s</code> ，并返回结果切片，也是 <code>S</code> 类型。
+	值 <code>x</code> 是传递给类型为 <code>...T</code> 的一个形参，其中 <code>T</code> 是 <code>S</code> 的<a href="#Slice_types">元素类型</a>并应用对应的<a href="#Passing_arguments_to_..._parameters">参数传递规则</a>。
+	作为一个特殊的情况，<code>append</code> 也接受首个为可分配给类型 <code>[]byte</code> 的实参，且第二个为后缀 <code>...</code> 的字符串类型的实参。
+	这种形式附加了字符串的字节。
 </p>
 
 <pre class="grammar">
-append(s S, x ...T) S  // T is the element type of S
+append(s S, x ...T) S  // T 是 S 的元素类型
 </pre>
 
 <p>
-If the capacity of <code>s</code> is not large enough to fit the additional
-values, <code>append</code> allocates a new, sufficiently large underlying
-array that fits both the existing slice elements and the additional values.
-Otherwise, <code>append</code> re-uses the underlying array.
+	如果 <code>s</code> 的容量不足以满足额外的值，那么 <code>append</code> 会分配一个新的足够大的底层数组来同时满足已经存在的切片元素和那些额外的值。
+	否则，<code>append</code> 复用原来的底层数组。
 </p>
 
 <pre>
 s0 := []int{0, 0}
-s1 := append(s0, 2)                // append a single element     s1 == []int{0, 0, 2}
-s2 := append(s1, 3, 5, 7)          // append multiple elements    s2 == []int{0, 0, 2, 3, 5, 7}
-s3 := append(s2, s0...)            // append a slice              s3 == []int{0, 0, 2, 3, 5, 7, 0, 0}
-s4 := append(s3[3:6], s3[2:]...)   // append overlapping slice    s4 == []int{3, 5, 7, 2, 3, 5, 7, 0, 0}
+s1 := append(s0, 2)                // 附加一个单一元素　 	     s1 == []int{0, 0, 2}
+s2 := append(s1, 3, 5, 7)          // 附加多个元素     	     s2 == []int{0, 0, 2, 3, 5, 7}
+s3 := append(s2, s0...)            // 附加一个切片     	     s3 == []int{0, 0, 2, 3, 5, 7, 0, 0}
+s4 := append(s3[3:6], s3[2:]...)   // 附加重叠的切片　　	     s4 == []int{3, 5, 7, 2, 3, 5, 7, 0, 0}
 
 var t []interface{}
 t = append(t, 42, 3.1415, "foo")   //                             t == []interface{}{42, 3.1415, "foo"}
 
 var b []byte
-b = append(b, "bar"...)            // append string contents      b == []byte{'b', 'a', 'r' }
+b = append(b, "bar"...)            // 附加字符串内容      		b == []byte{'b', 'a', 'r' }
 </pre>
 
 <p>
-The function <code>copy</code> copies slice elements from
-a source <code>src</code> to a destination <code>dst</code> and returns the
-number of elements copied.
-Both arguments must have <a href="#Type_identity">identical</a> element type <code>T</code> and must be
-<a href="#Assignability">assignable</a> to a slice of type <code>[]T</code>.
-The number of elements copied is the minimum of
-<code>len(src)</code> and <code>len(dst)</code>.
-As a special case, <code>copy</code> also accepts a destination argument assignable
-to type <code>[]byte</code> with a source argument of a string type.
-This form copies the bytes from the string into the byte slice.
+	函数 <code>copy</code> 从源 <code>src</code> 拷贝切片元素到目的 <code>dst</code> 并返回拷贝的元素个数。
+	两个实参必须有<a href="#Type_identity">一致的</a>元素类型 <code>T</code> 并且必须是<a href="#Assignability">可分配</a>给类型为 <code>[]T</code> 的切片的。
+	拷贝的元素格式是 <code>len(src)</code> 和 <code>len(dst)</code> 中的最小值。
+	作为一个特殊情况，<code>copy</code> 也接受目标实参可分配为 <code>[]byte</code> 类型而源实参为字符串类型。
+	这种形式会从字符串中拷贝字节到字节切片中。
 </p>
 
 <pre class="grammar">
@@ -5060,33 +4963,28 @@ n3 := copy(b, "Hello, World!")  // n3 == 5, b == []byte("Hello")
 </pre>
 
 
-<h3 id="Deletion_of_map_elements">Deletion of map elements</h3>
+<h3 id="Deletion_of_map_elements">map 元素的删除</h3>
 
 <p>
-The built-in function <code>delete</code> removes the element with key
-<code>k</code> from a <a href="#Map_types">map</a> <code>m</code>. The
-type of <code>k</code> must be <a href="#Assignability">assignable</a>
-to the key type of <code>m</code>.
+	内置函数 <code>delete</code> 会根据键 <code>k</code> 从 <a href="#Map_types">map</a> <code>m</code> 中删除元素。
+	<code>k</code> 的类型必须是<a href="#Assignability">可分配</a>给 <code>m</code> 的键类型的。
 </p>
 
 <pre class="grammar">
-delete(m, k)  // remove element m[k] from map m
+delete(m, k)  // 从 map m 中删除元素 m[k]
 </pre>
 
 <p>
-If the map <code>m</code> is <code>nil</code> or the element <code>m[k]</code>
-does not exist, <code>delete</code> is a no-op.
+	如果 map <code>m</code> 是 <code>nil</code> 或元素 <code>m[k]</code> 不存在，那么 <code>delete</code> 是一个空操作。
 </p>
 
 
-<h3 id="Complex_numbers">Manipulating complex numbers</h3>
+<h3 id="Complex_numbers">处理复数</h3>
 
 <p>
-Three functions assemble and disassemble complex numbers.
-The built-in function <code>complex</code> constructs a complex
-value from a floating-point real and imaginary part, while
-<code>real</code> and <code>imag</code>
-extract the real and imaginary parts of a complex value.
+	有三个函数用来聚合和分解复数。
+	内置函数 <code>complex</code> 用浮点的实部和虚部来构造一个复值，而 <code>real</code> 和 <code>imag</code> 从一个复值中提取其实部和虚部。
+
 </p>
 
 <pre class="grammar">
@@ -5096,57 +4994,42 @@ imag(complexT) floatT
 </pre>
 
 <p>
-The type of the arguments and return value correspond.
-For <code>complex</code>, the two arguments must be of the same
-floating-point type and the return type is the complex type
-with the corresponding floating-point constituents:
-<code>complex64</code> for <code>float32</code> arguments, and
-<code>complex128</code> for <code>float64</code> arguments.
-If one of the arguments evaluates to an untyped constant, it is first implicitly
-<a href="#Conversions">converted</a> to the type of the other argument.
-If both arguments evaluate to untyped constants, they must be non-complex
-numbers or their imaginary parts must be zero, and the return value of
-the function is an untyped complex constant.
+	实参的类型和返回值对应。
+	对于 <code>complex</code>，两个实参必须是相同的浮点类型，并且返回值类型是带对应浮点成分的复合类型，<code>complex64</code> 对应 <code>float32</code> 实参，<code>complex128</code> 对应 <code>float64</code> 实参。
+	如果有一个实参求值为一个无类型的常量，那么它会先被隐式地<a href="#Conversions">转换</a>为另一个实参类型。
+	如果两个实参都求值为无类型常量，那么它们必须是非复合数或者它们的虚部一定为零，然后函数的返回值也是一个无类型复合常量。
 </p>
 
 <p>
-For <code>real</code> and <code>imag</code>, the argument must be
-of complex type, and the return type is the corresponding floating-point
-type: <code>float32</code> for a <code>complex64</code> argument, and
-<code>float64</code> for a <code>complex128</code> argument.
-If the argument evaluates to an untyped constant, it must be a number,
-and the return value of the function is an untyped floating-point constant.
+	对于 <code>real</code> 和 <code>imag</code>，实参必须是复合类型，返回值是对应的浮点类型：<code>float32</code> 对应一个 <code>complex64</code> 实参，<code>float64</code> 对应一个 <code>complex128</code> 实参。
+	如果实参求值为一个无类型常量，那么它必须是一个数，然后函数的返回类型是一个无类型的浮点常量。
 </p>
 
 <p>
-The <code>real</code> and <code>imag</code> functions together form the inverse of
-<code>complex</code>, so for a value <code>z</code> of a complex type <code>Z</code>,
-<code>z&nbsp;==&nbsp;Z(complex(real(z),&nbsp;imag(z)))</code>.
+	<code>real</code> 和 <code>imag</code> 函数一起组成了 <code>complex</code> 的反相，所以对于一个复合类型 <code>Z</code> 的值 <code>z</code> 来说，<code>z&nbsp;==&nbsp;Z(complex(real(z),&nbsp;imag(z)))</code>。
 </p>
 
 <p>
-If the operands of these functions are all constants, the return
-value is a constant.
+	如果这些函数的操作数都是常量，那么返回值也是一个常量。
 </p>
 
 <pre>
 var a = complex(2, -2)             // complex128
-const b = complex(1.0, -1.4)       // untyped complex constant 1 - 1.4i
+const b = complex(1.0, -1.4)       // 无类型复合常量 1 - 1.4i
 x := float32(math.Cos(math.Pi/2))  // float32
 var c64 = complex(5, -x)           // complex64
-var s int = complex(1, 0)          // untyped complex constant 1 + 0i can be converted to int
-_ = complex(1, 2&lt;&lt;s)               // illegal: 2 assumes floating-point type, cannot shift
+var s int = complex(1, 0)          // 无类型复合常量 1 + 0i 可以被转化为 int
+_ = complex(1, 2&lt;&lt;s)               // 非法的： 2 被认为是浮点类型，不能位移
 var rl = real(c64)                 // float32
 var im = imag(a)                   // float64
-const c = imag(b)                  // untyped constant -1.4
-_ = imag(3 &lt;&lt; s)                   // illegal: 3 assumes complex type, cannot shift
+const c = imag(b)                  // 无类型常量 -1.4
+_ = imag(3 &lt;&lt; s)                   // 法的：3 被认为是复合类型，不能位移
 </pre>
 
-<h3 id="Handling_panics">Handling panics</h3>
+<h3 id="Handling_panics">处理 panics</h3>
 
-<p> Two built-in functions, <code>panic</code> and <code>recover</code>,
-assist in reporting and handling <a href="#Run_time_panics">run-time panics</a>
-and program-defined error conditions.
+<p>
+	有两个内置函数，<code>panic</code> 和 <code>recover</code>，协助报告和处理 <a href="#Run_time_panics">run-time panics</a> 和程序定义的错误状态。
 </p>
 
 <pre class="grammar">
@@ -5155,16 +5038,11 @@ func recover() interface{}
 </pre>
 
 <p>
-While executing a function <code>F</code>,
-an explicit call to <code>panic</code> or a <a href="#Run_time_panics">run-time panic</a>
-terminates the execution of <code>F</code>.
-Any functions <a href="#Defer_statements">deferred</a> by <code>F</code>
-are then executed as usual.
-Next, any deferred functions run by <code>F's</code> caller are run,
-and so on up to any deferred by the top-level function in the executing goroutine.
-At that point, the program is terminated and the error
-condition is reported, including the value of the argument to <code>panic</code>.
-This termination sequence is called <i>panicking</i>.
+	当执行函数 <code>F</code> 时，对 <code>panic</code> 的明确调用或 <a href="#Run_time_panics">run-time panic</a> 会终止 <code>F</code> 的执行。
+	任何被 <code>F</code> <a href="#Defer_statements">推迟</a>的函数会照常执行。
+	然后，任何被<code>F</code>的调用者所推迟的函数会运行，以此类推直到被在执行中 goroutine 中的顶层函数所推迟的。
+	在这个阶段，程序会终止并且错误状态会被报告，包括给 <code>panic</code> 的实参的值。
+	这个终止过程被称为 <i>panicking</i>。
 </p>
 
 <pre>
@@ -5174,6 +5052,7 @@ panic(Error("cannot parse"))
 </pre>
 
 <p>
+	
 The <code>recover</code> function allows a program to manage behavior
 of a panicking goroutine.
 Suppose a function <code>G</code> defers a function <code>D</code> that calls
@@ -5227,6 +5106,7 @@ func protect(g func()) {
 <h3 id="Bootstrapping">Bootstrapping</h3>
 
 <p>
+
 Current implementations provide several built-in functions useful during
 bootstrapping. These functions are documented for completeness but are not
 guaranteed to stay in the language. They do not return a result.
