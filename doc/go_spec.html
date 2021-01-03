@@ -5052,47 +5052,37 @@ panic(Error("cannot parse"))
 </pre>
 
 <p>
-	
-The <code>recover</code> function allows a program to manage behavior
-of a panicking goroutine.
-Suppose a function <code>G</code> defers a function <code>D</code> that calls
-<code>recover</code> and a panic occurs in a function on the same goroutine in which <code>G</code>
-is executing.
-When the running of deferred functions reaches <code>D</code>,
-the return value of <code>D</code>'s call to <code>recover</code> will be the value passed to the call of <code>panic</code>.
-If <code>D</code> returns normally, without starting a new
-<code>panic</code>, the panicking sequence stops. In that case,
-the state of functions called between <code>G</code> and the call to <code>panic</code>
-is discarded, and normal execution resumes.
-Any functions deferred by <code>G</code> before <code>D</code> are then run and <code>G</code>'s
-execution terminates by returning to its caller.
+	<code>recover</code> 函数允许程序管理一个 panicking goroutine 的行为。
+	假设函数 <code>G</code> 推迟调用 <code>recover</code> 的函数 <code>D</code>，且 panic 发生在了和 <code>G</code> 执行的同一个 goroutine 的函数中。
+	当运行中的被推迟的函数到达了 <code>D</code> 时，<code>D</code> 对 <code>recover</code> 调用的返回值将是传递给 <code>panic</code> 调用的值。
+	如果 <code>D</code> 没有开始一个新的 <code>panic</code>，正常返回，那么 panicking 序列会停止。
+	在这种情况中，在 <code>G</code> 和 <code>panic</code> 调用之间的函数状态会被丢弃，然后恢复正常的执行。
+	接着会运行被 <code>G</code> 推迟的在 <code>D</code> 前的函数，然后 <code>G</code> 通过返回到它的调用者来终止执行。
 </p>
 
 <p>
-The return value of <code>recover</code> is <code>nil</code> if any of the following conditions holds:
+	如果以下任何条件成立，那么 <code>recover</code> 的返回值为 <code>nil</code>：
 </p>
 <ul>
 <li>
-<code>panic</code>'s argument was <code>nil</code>;
+	<code>panic</code> 的实参是 <code>nil</code>；
 </li>
 <li>
-the goroutine is not panicking;
+	goroutine 没有 panicking；
 </li>
 <li>
-<code>recover</code> was not called directly by a deferred function.
+	<code>recover</code> 没有被一个延迟函数直接调用。
 </li>
 </ul>
 
 <p>
-The <code>protect</code> function in the example below invokes
-the function argument <code>g</code> and protects callers from
-run-time panics raised by <code>g</code>.
+	在以下例子中的 <code>protect</code> 函数调用了函数实参 <code>g</code> 并使调用者免受 <code>g</code> 中发生的 run-time panic 之害。
 </p>
 
 <pre>
 func protect(g func()) {
 	defer func() {
-		log.Println("done")  // Println executes normally even if there is a panic
+		log.Println("done")  // 即使这里有 panic，Println 也能正常执行
 		if x := recover(); x != nil {
 			log.Printf("run time panic: %v", x)
 		}
@@ -5103,58 +5093,47 @@ func protect(g func()) {
 </pre>
 
 
-<h3 id="Bootstrapping">Bootstrapping</h3>
+<h3 id="Bootstrapping">引导</h3>
 
 <p>
-
-Current implementations provide several built-in functions useful during
-bootstrapping. These functions are documented for completeness but are not
-guaranteed to stay in the language. They do not return a result.
+	目前的实现提供了一些在引导时有用的内置函数。
+	这些函数已经被记录完整了但是不能保证会一直存在在语言中。
+	它们不会返回一个结果。
 </p>
 
 <pre class="grammar">
-Function   Behavior
+函数  		行为
 
-print      prints all arguments; formatting of arguments is implementation-specific
-println    like print but prints spaces between arguments and a newline at the end
+print      打印所有实参；实参的格式化和实现有关
+println    和 print 类似，但是会在每个实参间打印空格，在结尾打印新行
 </pre>
 
 <p>
-Implementation restriction: <code>print</code> and <code>println</code> need not
-accept arbitrary argument types, but printing of boolean, numeric, and string
-<a href="#Types">types</a> must be supported.
+	实现限制：<code>print</code> 和 <code>println</code> 不需要支持任意的实参类型，但是布尔、数字和字符串<a href="#Types">类型</a>的打印一定要支持。
 </p>
 
-<h2 id="Packages">Packages</h2>
+<h2 id="Packages">包</h2>
 
 <p>
-Go programs are constructed by linking together <i>packages</i>.
-A package in turn is constructed from one or more source files
-that together declare constants, types, variables and functions
-belonging to the package and which are accessible in all files
-of the same package. Those elements may be
-<a href="#Exported_identifiers">exported</a> and used in another package.
+	Go程序是通过将<i>程序包</i> 链接在一起构造的。
+	一个包又由一个或多个源文件构成，这些文件一起声明了属于该包的常量，类型，变量和函数，并且可以在同一包的所有文件中访问它们。
+	这些元素可以<a href="#Exported_identifiers">导出</a>并在另一个包中使用。
 </p>
 
-<h3 id="Source_file_organization">Source file organization</h3>
+<h3 id="Source_file_organization">源文件组织</h3>
 
 <p>
-Each source file consists of a package clause defining the package
-to which it belongs, followed by a possibly empty set of import
-declarations that declare packages whose contents it wishes to use,
-followed by a possibly empty set of declarations of functions,
-types, variables, and constants.
+	每个源文件都是由以下组成的：定义其所属包的包子句，一组可能为空的用于声明其想要使用内容的包的导入声明，一组可能为空的函数、类型、变量和常量声明。
 </p>
 
 <pre class="ebnf">
 SourceFile       = PackageClause ";" { ImportDecl ";" } { TopLevelDecl ";" } .
 </pre>
 
-<h3 id="Package_clause">Package clause</h3>
+<h3 id="Package_clause">包子句</h3>
 
 <p>
-A package clause begins each source file and defines the package
-to which the file belongs.
+	包子句开始了每个源文件，并定义了文件所属的包。
 </p>
 
 <pre class="ebnf">
