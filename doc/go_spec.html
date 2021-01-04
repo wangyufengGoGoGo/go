@@ -5142,7 +5142,7 @@ PackageName    = identifier .
 </pre>
 
 <p>
-The PackageName must not be the <a href="#Blank_identifier">blank identifier</a>.
+	PackageName 一定不能是<a href="#Blank_identifier">空白标识符</a>。
 </p>
 
 <pre>
@@ -5150,20 +5150,15 @@ package math
 </pre>
 
 <p>
-A set of files sharing the same PackageName form the implementation of a package.
-An implementation may require that all source files for a package inhabit the same directory.
+	共享同一包名的一组文件构成了一个包的实现。
+	实现可能要求一个包的源文件都在同一文件夹下。
 </p>
 
-<h3 id="Import_declarations">Import declarations</h3>
+<h3 id="Import_declarations">导入声明</h3>
 
 <p>
-An import declaration states that the source file containing the declaration
-depends on functionality of the <i>imported</i> package
-(<a href="#Program_initialization_and_execution">§Program initialization and execution</a>)
-and enables access to <a href="#Exported_identifiers">exported</a> identifiers
-of that package.
-The import names an identifier (PackageName) to be used for access and an ImportPath
-that specifies the package to be imported.
+	导入声明陈述了这个包含声明的源文件依赖<i>被导入的</i> 包的功能（<a href="#Program_initialization_and_execution">程序初始化和执行</a>）并启用了对该包被<a href="#Exported_identifiers">暴露</a>的标识符的访问。
+	导入命名了一个标识符（包名）用来被访问，以及一个指定被导入包的导入路径。
 </p>
 
 <pre class="ebnf">
@@ -5173,45 +5168,27 @@ ImportPath       = string_lit .
 </pre>
 
 <p>
-The PackageName is used in <a href="#Qualified_identifiers">qualified identifiers</a>
-to access exported identifiers of the package within the importing source file.
-It is declared in the <a href="#Blocks">file block</a>.
-If the PackageName is omitted, it defaults to the identifier specified in the
-<a href="#Package_clause">package clause</a> of the imported package.
-If an explicit period (<code>.</code>) appears instead of a name, all the
-package's exported identifiers declared in that package's
-<a href="#Blocks">package block</a> will be declared in the importing source
-file's file block and must be accessed without a qualifier.
+	PackageName 是用在<a href="#Qualified_identifiers">限定标识符</a>中来访问导入源文件中包的导出标识符。
+	它是在<a href="#Blocks">文件块</a>中被声明的。
+	如果 PackageName 缺失，那它默认为被导入包的<a href="#Package_clause">包子句</a>中指定的标识符。
+	如果明确的句号（<code>.</code>）取代名字出现了，所有在包的<a href="#Blocks">包块</a>中声明的包的暴露标识符将在这个导入包的源文件中被声明，并且必须不带限定符来访问。
 </p>
 
 <p>
-The interpretation of the ImportPath is implementation-dependent but
-it is typically a substring of the full file name of the compiled
-package and may be relative to a repository of installed packages.
+	导入路径的解释取决于实现，但通常是已编译包的完整文件名的子字符串，并可能和已安装包的库所相对应。
 </p>
 
 <p>
-Implementation restriction: A compiler may restrict ImportPaths to
-non-empty strings using only characters belonging to
-<a href="https://www.unicode.org/versions/Unicode6.3.0/">Unicode's</a>
-L, M, N, P, and S general categories (the Graphic characters without
-spaces) and may also exclude the characters
-<code>!"#$%&amp;'()*,:;&lt;=&gt;?[\]^`{|}</code>
-and the Unicode replacement character U+FFFD.
+	实现限制：编译器可能会限制导入路径仅使用属于 <a href="https://www.unicode.org/versions/Unicode6.3.0/">Unicode's</a> 的 L, M, N, P 和 S 主类的字符串（无空格的可见字符）到非空字符串，并也可能去除了字符串<code>!"#$%&amp;'()*,:;&lt;=&gt;?[\]^`{|}</code> 和 Unicode 替换字符 U+FFFD。
 </p>
 
 <p>
-Assume we have compiled a package containing the package clause
-<code>package math</code>, which exports function <code>Sin</code>, and
-installed the compiled package in the file identified by
-<code>"lib/math"</code>.
-This table illustrates how <code>Sin</code> is accessed in files
-that import the package after the
-various types of import declaration.
+	假定我们已经编译了一个包含包子句 <code>package math</code> 的包，它暴露了函数 <code>Sin</code>，并将编译好的包安装在由 <code>"lib/math"</code> 标记的文件。
+	此表格说明了 <code>Sin</code> 是如何在在各种导入声明后导入包的文件中被访问的。
 </p>
 
 <pre class="grammar">
-Import declaration          Local name of Sin
+导入声明        				Sin 的本地名
 
 import   "lib/math"         math.Sin
 import m "lib/math"         m.Sin
@@ -5219,13 +5196,9 @@ import . "lib/math"         Sin
 </pre>
 
 <p>
-An import declaration declares a dependency relation between
-the importing and imported package.
-It is illegal for a package to import itself, directly or indirectly,
-or to directly import a package without
-referring to any of its exported identifiers. To import a package solely for
-its side-effects (initialization), use the <a href="#Blank_identifier">blank</a>
-identifier as explicit package name:
+	导入声明声明了导入者和被导入包的依赖关系。
+	在包中直接或间接导入它自己是非法的，直接导入一个没有引用任何其暴露标识符的包也是非法的。
+	仅仅为了包的副作用（初始化）来导入一个包的话，使用<a href="#Blank_identifier">空白</a>标识符作为明确的包名：
 </p>
 
 <pre>
@@ -5233,10 +5206,10 @@ import _ "lib/math"
 </pre>
 
 
-<h3 id="An_example_package">An example package</h3>
+<h3 id="An_example_package">一个示例包</h3>
 
 <p>
-Here is a complete Go package that implements a concurrent prime sieve.
+	这是一个完整的Go包，它实现了并发质数的筛选。
 </p>
 
 <pre>
@@ -5244,27 +5217,27 @@ package main
 
 import "fmt"
 
-// Send the sequence 2, 3, 4, … to channel 'ch'.
+// 发送 2, 3, 4, … 序列到 channel 'ch'
 func generate(ch chan&lt;- int) {
 	for i := 2; ; i++ {
-		ch &lt;- i  // Send 'i' to channel 'ch'.
+		ch &lt;- i  // 发送 'i' 到 channel 'ch'
 	}
 }
 
-// Copy the values from channel 'src' to channel 'dst',
-// removing those divisible by 'prime'.
+// 从 channel 'src' 拷贝值到 channel 'dst'
+// 移除那些可被 'prime' 整除的
 func filter(src &lt;-chan int, dst chan&lt;- int, prime int) {
-	for i := range src {  // Loop over values received from 'src'.
+	for i := range src {  // 遍历从 'src' 接收的值
 		if i%prime != 0 {
-			dst &lt;- i  // Send 'i' to channel 'dst'.
+			dst &lt;- i  // 发送 'i' 到 channel 'dst'
 		}
 	}
 }
 
-// The prime sieve: Daisy-chain filter processes together.
+// 质数筛选: Daisy-chain 过滤器一起处理
 func sieve() {
-	ch := make(chan int)  // Create a new channel.
-	go generate(ch)       // Start generate() as a subprocess.
+	ch := make(chan int)  // 创建一个新的 channel
+	go generate(ch)       // 启动 generate() 作为子进程
 	for {
 		prime := &lt;-ch
 		fmt.Print(prime, "\n")
@@ -5279,24 +5252,16 @@ func main() {
 }
 </pre>
 
-<h2 id="Program_initialization_and_execution">Program initialization and execution</h2>
+<h2 id="Program_initialization_and_execution">程序初始化和执行</h2>
 
-<h3 id="The_zero_value">The zero value</h3>
+<h3 id="The_zero_value">零值</h3>
 <p>
-When storage is allocated for a <a href="#Variables">variable</a>,
-either through a declaration or a call of <code>new</code>, or when
-a new value is created, either through a composite literal or a call
-of <code>make</code>,
-and no explicit initialization is provided, the variable or value is
-given a default value.  Each element of such a variable or value is
-set to the <i>zero value</i> for its type: <code>false</code> for booleans,
-<code>0</code> for numeric types, <code>""</code>
-for strings, and <code>nil</code> for pointers, functions, interfaces, slices, channels, and maps.
-This initialization is done recursively, so for instance each element of an
-array of structs will have its fields zeroed if no value is specified.
+	当存储空间被分配给一个<a href="#Variables">变量</a>（无论是通过一个声明、对 <code>new</code> 的调用或是新的值被创建，还是通过一个综合的字面量或对 <code>make</code> 的调用）且没有提供明确的初始化时，这个变量或值会被给定一个默认值。
+	这样一个变量或值的每个元素都会被设定到其类型的<i>零值</i>：布尔是 <code>false</code>，数字类型是 <code>0</code>，字符串类型是 <code>""</code>，指针、函数、接口、切片、channel 和 map 类型是 <code>nil</code>。
+	初始化会被递归地完成，所以打个比方，如果结构数组的元素未指定值，则都将其每个元素字段置零值。
 </p>
 <p>
-These two simple declarations are equivalent:
+	以下两个简单声明是相等：
 </p>
 
 <pre>
@@ -5305,7 +5270,7 @@ var i int = 0
 </pre>
 
 <p>
-After
+后
 </p>
 
 <pre>
@@ -5314,7 +5279,7 @@ t := new(T)
 </pre>
 
 <p>
-the following holds:
+	以下内容成立：
 </p>
 
 <pre>
@@ -5324,97 +5289,68 @@ t.next == nil
 </pre>
 
 <p>
-The same would also be true after
+	之后也是如此
 </p>
 
 <pre>
 var t T
 </pre>
 
-<h3 id="Package_initialization">Package initialization</h3>
+<h3 id="Package_initialization">包初始化</h3>
 
 <p>
-Within a package, package-level variable initialization proceeds stepwise,
-with each step selecting the variable earliest in <i>declaration order</i>
-which has no dependencies on uninitialized variables.
+	在一个包内，包级别变量初始化是逐步进行的，每个步骤以<i>声明顺序</i> 选择不依赖未初始化变量的最早变量。
 </p>
 
 <p>
-More precisely, a package-level variable is considered <i>ready for
-initialization</i> if it is not yet initialized and either has
-no <a href="#Variable_declarations">initialization expression</a> or
-its initialization expression has no <i>dependencies</i> on uninitialized variables.
-Initialization proceeds by repeatedly initializing the next package-level
-variable that is earliest in declaration order and ready for initialization,
-until there are no variables ready for initialization.
+	更精确地说，如果包级别变量还没被初始化且其没有<a href="#Variable_declarations">初始化表达式</a>或其初始化表达式没有在未声明变量中有依赖，那么它就被认为是<i>准备好初始化了</i>。
+	初始化通过重复初始化下一个最早声明且准备好初始化的包级变量来进行，直到没有变量准备好初始化了。
 </p>
 
 <p>
-If any variables are still uninitialized when this
-process ends, those variables are part of one or more initialization cycles,
-and the program is not valid.
+	如果在此过程结束时还有变量没初始化，且这些变量是一个或多个初始化循环的一部分，那么程序是无效的。
 </p>
 
 <p>
-Multiple variables on the left-hand side of a variable declaration initialized
-by single (multi-valued) expression on the right-hand side are initialized
-together: If any of the variables on the left-hand side is initialized, all
-those variables are initialized in the same step.
+	由右侧的单个（多值）表达式初始化的变量声明的左侧的多个变量一起被初始化：如果左侧的任何变量被初始化，则所有这些变量都被初始化 在同一步骤中。
 </p>
 
 <pre>
 var x = a
-var a, b = f() // a and b are initialized together, before x is initialized
+var a, b = f() // a 和 b 是在 x 被初始化之前一起被初始化的
 </pre>
 
 <p>
-For the purpose of package initialization, <a href="#Blank_identifier">blank</a>
-variables are treated like any other variables in declarations.
+	为了包初始化的目的，<a href="#Blank_identifier">空白</a>变量会被像其它被描述的变量一样对待。
 </p>
 
 <p>
-The declaration order of variables declared in multiple files is determined
-by the order in which the files are presented to the compiler: Variables
-declared in the first file are declared before any of the variables declared
-in the second file, and so on.
+	在多个文件中声明的变量的声明顺序是由对应文件提交给编译器的顺序来决定的：第一个文件中声明的变量会在任何第二个文件中声明的变量之前，以此类推。
 </p>
 
 <p>
-Dependency analysis does not rely on the actual values of the
-variables, only on lexical <i>references</i> to them in the source,
-analyzed transitively. For instance, if a variable <code>x</code>'s
-initialization expression refers to a function whose body refers to
-variable <code>y</code> then <code>x</code> depends on <code>y</code>.
-Specifically:
+	依赖性分析不依赖于变量的实际值，而仅依赖于源中对它们进行词法分析的词汇引用。
+	例如，如果一个变量 <code>x</code> 的初始化表达式引用了一个其实体引用了变量 <code>y</code> 的函数，那么 <code>x</code> 依赖 <code>y</code>。
+	具体来说：
 </p>
 
 <ul>
 <li>
-A reference to a variable or function is an identifier denoting that
-variable or function.
+	该变量或函数的标识符表示的是对变量或函数的引用。
 </li>
 
 <li>
-A reference to a method <code>m</code> is a
-<a href="#Method_values">method value</a> or
-<a href="#Method_expressions">method expression</a> of the form
-<code>t.m</code>, where the (static) type of <code>t</code> is
-not an interface type, and the method <code>m</code> is in the
-<a href="#Method_sets">method set</a> of <code>t</code>.
-It is immaterial whether the resulting function value
-<code>t.m</code> is invoked.
+	到方法 <code>m</code> 的引用是一个 <code>t.m</code> 形式的<a href="#Method_values">方法值</a>或<a href="#Method_expressions">方法表达式</a>，其中 <code>t</code> 的（静态）类型不能是接口类型，且方法 <code>m</code> 在 <code>t</code> 的方法集中。
+	结果的函数值 <code>t.m</code> 是否被调用是无关紧要的。
 </li>
 
 <li>
-A variable, function, or method <code>x</code> depends on a variable
-<code>y</code> if <code>x</code>'s initialization expression or body
-(for functions and methods) contains a reference to <code>y</code>
-or to a function or method that depends on <code>y</code>.
+	如果一个变量、函数或方法 <code>x</code> 的初始化表达式或实体（对于函数和方法而言）包含一个到变量 <code>y</code> 或到依赖于 <code>y</code> 的函数或方法的引用，那么 <code>x</code> 是依赖 <code>y</code> 的。
 </li>
 </ul>
 
 <p>
-For example, given the declarations
+	比如，给定声明
 </p>
 
 <pre>
@@ -5422,7 +5358,7 @@ var (
 	a = c + b  // == 9
 	b = f()    // == 4
 	c = f()    // == 5
-	d = 3      // == 5 after initialization has finished
+	d = 3      // == 5 初始化结束后等于 5
 )
 
 func f() int {
@@ -5432,26 +5368,22 @@ func f() int {
 </pre>
 
 <p>
-the initialization order is <code>d</code>, <code>b</code>, <code>c</code>, <code>a</code>.
-Note that the order of subexpressions in initialization expressions is irrelevant:
-<code>a = c + b</code> and <code>a = b + c</code> result in the same initialization
-order in this example.
+	初始化顺序是 <code>d</code>，<code>b</code>，<code>c</code>，<code>a</code>。
+	注意的是，初始化表达式中的子表达式的顺序是无所谓的：示例中 <code>a = c + b</code> 和 <code>a = b + c</code> 得出的是相同的初始化顺序。
 </p>
 
 <p>
-Dependency analysis is performed per package; only references referring
-to variables, functions, and (non-interface) methods declared in the current
-package are considered. If other, hidden, data dependencies exists between
-variables, the initialization order between those variables is unspecified.
+	依赖分析是分包执行的；只有涉及到在当前包中声明的变量、函数和（非接口）方法的引用才会被考虑。
+	如果变量间存在其它、隐藏的、数据依赖，那么这些变量间的初始化顺序是不明的。
 </p>
 
 <p>
-For instance, given the declarations
+	比如，给定声明
 </p>
 
 <pre>
-var x = I(T{}).ab()   // x has an undetected, hidden dependency on a and b
-var _ = sideEffect()  // unrelated to x, a, or b
+var x = I(T{}).ab()   // x 存在在 a 和 b 上的未被发现的隐藏依赖
+var _ = sideEffect()  // 与 x, a, 或 b 无关
 var a = b
 var b = 42
 
@@ -5461,16 +5393,11 @@ func (T) ab() []int   { return []int{a, b} }
 </pre>
 
 <p>
-the variable <code>a</code> will be initialized after <code>b</code> but
-whether <code>x</code> is initialized before <code>b</code>, between
-<code>b</code> and <code>a</code>, or after <code>a</code>, and
-thus also the moment at which <code>sideEffect()</code> is called (before
-or after <code>x</code> is initialized) is not specified.
+	变量 <code>a</code> 会在 <code>b</code> 后被初始化，但是 <code>x</code> 是在 <code>b</code> 之前、在 <code>b</code> 和 <code>a</code> 之间、还是在 <code>a</code> 之后，以及 <code>sideEffect()</code> 会在什么时候被调用（在 <code>x</code> 初始化前还是后）都是不明的。
 </p>
 
 <p>
-Variables may also be initialized using functions named <code>init</code>
-declared in the package block, with no arguments and no result parameters.
+	变量也可以被包块中声明的不带实参和结果类型的名为 <code>init</code> 的函数所初始化。
 </p>
 
 <pre>
@@ -5478,52 +5405,33 @@ func init() { … }
 </pre>
 
 <p>
-Multiple such functions may be defined per package, even within a single
-source file. In the package block, the <code>init</code> identifier can
-be used only to declare <code>init</code> functions, yet the identifier
-itself is not <a href="#Declarations_and_scope">declared</a>. Thus
-<code>init</code> functions cannot be referred to from anywhere
-in a program.
+	单一包中可以定义多个这样的函数，甚至是在单一源文件内也没问题。
+	在包块内，<code>init</code> 标识符仅用于声明 <code>init</code> 函数，但标识符本身是未<a href="#Declarations_and_scope">声明的</a>。
+	这样的 <code>init</code> 函数不能在程序中的任何位置被引用。
 </p>
 
 <p>
-A package with no imports is initialized by assigning initial values
-to all its package-level variables followed by calling all <code>init</code>
-functions in the order they appear in the source, possibly in multiple files,
-as presented to the compiler.
-If a package has imports, the imported packages are initialized
-before initializing the package itself. If multiple packages import
-a package, the imported package will be initialized only once.
-The importing of packages, by construction, guarantees that there
-can be no cyclic initialization dependencies.
+	不带导入声明的包是这样初始化的：分配初始化值到它所有的包级变量（按照出现在源码中的顺序，可能会在多个文件中，那就按照提交到编译器的顺序），接着调用 <code>init</code> 函数。
+	如果包有导入声明，那么在初始化包本身之前，被导入的包会先初始化好。
+	如果多个包导入了一个包，那么被导入的包只会初始化一次。
+	通过构造可以保证包的导入不存在循环初始化依赖关系。
 </p>
 
 <p>
-Package initialization&mdash;variable initialization and the invocation of
-<code>init</code> functions&mdash;happens in a single goroutine,
-sequentially, one package at a time.
-An <code>init</code> function may launch other goroutines, which can run
-concurrently with the initialization code. However, initialization
-always sequences
-the <code>init</code> functions: it will not invoke the next one
-until the previous one has returned.
+	包的初始化（变量初始化和对 <code>init</code> 函数的调用）在单一 goroutine 内，循序的，每次一个包地发生。
+	<code>init</code> 函数可能发起其它的可以与初始化代码并行运行的 goroutine。
+	不过，初始化过程总是会序列化 <code>init</code> 函数：在上一个没有返回前不会调用下一个。
 </p>
 
 <p>
-To ensure reproducible initialization behavior, build systems are encouraged
-to present multiple files belonging to the same package in lexical file name
-order to a compiler.
+	为了确保可重现的初始化行为，建议构建系统以词法文件名顺序将属于同一个包的多个文件呈现给编译器。
 </p>
 
 
-<h3 id="Program_execution">Program execution</h3>
+<h3 id="Program_execution">程序执行</h3>
 <p>
-A complete program is created by linking a single, unimported package
-called the <i>main package</i> with all the packages it imports, transitively.
-The main package must
-have package name <code>main</code> and
-declare a function <code>main</code> that takes no
-arguments and returns no value.
+	一个完整的程序是通过按轨迹地连接一个单一的，未导入的被叫做 <i>main package</i> 的包与其它所有其导入的包来创建的。
+	主包的包名一定是 <code>main</code>，并且声明一个无实参也无返回值的 <code>main</code> 函数。
 </p>
 
 <pre>
@@ -5531,16 +5439,15 @@ func main() { … }
 </pre>
 
 <p>
-Program execution begins by initializing the main package and then
-invoking the function <code>main</code>.
-When that function invocation returns, the program exits.
-It does not wait for other (non-<code>main</code>) goroutines to complete.
+	程序通过先初始化主包再调用 <code>main</code> 函数来开始执行。
+	当这个函数调用返回时，程序退出。
+	并不会等待其它（非 <code>main</code>）goroutine 完成。
 </p>
 
-<h2 id="Errors">Errors</h2>
+<h2 id="Errors">错误</h2>
 
 <p>
-The predeclared type <code>error</code> is defined as
+	预先声明的类型 <code>error</code> 定义如下：
 </p>
 
 <pre>
@@ -5550,9 +5457,8 @@ type error interface {
 </pre>
 
 <p>
-It is the conventional interface for representing an error condition,
-with the nil value representing no error.
-For instance, a function to read data from a file might be defined:
+	它是表示错误条件的常见接口，nil 值代表没有错误。
+	例如，从文件读入数据的函数可能被定义为：
 </p>
 
 <pre>
@@ -5562,14 +5468,9 @@ func Read(f *File, b []byte) (n int, err error)
 <h2 id="Run_time_panics">Run-time panics</h2>
 
 <p>
-Execution errors such as attempting to index an array out
-of bounds trigger a <i>run-time panic</i> equivalent to a call of
-the built-in function <a href="#Handling_panics"><code>panic</code></a>
-with a value of the implementation-defined interface type <code>runtime.Error</code>.
-That type satisfies the predeclared interface type
-<a href="#Errors"><code>error</code></a>.
-The exact error values that
-represent distinct run-time error conditions are unspecified.
+	像尝试超出数组边界的索引这样的执行错误会触发一个 <i>run-time panic</i>，它等同于对内置函数 <a href="#Handling_panics"><code>panic</code></a> 的调用，该调用使用根据实现定义的接口类型 <code>runtime.Error</code> 的值作为实参。
+	这个类型满足预先声明的接口类型 <a href="#Errors"><code>error</code></a>。
+	表示不同运行时错误条件的确切错误值是为指定的。
 </p>
 
 <pre>
@@ -5577,27 +5478,24 @@ package runtime
 
 type Error interface {
 	error
-	// and perhaps other methods
+	// 或许还有其它方法
 }
 </pre>
 
-<h2 id="System_considerations">System considerations</h2>
+<h2 id="System_considerations">系统注意事项</h2>
 
-<h3 id="Package_unsafe">Package <code>unsafe</code></h3>
+<h3 id="Package_unsafe">包 <code>unsafe</code></h3>
 
 <p>
-The built-in package <code>unsafe</code>, known to the compiler
-and accessible through the <a href="#Import_declarations">import path</a> <code>"unsafe"</code>,
-provides facilities for low-level programming including operations
-that violate the type system. A package using <code>unsafe</code>
-must be vetted manually for type safety and may not be portable.
-The package provides the following interface:
+	编译器已知且可以通过<a href="#Import_declarations">导入路径</a> <code>"unsafe"</code> 访问的内置包 <code>unsafe</code> 提供了包括违反类型系统操作在内的低级编程设施。
+	使用 <code>unsafe</code> 的包必须必须手动审查以确保类型安全，且不具备可移植性。
+	该包提供了以下接口：
 </p>
 
 <pre class="grammar">
 package unsafe
 
-type ArbitraryType int  // shorthand for an arbitrary Go type; it is not a real type
+type ArbitraryType int  // 任意 Go 类型的简写；它不是一个真实的类型
 type Pointer *ArbitraryType
 
 func Alignof(variable ArbitraryType) uintptr
@@ -5606,11 +5504,9 @@ func Sizeof(variable ArbitraryType) uintptr
 </pre>
 
 <p>
-A <code>Pointer</code> is a <a href="#Pointer_types">pointer type</a> but a <code>Pointer</code>
-value may not be <a href="#Address_operators">dereferenced</a>.
-Any pointer or value of <a href="#Types">underlying type</a> <code>uintptr</code> can be converted to
-a type of underlying type <code>Pointer</code> and vice versa.
-The effect of converting between <code>Pointer</code> and <code>uintptr</code> is implementation-defined.
+	<code>Pointer</code> 是一个<a href="#Pointer_types">指针类型</a>但是 <code>Pointer</code> 值不能被<a href="#Address_operators">解引用</a>。
+	任何指针或<a href="#Types">潜在类型</a>为 <code>uintptr</code> 的值都可以被转换为潜在类型为 <code>Pointer</code> 的类型，反之亦然。
+	在 <code>Pointer</code> 和 <code>uintptr</code> 间的转换效果是由实现定义的。
 </p>
 
 <pre>
@@ -5624,17 +5520,12 @@ var p ptr = nil
 </pre>
 
 <p>
-The functions <code>Alignof</code> and <code>Sizeof</code> take an expression <code>x</code>
-of any type and return the alignment or size, respectively, of a hypothetical variable <code>v</code>
-as if <code>v</code> was declared via <code>var v = x</code>.
+	函数 <code>Alignof</code> 和 <code>Sizeof</code> 获取任意类型的表达式 <code>x</code> 并分别返回假设变量 <code>v</code> 的定位或大小（<code>v</code> 就像通过 <code>var v = x</code> 声明的一样）。
 </p>
 <p>
-The function <code>Offsetof</code> takes a (possibly parenthesized) <a href="#Selectors">selector</a>
-<code>s.f</code>, denoting a field <code>f</code> of the struct denoted by <code>s</code>
-or <code>*s</code>, and returns the field offset in bytes relative to the struct's address.
-If <code>f</code> is an <a href="#Struct_types">embedded field</a>, it must be reachable
-without pointer indirections through fields of the struct.
-For a struct <code>s</code> with field <code>f</code>:
+	函数 <code>Offsetof</code> 获取一个（可能被括起来的）表示被 <code>s</code> 或 <code>*s</code> 所表示的结构体的字段 <code>f</code> 的<a href="#Selectors">选择器</a> <code>s.f</code>，并返回相对于结构体地址的以字节表示的字段的偏移量。
+	如果 <code>f</code> 是一个<a href="#Struct_types">嵌入字段</a>，那么必须可以在不要指针间接情况下直达结构体字段。
+	对于带字段 <code>f</code> 的结构体 <code>s</code>：
 </p>
 
 <pre>
@@ -5642,12 +5533,8 @@ uintptr(unsafe.Pointer(&amp;s)) + unsafe.Offsetof(s.f) == uintptr(unsafe.Pointer
 </pre>
 
 <p>
-Computer architectures may require memory addresses to be <i>aligned</i>;
-that is, for addresses of a variable to be a multiple of a factor,
-the variable's type's <i>alignment</i>.  The function <code>Alignof</code>
-takes an expression denoting a variable of any type and returns the
-alignment of the (type of the) variable in bytes.  For a variable
-<code>x</code>:
+	计算机架构可能会要求内存地址是<i>对齐的</i>；也就是说，变量的地址是一个因子的倍数，这个因子是变量类型的<i>对准值</i>。
+	函数 <code>Alignof</code> 获取一个表示任意类型变量的表达式，并以字节为单位返回变量（的类型）的对准值。对于一个变量 <code>x</code>：
 </p>
 
 <pre>
@@ -5655,14 +5542,13 @@ uintptr(unsafe.Pointer(&amp;x)) % unsafe.Alignof(x) == 0
 </pre>
 
 <p>
-Calls to <code>Alignof</code>, <code>Offsetof</code>, and
-<code>Sizeof</code> are compile-time constant expressions of type <code>uintptr</code>.
+	对于 <code>Alignof</code>、<code>Offsetof</code>、<code>Sizeof</code> 的调用是类型 <code>uintptr</code> 的编译时常量表达式。
 </p>
 
-<h3 id="Size_and_alignment_guarantees">Size and alignment guarantees</h3>
+<h3 id="Size_and_alignment_guarantees">大小和对准值保证</h3>
 
 <p>
-For the <a href="#Numeric_types">numeric types</a>, the following sizes are guaranteed:
+	对于<a href="#Numeric_types">数字类型</a>，以下大小是保证的：
 </p>
 
 <pre class="grammar">
@@ -5676,21 +5562,20 @@ complex128                           16
 </pre>
 
 <p>
-The following minimal alignment properties are guaranteed:
+	以下最小对准值属性是保证的：
 </p>
 <ol>
-<li>For a variable <code>x</code> of any type: <code>unsafe.Alignof(x)</code> is at least 1.
+<li>对于任意类型变量 <code>x</code>：<code>unsafe.Alignof(x)</code> 最小为 1。
 </li>
 
-<li>For a variable <code>x</code> of struct type: <code>unsafe.Alignof(x)</code> is the largest of
-   all the values <code>unsafe.Alignof(x.f)</code> for each field <code>f</code> of <code>x</code>, but at least 1.
+<li>对于结构体类型变量 <code>x</code>：<code>unsafe.Alignof(x)</code> 是所有 <code>unsafe.Alignof(x.f)</code>（对于 <code>x</code> 的每个字段 <code>f</code>）中最大的值，但最小为1。
 </li>
 
-<li>For a variable <code>x</code> of array type: <code>unsafe.Alignof(x)</code> is the same as
-	the alignment of a variable of the array's element type.
+<li>对于数组类型变量 <code>x</code>：<code>unsafe.Alignof(x)</code> 和数组元素类型变量的对准值相同。
 </li>
 </ol>
 
 <p>
-A struct or array type has size zero if it contains no fields (or elements, respectively) that have a size greater than zero. Two distinct zero-size variables may have the same address in memory.
+	如果结构体或数组没有包含大于零大小的字段（或元素，对数组而言），那么它大大小为零。
+	两个不同的零大小的变量在内存中可能拥有同一个地址。
 </p>
