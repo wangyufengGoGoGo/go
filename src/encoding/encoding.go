@@ -2,19 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package encoding defines interfaces shared by other packages that
-// convert data to and from byte-level and textual representations.
-// Packages that check for these interfaces include encoding/gob,
-// encoding/json, and encoding/xml. As a result, implementing an
-// interface once can make a type useful in multiple encodings.
-// Standard types that implement these interfaces include time.Time and net.IP.
-// The interfaces come in pairs that produce and consume encoded data.
+// 包 encoding 定义了其他包的共享接口，这些包将数据在字节级表示形式和文本表示形式相互转换。
+// encoding/gob、encoding/json、encoding/xml三个包都会检查使用这些接口。
+// 因此，只要实现了这些接口一次，就可以在多个包里使用。
+// 标准包内建类型 time.Time和 net.IP都实现了这些接口。
+// 接口是成对的，分别产生和还原编码后的数据。
 package encoding
 
-// BinaryMarshaler is the interface implemented by an object that can
-// marshal itself into a binary form.
+// 实现了 BinaryMarshaler 接口的类型可以将自身序列化为二进制形式。
 //
-// MarshalBinary encodes the receiver into a binary form and returns the result.
+// MarshalBinary 将接收到的数据编码为二进制形式并返回结果。
 type BinaryMarshaler interface {
 	MarshalBinary() (data []byte, err error)
 }
