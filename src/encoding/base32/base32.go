@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package base32 implements base32 encoding as specified by RFC 4648.
+// base32包实现了 RFC 4648 规定的 base32编码。
 package base32
 
 import (
@@ -14,10 +14,9 @@ import (
  * Encodings
  */
 
-// An Encoding is a radix 32 encoding/decoding scheme, defined by a
-// 32-character alphabet. The most common is the "base32" encoding
-// introduced for SASL GSSAPI and standardized in RFC 4648.
-// The alternate "base32hex" encoding is used in DNSSEC.
+// 编码是由 32 个字符的字母表定义的以 32 为基数的编码或解码方案。
+// 最常见的是为 SASL GSSAPI 引入并在 RFC 4648 中标准化的 "base32" 编码。
+// 在 DNSSEC 中使用备用的 "base32hex" 编码。
 type Encoding struct {
 	encode    [32]byte
 	decodeMap [256]byte
@@ -25,15 +24,14 @@ type Encoding struct {
 }
 
 const (
-	StdPadding rune = '=' // Standard padding character
-	NoPadding  rune = -1  // No padding
+	StdPadding rune = '=' // 标准填充字符
+	NoPadding  rune = -1  // 没有填充
 )
 
 const encodeStd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
 const encodeHex = "0123456789ABCDEFGHIJKLMNOPQRSTUV"
 
-// NewEncoding returns a new Encoding defined by the given alphabet,
-// which must be a 32-byte string.
+// NewEncoding 返回由给定字母生成一个 Encoding，该字母必须是 32 字节的字符串。
 func NewEncoding(encoder string) *Encoding {
 	if len(encoder) != 32 {
 		panic("encoding alphabet is not 32-bytes long")
