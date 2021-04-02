@@ -233,17 +233,14 @@ func (e *encoder) Close() error {
 	return e.err
 }
 
-// NewEncoder returns a new base32 stream encoder. Data written to
-// the returned writer will be encoded using enc and then written to w.
-// Base32 encodings operate in 5-byte blocks; when finished
-// writing, the caller must Close the returned encoder to flush any
-// partially written blocks.
+// NewEncoder 返回一个新的 base32 流编码器。
+// 写入返回的写入器的数据将使用 enc 进行编码，然后写入 w。
+// Base32 编码以5字节块为单位；完成写入后，调用者必须关闭返回的编码器以清除任何部分写入的块。
 func NewEncoder(enc *Encoding, w io.Writer) io.WriteCloser {
 	return &encoder{enc: enc, w: w}
 }
 
-// EncodedLen returns the length in bytes of the base32 encoding
-// of an input buffer of length n.
+// EncodedLen 返回长度为 n 的输入缓冲区的 base32 编码的字节长度。
 func (enc *Encoding) EncodedLen(n int) int {
 	if enc.padChar == NoPadding {
 		return (n*8 + 4) / 5
