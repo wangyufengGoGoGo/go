@@ -156,7 +156,7 @@ func (enc *Encoding) Encode(dst, src []byte) {
 	}
 }
 
-// EncodeToString returns the base32 encoding of src.
+// EncodeToString 返回 src 的 base32 编码。
 func (enc *Encoding) EncodeToString(src []byte) string {
 	buf := make([]byte, enc.EncodedLen(len(src)))
 	enc.Encode(buf, src)
@@ -167,8 +167,8 @@ type encoder struct {
 	err  error
 	enc  *Encoding
 	w    io.Writer
-	buf  [5]byte    // buffered data waiting to be encoded
-	nbuf int        // number of bytes in buf
+	buf  [5]byte    // 等待编码的缓冲数据
+	nbuf int        // buf 中的字节数
 	out  [1024]byte // output buffer
 }
 
@@ -220,8 +220,8 @@ func (e *encoder) Write(p []byte) (n int, err error) {
 	return
 }
 
-// Close flushes any pending output from the encoder.
-// It is an error to call Write after calling Close.
+// Close 清除编码器的所有待定输出。
+// 调用 Close 之后调用 Write 会出现 error
 func (e *encoder) Close() error {
 	// If there's anything left in the buffer, flush it out
 	if e.err == nil && e.nbuf > 0 {
